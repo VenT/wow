@@ -27,7 +27,7 @@ struct instance_icecrown_spire : public ScriptedInstance
 {
     instance_icecrown_spire(Map* pMap) : ScriptedInstance(pMap) 
     {
-        Difficulty = pMap->GetDifficulty();
+        Difficulty = ((InstanceMap*)pMap)->GetDifficulty();
         Initialize();
     }
 

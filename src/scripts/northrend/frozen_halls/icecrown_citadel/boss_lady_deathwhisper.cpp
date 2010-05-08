@@ -147,18 +147,18 @@ struct boss_lady_deathwhisperAI : public ScriptedAI
     if (place < 2) 
     {
     if (Unit* pTemp = bsw->doSummon(urand(0,1) ? NPC_FANATIC : NPC_ADHERENT, SpawnLoc[3*place+1].x, SpawnLoc[3*place+1].y, SpawnLoc[3*place+1].z))
-    if (Unit* pTarget= me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0) ) {
+    if (Unit* pTarget= SelectUnit(SELECT_TARGET_RANDOM, 0) ) {
                 pTemp->AddThreat(pTarget, 100.0f);
                 pTemp->GetMotionMaster()->MoveChase(pTarget);
                 };
     if (Unit* pTemp = bsw->doSummon(urand(0,1) ? NPC_FANATIC : NPC_ADHERENT, SpawnLoc[3*place+3].x, SpawnLoc[3*place+3].y, SpawnLoc[3*place+3].z))
-    if (Unit* pTarget= me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0) ) {
+    if (Unit* pTarget= SelectUnit(SELECT_TARGET_RANDOM, 0) ) {
                 pTemp->AddThreat(pTarget, 100.0f);
                 pTemp->GetMotionMaster()->MoveChase(pTarget);
                 };
     }
     if (Unit* pTemp = bsw->doSummon(urand(0,1) ? NPC_FANATIC : NPC_ADHERENT, SpawnLoc[3*place+2].x, SpawnLoc[3*place+2].y, SpawnLoc[3*place+2].z))
-    if (Unit* pTarget= me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0) ) {
+    if (Unit* pTarget= SelectUnit(SELECT_TARGET_RANDOM, 0) ) {
                 pTemp->AddThreat(pTarget, 100.0f);
                 pTemp->GetMotionMaster()->MoveChase(pTarget);
                 };
@@ -340,10 +340,10 @@ struct mob_vengeful_shadeAI : public ScriptedAI
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         me->SetInCombatWithZone();
-        if (Unit* pTarget= me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0) ) {
+        if (Unit* pTarget= SelectUnit(SELECT_TARGET_RANDOM, 0) ) {
                 me->AddThreat(pTarget, 1000.0f);
                 me->GetMotionMaster()->MoveChase(pTarget);
-                me->SetSpeedRate(MOVE_RUN, 0.5);
+//                me->SetSpeedRate(MOVE_RUN, 0.5);
                 }
         bsw->doCast(SPELL_VENGEFUL_BLAST);
     }
@@ -367,7 +367,7 @@ struct mob_vengeful_shadeAI : public ScriptedAI
                     else
                     {
                         me->GetMotionMaster()->MoveChase(me->getVictim());
-                        me->SetSpeedRate(MOVE_RUN, 0.5);
+//                        me->SetSpeedRate(MOVE_RUN, 0.5);
                     }
         }
     }

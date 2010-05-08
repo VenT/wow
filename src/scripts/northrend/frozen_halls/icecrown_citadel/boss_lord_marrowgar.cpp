@@ -65,7 +65,7 @@ struct boss_lord_marrowgarAI : public ScriptedAI
     void MoveInLineOfSight(Unit* pWho) 
     {
         if (intro) return;
-        DoScriptText(-1631000,m_creature);
+        DoScriptText(-1631000,me);
         intro = true;
     }
 
@@ -77,7 +77,7 @@ struct boss_lord_marrowgarAI : public ScriptedAI
 /*
     void JustSummoned(Creature* _summoned)
     {
-        if (Unit* target = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM,1))
+        if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
             _summoned->AddThreat(target);
     }
 */
@@ -85,17 +85,17 @@ struct boss_lord_marrowgarAI : public ScriptedAI
     {
         if(!pInstance) return;
         pInstance->SetData(TYPE_MARROWGAR, IN_PROGRESS);
-        DoScriptText(-1631001,m_creature);
+        DoScriptText(-1631001,me);
     }
 
     void KilledUnit(Unit* pVictim)
     {
     switch (urand(0,1)) {
         case 0:
-               DoScriptText(-1631006,m_creature,pVictim);
+               DoScriptText(-1631006,me,pVictim);
                break;
         case 1:
-               DoScriptText(-1631007,m_creature,pVictim);
+               DoScriptText(-1631007,me,pVictim);
                break;
         };
     }
@@ -103,30 +103,30 @@ struct boss_lord_marrowgarAI : public ScriptedAI
     void JustDied(Unit *killer)
     {
         if(pInstance) pInstance->SetData(TYPE_MARROWGAR, DONE);
-        DoScriptText(-1631009,m_creature);
+        DoScriptText(-1631009,me);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+        if (!UpdateVictim())
             return;
 
         switch(stage)
         {
             case 0: {
                     if (bsw->timedQuery(SPELL_BONE_STRIKE, diff))
-                        if (Unit* pTarget = m_creature->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 1))
+                        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                             if (bsw->doCast(SPELL_BONE_STRIKE, pTarget) == CAST_OK)
                               {
                               switch (urand(0,1)) {
                                                    case 0:
-                                                   DoScriptText(-1631003,m_creature,pTarget);
+                                                   DoScriptText(-1631003,me,pTarget);
                                                    break;
                                                    case 1:
-                                                   DoScriptText(-1631004,m_creature,pTarget);
+                                                   DoScriptText(-1631004,me,pTarget);
                                                    break;
                                                    case 2:
-                                                   DoScriptText(-1631005,m_creature,pTarget);
+                                                   DoScriptText(-1631005,me,pTarget);
                                                    break;
                                                    };
 
@@ -140,11 +140,11 @@ struct boss_lord_marrowgarAI : public ScriptedAI
             case 1: {
                     bsw->doCast(SPELL_BONE_STORM);
                     stage = 2;
-                    DoScriptText(-1631002,m_creature);
+                    DoScriptText(-1631002,me);
                     break;}
 
             case 2: {
-                    if (!bsw->hasAura(SPELL_BONE_STORM, m_creature)) stage = 3;
+                    if (!bsw->hasAura(SPELL_BONE_STORM, me)) stage = 3;
 //                             else bsw->timedCast(SPELL_BONE_STORM_STRIKE, diff);
 // insert to this damage override from bone storm
                     break;}
@@ -159,12 +159,12 @@ struct boss_lord_marrowgarAI : public ScriptedAI
 //        if (bsw->timedQuery(NPC_COLDFLAME, diff))
 //                   bsw->doSummon(NPC_COLDFLAME, TEMPSUMMON_TIMED_DESPAWN, 60000);
 
-        if (m_creature->GetHealthPercent() <= 30.0f && stage == 0) stage = 1;
+        if (me->GetHealthPercent() <= 30.0f && stage == 0) stage = 1;
 
         if (bsw->timedQuery(SPELL_BERSERK, diff))
             {
             bsw->doCast(SPELL_BERSERK);
-            DoScriptText(-1631008,m_creature);
+            DoScriptText(-1631008,me);
             }
 
         DoMeleeAttackIfReady();
@@ -188,13 +188,13 @@ struct mob_coldflameAI : public ScriptedAI
 
     void Reset()
     {
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->GetPosition(fPosX, fPosY, fPosZ);
-        m_creature->GetRandomPoint(fPosX, fPosY, fPosZ, urand(150, 200), fPosX, fPosY, fPosZ);
-        m_creature->GetMotionMaster()->MovePoint(1, fPosX, fPosY, fPosZ);
+        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        me->GetPosition(fPosX, fPosY, fPosZ);
+//        me->GetRandomPoint(fPosX, fPosY, fPosZ, urand(150, 200), fPosX, fPosY, fPosZ);
+        me->GetMotionMaster()->MovePoint(1, fPosX, fPosY, fPosZ);
         SetCombatMovement(false);
-        m_creature->SetSpeedRate(MOVE_RUN, 0.8f);
+//        me->SetSpeedRate(MOVE_RUN, 0.8f);
         bsw->doCast(SPELL_COLD_FLAME_0);
     }
 
@@ -203,8 +203,8 @@ struct mob_coldflameAI : public ScriptedAI
         if(!m_pInstance) return;
         if(type != POINT_MOTION_TYPE) return;
         if(id != 1)
-             m_creature->GetMotionMaster()->MovePoint(1, fPosX, fPosY, fPosZ);
-             else m_creature->ForcedDespawn();
+             me->GetMotionMaster()->MovePoint(1, fPosX, fPosY, fPosZ);
+             else me->ForcedDespawn();
     }
 
     void AttackStart(Unit *who)
@@ -217,7 +217,7 @@ struct mob_coldflameAI : public ScriptedAI
     {
         bsw->timedCast(SPELL_COLD_FLAME_0, uiDiff);
 //        bsw->timedCast(SPELL_COLD_FLAME, uiDiff);
-        if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+        if (!UpdateVictim())
             return;
     }
 };

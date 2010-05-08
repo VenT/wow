@@ -76,12 +76,12 @@ struct npc_tirion_guideAI : public ScriptedAI
 	npc_tirion_guideAI(Creature* pCreature) : ScriptedAI(pCreature)
 	{
 		pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-		bIsRegularMode = pCreature->GetMap()->IsRegularDifficulty();
+		bIsRegular;
 		Reset();
 	}
 
 	ScriptedInstance *pInstance;
-	bool bIsRegularMode;
+	bool bIsRegular;
 
 	uint8 stage;
 	uint8 Difficulty;
@@ -200,7 +200,7 @@ void UpdateAI(const uint32 diff)
 	if ((me->GetHealth() * 100 / me->GetMaxHealth() <= 20) && !enraged)
 	{
 		enraged = true;
-		DoCastSpellIfCan(me, 72143);
+		DoCast(me, 72143);
 		me->MonsterYell("You Shall die!", LANG_UNIVERSAL, NULL);
 	}
 
@@ -214,42 +214,42 @@ void UpdateAI(const uint32 diff)
 	{
 		if (spell1_phase1_Timer <= diff)
 		{
-			DoCastSpellIfCan(me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), 70372);
+			DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), 70372);
 			spell1_phase1_Timer = 60000+rand()%40000;
 		} 
 		else spell1_phase1_Timer -= diff;
 
 	if (spell2_phase1_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->getVictim(), 72149);
+		DoCast(me->getVictim(), 72149);
 		spell2_phase1_Timer = 30000+rand()%20000;
 	} 
 	else spell2_phase1_Timer -= diff;
 
 	if (spell3_phase1_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), 70358);
+		DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), 70358);
 		spell3_phase1_Timer = 90000+rand()%10000;
 	} 
 	else spell3_phase1_Timer -= diff;
 
 	if (spell4_phase1_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), 70541);
+		DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), 70541);
 		spell4_phase1_Timer = 20000+rand()%20000;
 	} 
 	else spell4_phase1_Timer -= diff;
 
 	if (spell5_phase1_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), 70337);
+		DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), 70337);
 		spell5_phase1_Timer = 40000+rand()%60000;
 	} 
 	else spell5_phase1_Timer -= diff;
 
 	if (spell6_phase1_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->getVictim(), 74074);
+		DoCast(me->getVictim(), 74074);
 		spell6_phase1_Timer = 20000+rand()%20000;
 	} 
 	else spell6_phase1_Timer -= diff;
@@ -259,35 +259,35 @@ void UpdateAI(const uint32 diff)
 	{
 		if (spell1_phase2_Timer <= diff)
 		{
-			DoCastSpellIfCan(me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), 69037);
+			DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), 69037);
 			spell1_phase2_Timer = 80000+rand()%20000;
 		} 
 		else spell1_phase2_Timer -= diff;
 
 	if (spell2_phase2_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), 74352);
+		DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), 74352);
 		spell2_phase2_Timer = 50000+rand()%50000;
 	} 
 	else spell2_phase2_Timer -= diff;
 
 	if (spell3_phase2_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), 70541);
+		DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), 70541);
 		spell3_phase2_Timer = 50000+rand()%50000;
 	} 
 	else spell3_phase2_Timer -= diff;
 
 	if (spell4_phase2_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->getVictim(), 69409);
+		DoCast(me->getVictim(), 69409);
 		spell4_phase2_Timer = 80000+rand()%20000;
 	} 
 	else spell4_phase2_Timer -= diff;
 
 	if (spell5_phase2_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->getVictim(), 72754);
+		DoCast(me->getVictim(), 72754);
 		spell5_phase2_Timer = 40000+rand()%20000;
 	} 
 	else spell5_phase2_Timer -= diff;
@@ -297,14 +297,14 @@ void UpdateAI(const uint32 diff)
 	{
 		if (spell1_phase3_Timer <= diff)
 		{
-			DoCastSpellIfCan(me->getVictim(), 72754);
+			DoCast(me->getVictim(), 72754);
 			spell1_phase3_Timer = 40000+rand()%20000;
 		} 
 		else spell1_phase3_Timer -= diff;
 
 	if (spell2_phase3_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), 69409);
+		DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), 69409);
 		spell2_phase3_Timer = 40000+rand()%20000;
 	} 
 	else spell2_phase3_Timer -= diff;
@@ -315,21 +315,21 @@ void UpdateAI(const uint32 diff)
 
 		if (spell1_phase4_Timer <= diff)
 		{
-			DoCastSpellIfCan(me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), 68980);
+			DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), 68980);
 			spell1_phase4_Timer = 20000+rand()%40000;
 		} 
 		else spell1_phase4_Timer -= diff;
 
 	if (spell2_phase4_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->SelectAttackingTarget(ATTACKING_TARGET_RANDOM, 0), 70498);
+		DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), 70498);
 		spell2_phase4_Timer = 20000+rand()%20000;
 	} 
 	else spell2_phase4_Timer -= diff;
 
 	if (spell3_phase4_Timer <= diff)
 	{
-		DoCastSpellIfCan(me->getVictim(), 70503);
+		DoCast(me->getVictim(), 70503);
 		spell3_phase4_Timer = 50000+rand()%10000;
 	} 
 	else spell3_phase4_Timer -= diff;

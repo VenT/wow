@@ -160,8 +160,8 @@ struct boss_proffesor_putricideAI : public ScriptedAI
                     break;
         }
 
-        if ( stage ==0 && m_creature->GetHealthPercent() < 80.0f ) stage = 1;
-        if ( stage ==2 && m_creature->GetHealthPercent() < 35.0f ) stage = 3;
+        if ( stage ==0 && me->GetHealthPercent() < 80.0f ) stage = 1;
+        if ( stage ==2 && me->GetHealthPercent() < 35.0f ) stage = 3;
 
         DoMeleeAttackIfReady();
     }
@@ -186,8 +186,8 @@ struct mob_icc_gas_cloudAI : public ScriptedAI
 
     void Reset()
     {
-        m_creature->SetInCombatWithZone();
-        m_creature->SetRespawnDelay(DAY);
+        me->SetInCombatWithZone();
+        me->SetRespawnDelay(DAY);
     }
 
     void Aggro(Unit *who)
@@ -198,7 +198,7 @@ struct mob_icc_gas_cloudAI : public ScriptedAI
     void JustReachedHome()
     {
         if (!m_pInstance) return;
-            m_creature->ForcedDespawn();
+            me->ForcedDespawn();
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -209,11 +209,11 @@ struct mob_icc_gas_cloudAI : public ScriptedAI
 
         bsw->timedCast(SPELL_GASEOUS_BLOAT, uiDiff);
         bsw->timedCast(SPELL_SOUL_FEAST, uiDiff);
-        if (m_creature->getVictim()->IsWithinDistInMap(m_creature, 1.0f)
-            && bsw->hasAura(SPELL_GASEOUS_BLOAT, m_creature->getVictim()))
+        if (me->getVictim()->IsWithinDistInMap(me, 1.0f)
+            && bsw->hasAura(SPELL_GASEOUS_BLOAT, me->getVictim()))
             {
                bsw->doCast(SPELL_EXPUNGED_GAS);
-               m_creature->ForcedDespawn();
+               me->ForcedDespawn();
             };
     }
 };
@@ -255,7 +255,7 @@ struct mob_icc_volatile_oozeAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
 
-        if (!me->SelectHostileTarget() || !me->getVictim())
+        if (!UpdateVictim())
             return;
 
         bsw->timedCast(SPELL_OOZE_ADHESIVE, uiDiff, me->getVictim());

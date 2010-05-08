@@ -50,7 +50,7 @@ struct mob_spire_frostwyrmAI : public ScriptedAI
 
     void Reset()
     {
-        m_creature->SetRespawnDelay(DAY);
+        me->SetRespawnDelay(DAY);
         stage = 0;
     }
 
@@ -76,7 +76,7 @@ struct mob_spire_frostwyrmAI : public ScriptedAI
                     bsw->timedCast(SPELL_BLIZZARD, diff);
                     bsw->timedCast(SPELL_FROST_BREATH, diff);
 
-        if (m_creature->GetHealthPercent() < 10.0f && stage == 0) stage = 1;
+        if (me->GetHealthPercent() < 10.0f && stage == 0) stage = 1;
 
         bsw->timedCast(SPELL_BERSERK, diff);
 
@@ -120,7 +120,7 @@ struct mob_frost_giantAI : public ScriptedAI
 
     void Reset()
     {
-        m_creature->SetRespawnDelay(DAY);
+        me->SetRespawnDelay(DAY);
         stage = 0;
     }
 
@@ -144,7 +144,7 @@ struct mob_frost_giantAI : public ScriptedAI
                     bsw->timedCast(SPELL_STOMP, diff);
                     bsw->timedCast(SPELL_DEATH_PLAGUE, diff);
 
-        if (m_creature->GetHealthPercent() < 2.0f && stage == 0) stage = 1;
+        if (me->GetHealthPercent() < 2.0f && stage == 0) stage = 1;
 
         bsw->timedCast(SPELL_BERSERK, diff);
 

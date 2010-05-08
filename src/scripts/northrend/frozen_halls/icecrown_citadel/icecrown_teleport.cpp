@@ -63,7 +63,7 @@ bool GOGossipSelect_go_icecrown_teleporter(Player *player, GameObject* pGo, uint
     player->TeleportTo(MAP_NUM, PortalLoc[action].x, PortalLoc[action].y, PortalLoc[action].z, 0);
     if (PortalLoc[action].spellID !=0 ) 
            if (SpellEntry const* spell = (SpellEntry *)GetSpellStore()->LookupEntry(PortalLoc[action].spellID))
-                  player->AddAura(new BossAura(spell, EFFECT_INDEX_2, &damage,(Unit*)player, (Unit*)player));
+//                  player->AddAura(new BossAura(spell, EFFECT_INDEX_2, &damage,(Unit*)player, (Unit*)player));
 
     player->CLOSE_GOSSIP_MENU();
     return true;
@@ -124,22 +124,22 @@ void AddSC_icecrown_teleporter()
 
     newscript = new Script;
     newscript->Name = "go_icecrown_teleporter";
-    newscript->pGOGossipHello  = &GOGossipHello_go_icecrown_teleporter;
-    newscript->pGOGossipSelect = &GOGossipSelect_go_icecrown_teleporter;
+//    newscript->pGOGossipHello  = &GOGossipHello_go_icecrown_teleporter;
+//    newscript->pGOGossipSelect = &GOGossipSelect_go_icecrown_teleporter;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "go_plague_sigil";
-    newscript->pGOGossipHello  = &GOGossipHello_go_plague_sigil;
+//    newscript->pGOGossipHello  = &GOGossipHello_go_plague_sigil;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "go_bloodwing_sigil";
-    newscript->pGOGossipHello  = &GOGossipHello_go_bloodwing_sigil;
+//    newscript->pGOGossipHello  = &GOGossipHello_go_bloodwing_sigil;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "go_frostwing_sigil";
-    newscript->pGOGossipHello  = &GOGossipHello_go_frostwing_sigil;
+//    newscript->pGOGossipHello  = &GOGossipHello_go_frostwing_sigil;
     newscript->RegisterSelf();
 }
