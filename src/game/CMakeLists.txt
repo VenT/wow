@@ -307,6 +307,8 @@ SET(game_STAT_SRCS
    GroupRefManager.h
    OutdoorPvPImpl.h
    ZoneScript.h
+   sc_boss_spell_worker.cpp
+   sc_boss_spell_worker.h
 )
 
 include_directories(
