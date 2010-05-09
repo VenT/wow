@@ -22,6 +22,7 @@ SDCategory: Icecrown Citadel
 EndScriptData */
 
 #include "ScriptedPch.h"
+#include "def_spire.h"
 
 const Position FlyPosition = { 4523.889160, 2486.907227, 280.249878, 3.155010};
 const Position LandPosition = { 4407.439453, 2484.90541,  203.374374, 3.166791};

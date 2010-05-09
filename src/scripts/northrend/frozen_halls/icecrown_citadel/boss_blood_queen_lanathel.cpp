@@ -121,24 +121,24 @@ struct Boss_Blood_Queen_LanathelAI : public ScriptedAI
                 /************ Other **********/
                 m_uiPhase = 1;
                 m_uiBerserkTimer        = 330000; // 5:30 Min
-                m_creature->SetFlying(false);
+                me->SetFlying(false);
 
-                m_creature->SetReactState(REACT_AGGRESSIVE);
+                me->SetReactState(REACT_AGGRESSIVE);
         }
 
         void EnterCombat(Unit *who)
         {
-                DoScriptText(SAY_AGGRO, m_creature);
+                DoScriptText(SAY_AGGRO, me);
         }
 
         void KilledUnit(Unit* victim)
         {
-                //DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), m_creature);
+                //DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
         }
 
         void JustDied(Unit* Killer)
         {
-                DoScriptText(SAY_DEATH, m_creature);
+                DoScriptText(SAY_DEATH, me);
         }
 
      void UpdateAI(const uint32 uiDiff)
@@ -146,19 +146,19 @@ struct Boss_Blood_Queen_LanathelAI : public ScriptedAI
           if (!UpdateVictim())
                return;
 
-                if (!m_creature->HasAura(SPELL_SHROUD_OF_SORROW))
-                        DoCast(m_creature, SPELL_SHROUD_OF_SORROW);
+                if (!me->HasAura(SPELL_SHROUD_OF_SORROW))
+                        DoCast(me, SPELL_SHROUD_OF_SORROW);
 
                         if(m_uiPhase == 1)
                         {
 
                                 if (m_uiPactofDarkfallenTimer <= uiDiff)
                                 {
-                                        PactFallen();
+//                                        PactFallen();
 
-                                        DoScriptText(SAY_PACT_DARKFALLEN, m_creature);
-                                        m_uiPactofDarkfallenExplosionCount = 0;
-                                        m_uiPactofDarkfallenExplodeTimer = 2*IN_MILISECONDS;
+                                        DoScriptText(SAY_PACT_DARKFALLEN, me);
+//                                        m_uiPactofDarkfallenExplosionCount = 0;
+//                                        m_uiPactofDarkfallenExplodeTimer = 2*IN_MILISECONDS;
                                         m_uiPactofDarkfallenTimer = 25*IN_MILISECONDS;
                                 }
                                 else m_uiPactofDarkfallenTimer -= uiDiff;
@@ -181,7 +181,7 @@ struct Boss_Blood_Queen_LanathelAI : public ScriptedAI
 
                                 if (m_uiVampBiteTimer < uiDiff)
                                 {
-                                        DoScriptText(RAND(SAY_VAMP_BITE_1,SAY_VAMP_BITE_2), m_creature);
+                                        DoScriptText(RAND(SAY_VAMP_BITE_1,SAY_VAMP_BITE_2), me);
                                         if (Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO/*SELECT_TARGET_RANDOM*/, 0))
                                         DoCast(target, SPELL_VAMPIRIC_BITE);
                                         m_uiVampBiteTimer       = urand(15*IN_MILISECONDS,60*IN_MILISECONDS);
@@ -190,11 +190,11 @@ struct Boss_Blood_Queen_LanathelAI : public ScriptedAI
 
                                 if (m_uiPhaseTimer < uiDiff)
                                 {
-                                        DoScriptText(SAY_AIR_PHASE, m_creature);
-                                        DoCast(m_creature, SPELL_INCITE_TERROR);
-                                        m_creature->GetMotionMaster()->MovePoint(0, Phase2Position);
-                                        m_creature->SetReactState(REACT_PASSIVE);
-                                        m_creature->AttackStop();
+                                        DoScriptText(SAY_AIR_PHASE, me);
+                                        DoCast(me, SPELL_INCITE_TERROR);
+                                        me->GetMotionMaster()->MovePoint(0, Phase2Position);
+                                        me->SetReactState(REACT_PASSIVE);
+                                        me->AttackStop();
                                         m_uiPhase = 2;
                                         m_uiPhaseTimer  = 90*IN_MILISECONDS;
                                         m_uiSetHoverTimer = 5*IN_MILISECONDS;
@@ -209,9 +209,9 @@ struct Boss_Blood_Queen_LanathelAI : public ScriptedAI
                 {
                         if (m_uiSetHoverTimer < uiDiff)
                         {
-                                m_creature->GetMotionMaster()->MovePoint(0, FlyPosition);
-                                m_creature->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
-                                m_creature->SetFlying(true);
+                                me->GetMotionMaster()->MovePoint(0, FlyPosition);
+                                me->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
+                                me->SetFlying(true);
                                 m_uiSetHoverTimer       = 90*IN_MILISECONDS;
                         }
                         else m_uiSetHoverTimer -= uiDiff;
@@ -228,8 +228,8 @@ struct Boss_Blood_Queen_LanathelAI : public ScriptedAI
 
                         if (m_uiLandingTimer < uiDiff)
                         {
-                                m_creature->GetMotionMaster()->MovePoint(0, Phase2Position);
-                                m_creature->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
+                                me->GetMotionMaster()->MovePoint(0, Phase2Position);
+                                me->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
                                 m_uiLandingTimer        = 900*IN_MILISECONDS;
                                 m_uiBloodboldSplashTimer = 900*IN_MILISECONDS;
                         }
@@ -237,10 +237,10 @@ struct Boss_Blood_Queen_LanathelAI : public ScriptedAI
 
                         if (m_uiFlyingFalseTimer < uiDiff)
                         {
-                                m_creature->SetFlying(false);
-                                m_creature->RemoveAllAuras();
-                                m_creature->SetReactState(REACT_AGGRESSIVE);
-                                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+                                me->SetFlying(false);
+                                me->RemoveAllAuras();
+                                me->SetReactState(REACT_AGGRESSIVE);
+                                me->GetMotionMaster()->MoveChase(me->getVictim());
                                 m_uiPhase = 1;
                                 m_uiFlyingFalseTimer = 900*IN_MILISECONDS;
                         }
@@ -264,17 +264,17 @@ struct mob_swarming_shadowsAI : public Scripted_NoMovementAI
 
     void Reset()
     {
-                m_creature->SetReactState(REACT_PASSIVE);
+                me->SetReactState(REACT_PASSIVE);
                 m_uiSwarmingShadowTimer = 1200;
     }
     void UpdateAI(const uint32 uiDiff)
     {
-                if (!m_creature->HasAura(SPELL_SWARMING_SHADOWS_VISUAL))
-                        DoCast(m_creature, SPELL_SWARMING_SHADOWS_VISUAL);
+                if (!me->HasAura(SPELL_SWARMING_SHADOWS_VISUAL))
+                        DoCast(me, SPELL_SWARMING_SHADOWS_VISUAL);
 
                 if (m_uiSwarmingShadowTimer < uiDiff)
                 {
-                        DoCast(m_creature, RAID_MODE(N_10_SPELL_SWARMING_SHADOW_DAMAGE,N_25_SPELL_SWARMING_SHADOW_DAMAGE,H_10_SPELL_SWARMING_SHADOW_DAMAGE,H_25_SPELL_SWARMING_SHADOW_DAMAGE));
+                        DoCast(me, RAID_MODE(N_10_SPELL_SWARMING_SHADOW_DAMAGE,N_25_SPELL_SWARMING_SHADOW_DAMAGE,H_10_SPELL_SWARMING_SHADOW_DAMAGE,H_25_SPELL_SWARMING_SHADOW_DAMAGE));
                         m_uiSwarmingShadowTimer = 2000;
                 }
                 else m_uiSwarmingShadowTimer -= uiDiff;
