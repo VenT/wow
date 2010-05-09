@@ -24,270 +24,225 @@ EndScriptData */
 #include "ScriptedPch.h"
 #include "def_spire.h"
 
-enum BossSpells
+enum Yells
 {
-    SPELL_SLIME_PUDDLE            = 70346,
-    SPELL_UNSTABLE_EXPERIMENT     = 71968,
-    SPELL_TEAR_GAS                = 71617,
-    SPELL_TEAR_GAS_1              = 71618,
-    SPELL_CREATE_CONCOCTION       = 71621,
-    SPELL_CHOKING_GAS             = 71278,
-    SPELL_CHOKING_GAS_EXPLODE     = 71279,
-    SPELL_MALLEABLE_GOO           = 72296,
-    SPELL_GUZZLE_POTIONS          = 73122,
-    SPELL_MUTATED_STRENGTH        = 71603,
-    SPELL_MUTATED_PLAGUE          = 72672,
-//
-    NPC_GAS_CLOUD                 = 37562,
-    SPELL_GASEOUS_BLOAT           = 70672,
-    SPELL_EXPUNGED_GAS            = 70701,
-    SPELL_SOUL_FEAST              = 71203,
-//
-    NPC_VOLATILE_OOZE             = 37697,
-    SPELL_OOZE_ADHESIVE           = 70447,
-    SPELL_OOZE_ERUPTION           = 70492,
-//
-    NPC_MUTATED_ABOMINATION       = 37672,
-    SPELL_MUTATED_TRANSFORMATION  = 70311,
-    SPELL_EAT_OOZE                = 72527,
-    SPELL_REGURGITATED_OOZE       = 70539,
-    SPELL_MUTATED_SLASH           = 70542,
-    SPELL_MUTATED_AURA            = 70405,
+        SAY_AGGRO               =       -1666025,
+        SAY_AIRLOCK             =       -1666026,
+        SAY_PHASE_HC    =       -1666027,
+        SAY_TRANSFORM_1 =       -1666028,
+        SAY_TRANSFORM_2 =       -1666029,
+        SAY_KILL_1              =       -1666030,
+        SAY_KILL_2              =       -1666031,
+        SAY_BERSERK             =       -1666032,
+        SAY_DEATH               =       -1666033,
 };
 
-struct boss_proffesor_putricideAI : public ScriptedAI
+enum Spells
 {
-    boss_proffesor_putricideAI(Creature* pCreature) : ScriptedAI(pCreature)
+        // Professor All Phase Spells
+        SPELL_UNSTABLE_EXPERIMENT                       =       71968,
+
+        // Phase Change Spells
+        N_SPELL_TEAR_GAS                                        =       71617,  // Phasenchange Spell
+        N_SPELL_CREATE_CONCOTION                        =       71621,  // Phase 1 to 2.
+        N_SPELL_GUZZLE_POTIONS                          =       73122,  // Phase 2 to 3.
+
+        // 80% - 35%
+        N_10_SPELL_MALLEABLE_GOO                        =       72296,
+        N_25_SPELL_MALLEABLE_GOO                        =       70852,
+
+        // 35% - 0%
+        N_10_SPELL_MUTATED_STRENGTH                     =       71603,
+        N_10_MUTATED_PLAGUE                                     =       72672,
+
+        // Ooze Spells
+        N_10_SPELL_OOZE_ERUPTION                        =       70492,
+        N_10_SPELL_OOZE_ADHESIV                         =       70447,
+        // Gas Cloude Spells
+        // Choking Gas Spells
+        N_10_SPELL_CHOKING_GAS                          =       71278, // Wenn Gas Spawnt.
+        N_10_SPELL_CHOKING_GAS_EXPLOSION        =       71279, // 20 Sek.
+};
+
+enum Summons
+{
+        SUMMON_GASCLOUD                 =       37562,
+        SUMMON_VOLATILE_OOZE    =       37697,
+};
+
+enum Achievements
+{
+};
+
+#define EMOTE_UNSTABLE_EXPERIMENT "Professor Seuchenmord beginnt Unstabiles Experiment zu wirken!"
+
+struct Boss_ProfessorPutricideAI : public ScriptedAI
+{
+    Boss_ProfessorPutricideAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        bsw = new BossSpellWorker(this);
-        Reset();
+                m_pInstance = pCreature->GetInstanceData();
     }
 
-    ScriptedInstance *pInstance;
-    BossSpellWorker* bsw;
-    uint8 stage;
+    ScriptedInstance* m_pInstance;
+
+        uint32 m_uiPhase;
+        uint32 m_uiUnstableExperimentTimer;
+        uint32 m_uiAddSpawnTimer;
 
     void Reset()
     {
-        if (pInstance) pInstance->SetData(TYPE_PUTRICIDE, NOT_STARTED);
+                m_uiPhase = 1;
+                m_uiUnstableExperimentTimer = 10000;
+                m_uiAddSpawnTimer = 60000;
     }
 
-    void Aggro(Unit *who) 
+    void EnterCombat(Unit* who)
     {
-        if (pInstance) pInstance->SetData(TYPE_PUTRICIDE, IN_PROGRESS);
+                DoScriptText(SAY_AGGRO, me);
     }
 
-    void JustDied(Unit *killer)
+        void JustDied(Unit* killer)
     {
-        if (pInstance) pInstance->SetData(TYPE_PUTRICIDE, DONE);
+                DoScriptText(SAY_DEATH, me);
     }
 
-    void JustReachedHome()
+        void KilledUnit(Unit *victim)
     {
-        if (pInstance) pInstance->SetData(TYPE_PUTRICIDE, FAIL);
+        DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2), me);
+    }
+
+        void JustSummoned(Creature* pSummoned)
+    {
+        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            pSummoned->AI()->AttackStart(pTarget);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (!UpdateVictim())
+            return;
+
+                if (m_uiUnstableExperimentTimer < uiDiff)
+        {
+                        DoCast(me, SPELL_UNSTABLE_EXPERIMENT);
+                        me->MonsterTextEmote(EMOTE_UNSTABLE_EXPERIMENT,NULL);
+                        m_uiUnstableExperimentTimer = 40000;
+                        m_uiAddSpawnTimer = 5000;
+        }
+                else m_uiUnstableExperimentTimer -= uiDiff;
+
+                if (m_uiAddSpawnTimer < uiDiff)
+        {
+                        me->SummonCreature(SUMMON_VOLATILE_OOZE, me->GetPositionX()+20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 9999999);
+                        m_uiAddSpawnTimer = 60000;
+        }
+                else m_uiAddSpawnTimer -= uiDiff;
+
+                if (m_uiPhase == 1)
+        {
+                }
+
+                if (m_uiPhase == 2)
+        {
+                }
+                        DoMeleeAttackIfReady();
+                }
+};
+
+struct VolatileOozeAI : public ScriptedAI
+{
+    VolatileOozeAI(Creature *pCreature) : ScriptedAI(pCreature)
+        {
+                me->ApplySpellImmune(0, IMMUNITY_ID, N_10_SPELL_OOZE_ADHESIV, true);
+        }
+
+    uint64 TargetGUID;
+
+        uint32 OozeAdhesivTimer;
+        uint32 OozeExplosion;
+        uint32 MovechaseTimer;
+
+    void EnterCombat(Unit *who)
+        {
+                DoZoneInCombat();
+        }
+
+    void Reset()
+    {
+        TargetGUID = 0;
+                OozeAdhesivTimer        = 1000;
+                OozeExplosion           = 1000;
+                MovechaseTimer          = 999999;
     }
 
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())
-            return;
+                        return;
 
-        switch(stage)
+        if (me->getVictim()->GetTypeId() != TYPEID_PLAYER)
+                        return; // Only cast the below on players.
+
+        if (!me->getVictim()->HasAura(N_10_SPELL_OOZE_ADHESIV))
         {
-            case 0: 
-                    bsw->timedCast(SPELL_SLIME_PUDDLE, diff);
-
-                    if (bsw->timedQuery(SPELL_UNSTABLE_EXPERIMENT, diff))
-                        switch(urand(0,1))
-                          {
-                          case 0:
-                                 bsw->doSummon(NPC_VOLATILE_OOZE);
-                                 break;
-                          case 1:
-                                 bsw->doSummon(NPC_GAS_CLOUD);
-                                 break;
-                          }
-
-                    break;
-            case 1: 
-                    bsw->doCast(SPELL_TEAR_GAS);
-                    bsw->doCast(SPELL_CREATE_CONCOCTION);
-                    stage = 2;
-                    break;
-            case 2: 
-                    bsw->timedCast(SPELL_SLIME_PUDDLE, diff);
-
-                    if (bsw->timedQuery(SPELL_UNSTABLE_EXPERIMENT, diff))
-                        switch(urand(0,1))
-                          {
-                          case 0:
-                                 bsw->doSummon(NPC_VOLATILE_OOZE);
-                                 break;
-                          case 1:
-                                 bsw->doSummon(NPC_GAS_CLOUD);
-                                 break;
-                          }
-
-                    bsw->timedCast(SPELL_CHOKING_GAS, diff);
-
-                    bsw->timedCast(SPELL_MALLEABLE_GOO, diff);
-
-                    break;
-            case 3: 
-                    bsw->doCast(SPELL_TEAR_GAS);
-                    bsw->doCast(SPELL_GUZZLE_POTIONS);
-                    bsw->doCast(SPELL_MUTATED_STRENGTH);
-                    bsw->doCast(SPELL_MUTATED_PLAGUE);
-                    stage = 4;
-                    break;
-            case 4: 
-                    if (bsw->timedQuery(SPELL_UNSTABLE_EXPERIMENT, diff))
-                        switch(urand(0,1))
-                          {
-                          case 0:
-                                 bsw->doSummon(NPC_VOLATILE_OOZE);
-                                 break;
-                          case 1:
-                                 bsw->doSummon(NPC_GAS_CLOUD);
-                                 break;
-                          }
-
-                    bsw->timedCast(SPELL_CHOKING_GAS, diff);
-
-                    bsw->timedCast(SPELL_MALLEABLE_GOO, diff);
-
-                    break;
+                        if (OozeAdhesivTimer < diff)
+                        {
+                                uint32 count = RAID_MODE(1,1,1,1); // 10 Normal x1 / 25 Normal 3x / 10 Heroic 1x / 25 Heroic 3x
+                for (uint8 i = 1; i <= count; i++)
+                {
+                                        DoCast(me->getVictim(), N_10_SPELL_OOZE_ADHESIV, true);
+                                        me->GetMotionMaster()->MoveChase(me->getVictim());
+                                        OozeAdhesivTimer = 999999;
+                                        MovechaseTimer = 10000;
+                                }
+                        }
+                else OozeAdhesivTimer -= diff;
         }
 
-        if ( stage ==0 && me->GetHealthPercent() < 80.0f ) stage = 1;
-        if ( stage ==2 && me->GetHealthPercent() < 35.0f ) stage = 3;
+                if (MovechaseTimer < diff)
+                {
+                        me->AddThreat(me->getVictim(), 10000000.0f);
+                        me->GetMotionMaster()->MoveChase(me->getVictim());
+                        MovechaseTimer = 2000;
+                }
+                else MovechaseTimer -= diff;
 
-        DoMeleeAttackIfReady();
+
+                if (OozeAdhesivTimer < diff)
+                {
+                        if (me->IsWithinDistInMap(me->getVictim(), 3))
+            DoCast(me->getVictim(), N_10_SPELL_OOZE_ERUPTION);
+                        OozeAdhesivTimer = 10000;
+                }
+                else OozeAdhesivTimer -= diff;
     }
 };
 
-CreatureAI* GetAI_boss_proffesor_putricide(Creature* pCreature)
+CreatureAI* GetAI_VolatileOoze(Creature* pCreature)
 {
-    return new boss_proffesor_putricideAI(pCreature);
+    return new VolatileOozeAI(pCreature);
 }
 
-struct mob_icc_gas_cloudAI : public ScriptedAI
+CreatureAI* GetAI_Boss_ProfessorPutricide(Creature* pCreature)
 {
-    mob_icc_gas_cloudAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        bsw = new BossSpellWorker(this);
-        Reset();
-    }
-
-    ScriptedInstance* m_pInstance;
-    BossSpellWorker* bsw;
-
-    void Reset()
-    {
-        me->SetInCombatWithZone();
-        me->SetRespawnDelay(DAY);
-    }
-
-    void Aggro(Unit *who)
-    {
-        if (!m_pInstance) return;
-    }
-
-    void JustReachedHome()
-    {
-        if (!m_pInstance) return;
-            me->ForcedDespawn();
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-
-        if (!UpdateVictim())
-            return;
-
-        bsw->timedCast(SPELL_GASEOUS_BLOAT, uiDiff);
-        bsw->timedCast(SPELL_SOUL_FEAST, uiDiff);
-        if (me->getVictim()->IsWithinDistInMap(me, 1.0f)
-            && bsw->hasAura(SPELL_GASEOUS_BLOAT, me->getVictim()))
-            {
-               bsw->doCast(SPELL_EXPUNGED_GAS);
-               me->ForcedDespawn();
-            };
-    }
-};
-
-CreatureAI* GetAI_mob_icc_gas_cloud(Creature* pCreature)
-{
-    return new mob_icc_gas_cloudAI(pCreature);
+    return new Boss_ProfessorPutricideAI(pCreature);
 }
 
-struct mob_icc_volatile_oozeAI : public ScriptedAI
+void AddSC_Boss_ProfessorPutricide()
 {
-    mob_icc_volatile_oozeAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        bsw = new BossSpellWorker(this);
-        Reset();
-    }
+    Script* NewScript;
 
-    ScriptedInstance* m_pInstance;
-    BossSpellWorker* bsw;
+    NewScript = new Script;
+    NewScript->Name = "Boss_ProfessorPutricide";
+    NewScript->GetAI = &GetAI_Boss_ProfessorPutricide;
+    NewScript->RegisterSelf();
 
-    void Reset()
-    {
-        me->SetInCombatWithZone();
-        me->SetRespawnDelay(DAY);
-    }
-
-    void Aggro(Unit *who)
-    {
-        if (!m_pInstance) return;
-    }
-
-    void JustReachedHome()
-    {
-        if (!m_pInstance) return;
-            me->ForcedDespawn();
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-
-        if (!UpdateVictim())
-            return;
-
-        bsw->timedCast(SPELL_OOZE_ADHESIVE, uiDiff, me->getVictim());
-        bsw->timedCast(SPELL_SOUL_FEAST, uiDiff);
-        if (me->getVictim()->IsWithinDistInMap(me, 1.0f))
-            {
-               bsw->doCast(SPELL_OOZE_ERUPTION);
-               me->ForcedDespawn();
-            };
-    }
-};
-
-CreatureAI* GetAI_mob_icc_volatile_ooze(Creature* pCreature)
-{
-    return new mob_icc_volatile_oozeAI(pCreature);
+        NewScript = new Script;
+    NewScript->Name = "Mob_VolatileOoze";
+    NewScript->GetAI = &GetAI_VolatileOoze;
+    NewScript->RegisterSelf();
 }
 
-void AddSC_boss_proffesor_putricide()
-{
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_proffesor_putricide";
-    newscript->GetAI = &GetAI_boss_proffesor_putricide;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_icc_volatile_ooze";
-    newscript->GetAI = &GetAI_mob_icc_volatile_ooze;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_icc_gas_cloud";
-    newscript->GetAI = &GetAI_mob_icc_gas_cloud;
-    newscript->RegisterSelf();
-}
+/* UPDATE `creature_template` SET `ScriptName`='Boss_ProfessorPutricide' WHERE (`entry`='36678')
+   UPDATE `creature_template` SET `ScriptName`='Mob_VolatileOoze' WHERE (`entry`='37697')
+*/

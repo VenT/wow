@@ -24,122 +24,159 @@ EndScriptData */
 #include "ScriptedPch.h"
 #include "def_spire.h"
 
-enum BossSpells
+enum Yells
 {
-    SPELL_GASEOUS_BLIGHT_0   = 70138,
-    SPELL_GASEOUS_BLIGHT_1   = 69161,
-    SPELL_GASEOUS_BLIGHT_2   = 70468,
-    SPELL_INHALE_BLIGHT      = 69165,
-    SPELL_INHALED_BLIGHT     = 71912,
-    SPELL_PUNGENT_BLIGHT     = 69195,
-    SPELL_PUNGENT_BLIGHT_1   = 69157,
-    SPELL_PUNGENT_BLIGHT_2   = 69126,
-    SPELL_GAS_SPORE          = 69278,
-    SPELL_INOCULATE          = 72103,
-    SPELL_GASTRIC_BLOAT      = 72219,
-    SPELL_GASTRIC_EXPLOSION  = 72227,
-    SPELL_VILE_GAS           = 72272,
+        SAY_STINKI_DIES                 =       -1666004,
+        SAY_AGGRO                               =       -1666005,
+        SAY_GAS_CLOUD                   =       -1666006,
+        SAY_GAS_SPORES                  =       -1666007,
+        SAY_PUNGENT_BLIGHT_1    =       -1666008,
+        SAY_PUNGENT_BLIGHT_2    =       -1666009,
+        SAY_KILL_1                              =       -1666010,
+        SAY_KILL_2                              =       -1666011,
+        SAY_BERSERK                             =       -1666012,
+        SAY_DEATH_1                             =       -1666013,
+        SAY_DEATH_2                             =       -1666014,
 };
 
-struct boss_festergutAI : public ScriptedAI
+enum Spells
 {
-    boss_festergutAI(Creature* pCreature) : ScriptedAI(pCreature)
+        N_10_SPELL_PUNGENT_BLIGHT               =       69195, //
+        N_10_SPELL_GASTRIC_EXPLOSION    =       72227, //
+        SPELL_INHALE_BLIGHT                             =       69165, //
+        N_10_SPELL_VILE_GAS                             =       72272, // Random
+        N_10_SPELL_GASTRIC_BLOAT                =       72219, // Tank
+        SPELL_GAS_VISUAL_SMAL                   =       69154, //
+        SPELL_GAS_VISUAL_MIDDEL                 =       69152, //
+        SPELL_GAS_VISUAL_BIG                    =       69126, // 69157 ?? :/
+        SPELL_GAS_SPORES                                =       69279, // 10 Version 2 Player 25 Version 3 Player
+        SPELL_BERSERK                                   =       47008, // 5 Min :O
+        SPELL_INOCULATED                                =       72103, // Impfung
+        SPELL_BLIGHTED_SPORES                   =       69290,
+};
+
+struct Boss_FauldarmAI : public ScriptedAI
+{
+    Boss_FauldarmAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        bsw = new BossSpellWorker(this);
-        Reset();
+                m_pInstance = pCreature->GetInstanceData();
     }
 
-    ScriptedInstance *pInstance;
-    BossSpellWorker* bsw;
-    uint8 stage;
+    ScriptedInstance* m_pInstance;
+
+        uint32 m_uiPungentBlightTimer;
+        uint32 m_uiGastricExplosionTimer;
+        uint32 m_uiInhaleBlightTimer;
+        uint32 m_uiGasSporesTimer;
+        uint32 m_uiVileGasTimer;
+        uint32 m_uiGastricBloatTimer;
 
     void Reset()
     {
-        if(!pInstance) return;
-        pInstance->SetData(TYPE_FESTERGUT, NOT_STARTED);
-        stage = 0;
+                m_uiPungentBlightTimer  = 120000;
+                m_uiInhaleBlightTimer   = 33000;
+                m_uiVileGasTimer = urand(10000,15000);
+                m_uiGasSporesTimer = 20000;
+                m_uiGastricBloatTimer = 10000;
     }
 
-    void JustReachedHome()
+    void EnterCombat(Unit* who)
     {
-        if (pInstance) pInstance->SetData(TYPE_FESTERGUT, FAIL);
+                DoScriptText(SAY_AGGRO, me);
     }
 
-    void Aggro(Unit *who) 
+        void JustDied(Unit* killer)
     {
-        if(pInstance) pInstance->SetData(TYPE_FESTERGUT, IN_PROGRESS);
+                DoScriptText(SAY_DEATH_1, me);
     }
 
-    void JustDied(Unit *killer)
+        void KilledUnit(Unit *victim)
     {
-        if(pInstance) pInstance->SetData(TYPE_FESTERGUT, DONE);
-        bsw->doRemove(SPELL_PUNGENT_BLIGHT);
-        bsw->doRemove(SPELL_PUNGENT_BLIGHT_1);
-        bsw->doRemove(SPELL_PUNGENT_BLIGHT_2);
+       DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2), me);
     }
 
-    void UpdateAI(const uint32 diff)
+        void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
+    {
+        switch(spell->Id)
+        {
+                        case SPELL_GAS_SPORES:
+            HandleTouchedSpells(pTarget, SPELL_BLIGHTED_SPORES);
+            break;
+        }
+    }
+
+        void HandleTouchedSpells(Unit *pTarget, uint32 TouchedType)
+    {
+        switch(TouchedType)
+        {
+        case SPELL_GAS_SPORES:
+                if (pTarget->HasAura(SPELL_BLIGHTED_SPORES))
+                {
+                    pTarget->CastSpell(pTarget, SPELL_INOCULATED, true);
+                } else pTarget->CastSpell(pTarget, SPELL_INOCULATED, true);
+                                break;
+                 }
+    }
+
+    void UpdateAI(const uint32 uiDiff)
     {
         if (!UpdateVictim())
             return;
 
-        switch(stage)
+        if (m_uiGastricBloatTimer < uiDiff)
         {
-            case 0: 
-                    if (bsw->timedQuery(SPELL_GASEOUS_BLIGHT_0, diff))
-                        {
-                        bsw->doCast(SPELL_GASEOUS_BLIGHT_0);
-                        bsw->doCast(SPELL_INHALE_BLIGHT);
-                        stage = 1;
-                        }
-                    break;
-            case 1: 
-                    if (bsw->timedQuery(SPELL_GASEOUS_BLIGHT_0, diff))
-                        {
-                        bsw->doCast(SPELL_GASEOUS_BLIGHT_0);
-                        bsw->doCast(SPELL_INHALE_BLIGHT);
-                        stage = 2;
-                        }
-                    break;
-            case 2: 
-                    if (bsw->timedQuery(SPELL_GASEOUS_BLIGHT_0, diff))
-                        {
-                        bsw->doCast(SPELL_GASEOUS_BLIGHT_0);
-                        bsw->doCast(SPELL_INHALE_BLIGHT);
-                        stage = 3;
-                        }
-                    break;
-            case 3: 
-                    if (bsw->timedQuery(SPELL_PUNGENT_BLIGHT, diff))
-                        {
-                        bsw->doCast(SPELL_PUNGENT_BLIGHT);
-                        stage = 0;
-                        }
-                    break;
+                DoCast(me->getVictim(), N_10_SPELL_GASTRIC_BLOAT);
+                m_uiGastricBloatTimer = 15000;
         }
-        bsw->timedCast(SPELL_GAS_SPORE, diff);
+        else m_uiGastricBloatTimer -= uiDiff;
 
-        bsw->timedCast(SPELL_GASTRIC_BLOAT, diff);
+        if(m_uiInhaleBlightTimer < uiDiff)
+        {
+                DoCast(me, SPELL_INHALE_BLIGHT);
+                m_uiInhaleBlightTimer = 33000;
+        }
+        else m_uiInhaleBlightTimer -= uiDiff;
 
-        bsw->timedCast(SPELL_VILE_GAS, diff);
+        if (m_uiVileGasTimer < uiDiff)
+        {
+                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(target, N_10_SPELL_VILE_GAS);
+                m_uiVileGasTimer = 30000;
+        }
+        else m_uiVileGasTimer -= uiDiff;
+
+        if (m_uiGasSporesTimer < uiDiff)
+        {
+                if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                target->CastSpell(target, SPELL_GAS_SPORES, true);
+                m_uiGasSporesTimer = 35000;
+        }
+        else m_uiGasSporesTimer -= uiDiff;
+
+        if (m_uiPungentBlightTimer < uiDiff)
+        {
+                DoCastAOE(N_10_SPELL_PUNGENT_BLIGHT);
+                m_uiPungentBlightTimer = 120000;
+                m_uiInhaleBlightTimer = 33000;
+                me->RemoveAllAuras();
+        }
+        else m_uiPungentBlightTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
-    }
+        }
 };
 
-
-CreatureAI* GetAI_boss_festergut(Creature* pCreature)
+CreatureAI* GetAI_Boss_Fauldarm(Creature* pCreature)
 {
-    return new boss_festergutAI(pCreature);
+    return new Boss_FauldarmAI(pCreature);
 }
 
-
-void AddSC_boss_festergut()
+void AddSC_Boss_Fauldarm()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_festergut";
-    newscript->GetAI = &GetAI_boss_festergut;
-    newscript->RegisterSelf();
+    Script* NewScript;
+
+    NewScript = new Script;
+    NewScript->Name = "Boss_Fauldarm";
+    NewScript->GetAI = &GetAI_Boss_Fauldarm;
+    NewScript->RegisterSelf();
 }
