@@ -424,6 +424,19 @@ void AddSC_pit_of_saron();
 void AddSC_boss_garfrost();
 void AddSC_boss_ick();
 void AddSC_boss_tyrannus();
+//IceCrown Citadel
+void AddSC_instance_icecrown_spire();
+void AddSC_icecrown_spire();
+void AddSC_icecrown_teleporter();
+void AddSC_boss_lord_marrowgar();
+void AddSC_boss_lady_deathwhisper();
+void AddSC_boss_deathbringer_saurfang();
+void AddSC_boss_rotface();
+void AddSC_boss_festergut();
+void AddSC_boss_proffesor_putricide();
+void AddSC_blood_prince_council();
+void AddSC_boss_blood_queen_lanathel();
+void AddSC_boss_the_lich_king();
 
 void AddSC_dalaran();
 void AddSC_borean_tundra();
@@ -928,6 +941,19 @@ void AddScripts()
     AddSC_boss_garfrost();
     AddSC_boss_ick();
     AddSC_boss_tyrannus();
+    //IceCrown Citadel
+    AddSC_instance_icecrown_spire();
+    AddSC_icecrown_spire();
+    AddSC_icecrown_teleporter();
+    AddSC_boss_lord_marrowgar();
+    AddSC_boss_lady_deathwhisper();
+    AddSC_boss_deathbringer_saurfang();
+    AddSC_boss_rotface();
+    AddSC_boss_festergut();
+    AddSC_boss_proffesor_putricide();
+    AddSC_blood_prince_council();
+    AddSC_boss_blood_queen_lanathel();
+    AddSC_boss_the_lich_king();
 
     AddSC_dalaran();
     AddSC_borean_tundra();

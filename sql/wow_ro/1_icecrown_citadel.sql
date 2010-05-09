@@ -16,6 +16,24 @@ DELETE FROM `gameobject` WHERE `guid` IN (913334);
 
 UPDATE `instance_template` SET `script`='instance_icecrown_spire' WHERE `map`=631;
 
+-- The Lich King script
+UPDATE `creature_template` SET ScriptName='boss_the_lich_king' WHERE `entry`=36597;
+UPDATE `creature_template` SET ScriptName='boss_the_lich_king' WHERE `entry`=37226;
+
+UPDATE creature_template SET dmg_multiplier=120 where entry=37226;
+UPDATE creature_template SET dmg_multiplier=120 where entry=36597;
+UPDATE creature_template SET unit_flags=0 where entry=37226;
+UPDATE creature_template SET unit_flags=0 where entry=36597;
+
+UPDATE creature_template SET faction_a=14 where entry=36597;
+UPDATE creature_template SET faction_h=14 where entry=36597;
+UPDATE creature_template SET faction_a=14 where entry=37226;
+UPDATE creature_template SET faction_h=14 where entry=37226;
+
+-- Tirion NPC
+UPDATE `creature_template` SET ScriptName='npc_tirion_guide' WHERE `entry`=38995;
+UPDATE creature_template SET unit_flags=0 where entry=38995;
+
 -- Saurfang
 UPDATE `creature_template` SET `ScriptName`='boss_deathbringer_saurfang' WHERE `entry`=37813;
 DELETE FROM `gameobject` WHERE `guid` IN (913383, 913385, 913395, 913397);
