@@ -308,3 +308,4 @@ INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,
 (0,-1666068,'FAILURES!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17067,1,0,0,''),
 (0,-1666069,'I am renewed! Ysera grants me the favor to lay these foul creatures to rest!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17071,1,0,0,'');
 
+UPDATE `creature_template` SET `ScriptName`='Boss_Sindragosa' WHERE (`entry`='36853');
