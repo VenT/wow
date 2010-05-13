@@ -319,10 +319,10 @@ struct instance_trial_of_the_crussader : public ScriptedInstance
         }
 
         return 0;
-    }
 
 	if (uiData==DONE)
 		SaveToDB();
+	}
 	const char* Save()
     {
         return str_data.c_str();
