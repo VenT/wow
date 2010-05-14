@@ -559,7 +559,6 @@ class World
         /// Next daily quests reset time
         time_t GetNextDailyQuestsResetTime() const { return m_NextDailyQuestReset; }
         time_t GetNextWeeklyQuestsResetTime() const { return m_NextWeeklyQuestReset; }
-		time_t GetNextRandomBGResetTime() const { return m_NextRandomBGReset; }
 
         /// Get the maximum skill level a player can reach
         uint16 GetConfigMaxSkillValue() const
@@ -681,10 +680,8 @@ class World
 
         void InitDailyQuestResetTime();
         void InitWeeklyQuestResetTime();
-		void InitRandomBGResetTime();
         void ResetDailyQuests();
         void ResetWeeklyQuests();
-		void ResetRandomBG();
     private:
         static volatile bool m_stopEvent;
         static uint8 m_ExitCode;
@@ -753,7 +750,6 @@ class World
         // next daily quests reset time
         time_t m_NextDailyQuestReset;
         time_t m_NextWeeklyQuestReset;
-		time_t m_NextRandomBGReset;
 
         //Player Queue
         Queue m_QueuedPlayer;

@@ -851,8 +851,7 @@ enum PlayerLoginQueryIndex
     PLAYER_LOGIN_QUERY_LOADACCOUNTDATA          = 24,
     PLAYER_LOGIN_QUERY_LOADSKILLS               = 25,
     PLAYER_LOGIN_QUERY_LOADWEKLYQUESTSTATUS     = 26,
-    PLAYER_LOGIN_QUERY_LOADRANDOMBG             = 27,
-    MAX_PLAYER_LOGIN_QUERY                      = 28
+    MAX_PLAYER_LOGIN_QUERY                      = 27
 };
 
 enum PlayerDelayedOperations
@@ -1244,7 +1243,7 @@ class Player : public Unit, public GridObject<Player>
         bool IsUseEquipedWeapon(bool mainhand) const
         {
             // disarm applied only to mainhand weapon
-            return !IsInFeralForm() && (!mainhand || !HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISARMED));
+            return !IsInFeralForm() && (!mainhand || !HasFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_DISARMED));
         }
         bool IsTwoHandUsed() const
         {
@@ -2122,9 +2121,6 @@ class Player : public Unit, public GridObject<Player>
         bool CanUseBattleGroundObject();
         bool isTotalImmune();
         bool CanCaptureTowerPoint();
-		
-        bool GetRandomWinner() { return m_IsBGRandomWinner; }
-        void SetRandomWinner(bool isWinner);
 
         /*********************************************************/
         /***               OUTDOOR PVP SYSTEM                  ***/
@@ -2370,8 +2366,6 @@ class Player : public Unit, public GridObject<Player>
 
         BgBattleGroundQueueID_Rec m_bgBattleGroundQueueID[PLAYER_MAX_BATTLEGROUND_QUEUES];
         BGData                    m_bgData;
-		
-		bool m_IsBGRandomWinner;
 
         /*********************************************************/
         /***                    QUEST SYSTEM                   ***/
@@ -2400,7 +2394,6 @@ class Player : public Unit, public GridObject<Player>
         void _LoadQuestStatus(QueryResult_AutoPtr result);
         void _LoadDailyQuestStatus(QueryResult_AutoPtr result);
         void _LoadWeeklyQuestStatus(QueryResult_AutoPtr result);
-		void _LoadRandomBGStatus(QueryResult_AutoPtr result);
         void _LoadGroup(QueryResult_AutoPtr result);
         void _LoadSkills(QueryResult_AutoPtr result);
         void _LoadSpells(QueryResult_AutoPtr result);
@@ -2413,7 +2406,6 @@ class Player : public Unit, public GridObject<Player>
         void _LoadGlyphs(QueryResult_AutoPtr result);
         void _LoadTalents(QueryResult_AutoPtr result);
         void _LoadIntoDataField(const char* data, uint32 startOffset, uint32 count);
-		
 
         /*********************************************************/
         /***                   SAVE SYSTEM                     ***/
