@@ -1313,7 +1313,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 		}
 
 		// Reputation conversion
-		if(QueryResult *result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_reputations"))
+		if(QueryResult_AutoPtr result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_reputations"))
 		{
 			do
 			{
