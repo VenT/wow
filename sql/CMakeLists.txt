@@ -1,4 +1,3 @@
-add_subdirectory(WintergraspPVPEvent)
 add_subdirectory(updates)
 add_subdirectory(FULL)
 
