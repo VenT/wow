@@ -1661,6 +1661,10 @@ AutoBroadcast.Timer = 60000
 #        Default: 0 (disable)
 #                 1 (enable)
 #
+#    BattleGround.Random.ResetHour
+#        Hour when random bg reset (0..23)
+#        Default: 6
+#
 ###############################################################################
 
 Battleground.CastDeserter = 1
