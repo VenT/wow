@@ -1165,7 +1165,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 	recv_data >> newname;
 	recv_data >> gender >> skin >> hairColor >> hairStyle >> facialHair >> face >> race;
 
-	QueryResult *result = CharacterDatabase.PQuery("SELECT at_login FROM characters WHERE guid ='%u'", GUID_LOPART(guid));
+	QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT at_login FROM characters WHERE guid ='%u'", GUID_LOPART(guid));
     if (!result)
     {
         WorldPacket data(SMSG_CHAR_FACTION_CHANGE, 1);
@@ -1177,7 +1177,6 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 	Field *fields = result->Fetch();
     uint32 at_loginFlags = fields[0].GetUInt32();
 	uint32 used_loginFlag = recv_data.GetOpcode() == CMSG_CHAR_RACE_CHANGE ? AT_LOGIN_CHANGE_RACE : AT_LOGIN_CHANGE_FACTION;
-    delete result;
 
 	if (!(at_loginFlags & used_loginFlag))
     {
@@ -1206,7 +1205,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
     }
 
     // check name limitations
-    if (GetSecurity() == SEC_PLAYER && sObjectMgr.IsReservedName(newname))
+    if (GetSecurity() == SEC_PLAYER && objmgr.IsReservedName(newname))
     {
         WorldPacket data(SMSG_CHAR_FACTION_CHANGE, 1);
         data << uint8(CHAR_NAME_RESERVED);
@@ -1215,7 +1214,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
     }
 
     // character with this name already exist
-    if (uint64 newguid = sObjectMgr.GetPlayerGUIDByName(newname))
+    if (uint64 newguid = objmgr.GetPlayerGUIDByName(newname))
     {
         if (newguid != guid)
         {
@@ -1268,7 +1267,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 			CharacterDatabase.PExecute("INSERT INTO `character_homebind` VALUES ('%u','1', '1637', '1633.33', '-4439.11', '15.7588'",GUID_LOPART(guid));
 
 		// Achievement conversion
-		if(QueryResult *result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_achievements"))
+		if(QueryResult_AutoPtr result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_achievements"))
 		{
 			do
 			{
@@ -1282,7 +1281,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 		}
 
 		// Item conversion
-		if(QueryResult *result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_items"))
+		if(QueryResult_AutoPtr result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_items"))
 		{
 			do
 			{
@@ -1299,7 +1298,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 		}
 
 		// Spell conversion
-		if(QueryResult *result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_spells"))
+		if(QueryResult_AutoPtr result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_spells"))
 		{
 			do
 			{
@@ -1313,7 +1312,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 		}
 
 		// Reputation conversion
-		if(QueryResult *result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_spells"))
+		if(QueryResult_AutoPtr result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_spells"))
 		{
 			do
 			{
