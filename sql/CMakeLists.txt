@@ -1,6 +1,5 @@
 add_subdirectory(updates)
 add_subdirectory(FULL)
-add_subdirectory(AC1)
 
 ########### install files ###############
 
