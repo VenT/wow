@@ -1241,6 +1241,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 		CharacterDatabase.PExecute("DELETE FROM `guild_member` WHERE `guid`= '%u'",GUID_LOPART(guid));
 		// Delete Friend List
 		CharacterDatabase.PExecute("DELETE FROM `character_social` WHERE `guid`= '%u'",GUID_LOPART(guid));
+        CharacterDatabase.PExecute("DELETE FROM `character_social` WHERE `friend`= '%u'",GUID_LOPART(guid));
 		// Leave Arena Teams
 		Player::LeaveAllArenaTeams(GUID_LOPART(guid));
 
@@ -1274,7 +1275,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 				Field *fields2 = result2->Fetch();
 				uint32 achiev_alliance = fields2[0].GetUInt32();
 				uint32 achiev_horde = fields2[1].GetUInt32();
-				CharacterDatabase.PExecute("UPDATE `character_achievements` set achievement = '%u' where achievement = '%u' AND guid = '%u'",
+				CharacterDatabase.PExecute("UPDATE `character_achievement` set achievement = '%u' where achievement = '%u' AND guid = '%u'",
 					team == BG_TEAM_ALLIANCE ? achiev_alliance : achiev_horde, team == BG_TEAM_ALLIANCE ? achiev_horde : achiev_alliance, GUID_LOPART(guid));
 			}
 			while( result2->NextRow() );
@@ -1291,7 +1292,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 				CharacterDatabase.PExecute("UPDATE `character_inventory` set item = '%u' where item = '%u' AND guid = '%u'",
 					team == BG_TEAM_ALLIANCE ? item_alliance : item_horde, team == BG_TEAM_ALLIANCE ? item_horde : item_alliance, guid);
 
-				CharacterDatabase.PExecute("UPDATE `item_instance` SET `data`=CONCAT(CAST(SUBSTRING_INDEX(`data`, ' ', 3) AS CHAR), ' ', '%u', ' ',	CAST(SUBSTRING_INDEX(`data`, ' ', (3-64))AS CHAR)) WHERE CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`data`, ' ', 4), ' ', '-1') AS UNSIGNED) = '%u' AND ownerguid = '%u'",
+				CharacterDatabase.PExecute("UPDATE `item_instance` SET `data`=CONCAT(CAST(SUBSTRING_INDEX(`data`, ' ', 3) AS CHAR), ' ', '%u', ' ',    CAST(SUBSTRING_INDEX(`data`, ' ', (3-64))AS CHAR)) WHERE CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`data`, ' ', 4), ' ', '-1') AS UNSIGNED) = '%u' AND owner_guid = '%u'",
 						team == BG_TEAM_ALLIANCE ? item_alliance : item_horde, team == BG_TEAM_ALLIANCE ? item_horde : item_alliance, GUID_LOPART(guid));
 			}
 			while( result2->NextRow() );
@@ -1312,7 +1313,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 		}
 
 		// Reputation conversion
-		if(QueryResult_AutoPtr result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_spells"))
+		if(QueryResult *result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_reputations"))
 		{
 			do
 			{
