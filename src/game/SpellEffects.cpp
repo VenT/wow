@@ -4685,6 +4685,9 @@ void Spell::SpellDamageWeaponDmg(uint32 i)
             // Blood-Caked Strike - Blood-Caked Blade
             else if (m_spellInfo->SpellIconID == 1736)
                 totalDamagePercentMod *= (float(unitTarget->GetDiseasesByCaster(m_caster->GetGUID())) * 12.5f + 100.0f) / 100.0f;
+            // Rune Strike
+            else if (m_spellInfo->SpellFamilyFlags[1] & 0x20000000)
+                m_damage += int32(m_caster->GetTotalAttackPowerValue(BASE_ATTACK) * 0.15f);
             break;
         }
     }
