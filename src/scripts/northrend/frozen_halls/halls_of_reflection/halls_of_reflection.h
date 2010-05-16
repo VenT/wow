@@ -14,17 +14,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef DEF_ICECROWN_H
-#define DEF_ICECROWN_H
-
-#define DATA_KNIGHTS_EVENT                   1
-#define DATA_LICHKING_EVENT                  2
-
-#define NPC_SLYVANAS_PART1             37223
-#define NPC_SLYVANAS_PART2             37554
-#define NPC_JAINA_PART1                37221
-#define NPC_JAINA_PART2                36955
-#define NPC_KILARA                     37779 // Actually Loralen, but its copy paste so i dont care to update. Which questions why im taking the time to write this instead of updating it. FFS I should stop typing. Alright.
-#define NPC_ELANDRA                    37582 // Same song, same verse, a little big louder, a whole lot worse.
-
+#ifndef DEF_HALLS_OF_REFLECTION_H
+#define DEF_HALLS_OF_REFLECTION_H
+enum Data
+{
+    DATA_FALRIC_EVENT,
+    DATA_MARWYN_EVENT,
+    DATA_LICHKING_EVENT
+};
+enum Creatures
+{
+    CREATURE_FALRIC                               = 36494,
+    CREATURE_MARWYN                               = 36476,
+    CREATURE_LICHKING                             = 36658
+};
 #endif

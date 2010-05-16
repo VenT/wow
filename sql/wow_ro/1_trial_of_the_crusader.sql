@@ -1,9 +1,5 @@
 UPDATE `instance_template` SET `script`='instance_trial_of_the_crussader' WHERE (`map`='649');
 
-UPDATE `creature_template` SET `scriptname`='npc_tcrus_tirion' WHERE `entry`=34996;
-UPDATE `creature_template` SET `scriptname`='npc_Garrosh' WHERE `entry`=34995;
-UPDATE `creature_template` SET `scriptname`='npc_KingVyrn' WHERE `entry`=34990;
-
 UPDATE `creature_template` SET `ScriptName`='npc_tcrus_announcer' WHERE (`entry`='34816');
 UPDATE `creature_template` SET `ScriptName`='npc_tcrus_tirion' WHERE (`entry`='34996');
 UPDATE `creature_template` SET `ScriptName`='npc_tcrus_fizzlebang' WHERE (`entry`='35458');
