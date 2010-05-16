@@ -17,7 +17,7 @@
  */
 
 #include "ScriptedPch.h"
-#include "instance_icecrown_citadel.h"
+#include "def_spire.h"
 
 #define LIGHTS_HAMMER 70781
 #define ORATORY       70856
