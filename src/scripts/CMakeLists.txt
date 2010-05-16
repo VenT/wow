@@ -378,6 +378,7 @@ SET(scripts_STAT_SRCS
    northrend/frozen_halls/icecrown_citadel/icecrown_spire.cpp
    northrend/frozen_halls/icecrown_citadel/icecrown_teleport.cpp
    northrend/frozen_halls/icecrown_citadel/def_spire.h
+   northrend/frozen_halls/icecrown_citadel/instance_icecrown_citadel.h
    northrend/gundrak/instance_gundrak.cpp
    northrend/gundrak/boss_slad_ran.cpp
    northrend/gundrak/boss_moorabi.cpp
