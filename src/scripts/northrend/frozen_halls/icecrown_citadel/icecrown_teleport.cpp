@@ -103,12 +103,48 @@ bool GOSelect_icecrown_teleporter( Player *pPlayer, GameObject *pGO, uint32 send
         pPlayer->TeleportTo(631, 4356.581543, 2565.748291, 220.401520, 4.886216);
         pPlayer->CLOSE_GOSSIP_MENU(); break;
     case LICHKING:
-        pPlayer->TeleportTo(631, 503.61995, -2124.659912, 1040.520020, 3.141590);
+        pPlayer->TeleportTo(631, 516.870728, -2124.666260, 1040.860107, 2.982144);
         pPlayer->CLOSE_GOSSIP_MENU(); break;
     }
 
     return true;
 }
+
+bool GOGossipHello_go_plague_sigil(Player *player, GameObject* pGo)
+{
+    ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
+    if(!pInstance) return false;
+
+    if (pInstance->GetData(DATA_FESTERGURT_EVENT) == DONE)
+           pInstance->SetData(DATA_FESTERGURT_EVENT, DONE);
+    if (pInstance->GetData(DATA_ROTFACE_EVENT) == DONE)
+           pInstance->SetData(DATA_ROTFACE_EVENT, DONE);
+
+    return true;
+}
+
+bool GOGossipHello_go_bloodwing_sigil(Player *player, GameObject* pGo)
+{
+    ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
+    if(!pInstance) return false;
+
+    if (pInstance->GetData(DATA_PROFESSOR_PUTRICIDE_EVENT) == DONE)
+           pInstance->SetData(DATA_PROFESSOR_PUTRICIDE_EVENT, DONE);
+
+    return true;
+}
+
+bool GOGossipHello_go_frostwing_sigil(Player *player, GameObject* pGo)
+{
+    ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
+    if(!pInstance) return false;
+
+    if (pInstance->GetData(TYPE_LANATHEL) == DONE)
+           pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, DONE);
+
+    return true;
+}
+
 
 void AddSC_icecrown_teleporter()
 {
@@ -117,5 +153,20 @@ void AddSC_icecrown_teleporter()
     newscript->Name = "icecrown_teleporter";
     newscript->pGOHello = &GoHello_icecrown_teleporter;
     newscript->pGOSelect = &GOSelect_icecrown_teleporter;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_plague_sigil";
+    newscript->pGOHello  = &GOGossipHello_go_plague_sigil;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_bloodwing_sigil";
+    newscript->pGOHello  = &GOGossipHello_go_bloodwing_sigil;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_frostwing_sigil";
+    newscript->pGOHello  = &GOGossipHello_go_frostwing_sigil;
     newscript->RegisterSelf();
 }
