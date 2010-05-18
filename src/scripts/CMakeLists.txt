@@ -364,6 +364,12 @@ SET(scripts_STAT_SRCS
    northrend/frozen_halls/pit_of_saron/instance_pit_of_saron.cpp
    northrend/frozen_halls/pit_of_saron/pit_of_saron.cpp
    northrend/frozen_halls/pit_of_saron/pit_of_saron.h
+   northrend/frozen_halls/halls_of_reflection/instance_halls_of_reflection.cpp
+   northrend/frozen_halls/halls_of_reflection/boss_falric.cpp
+   northrend/frozen_halls/halls_of_reflection/boss_marwyn.cpp
+   northrend/frozen_halls/halls_of_reflection/halls_of_reflection.cpp
+   northrend/frozen_halls/halls_of_reflection/halls_of_reflection.h
+   northrend/frozen_halls/halls_of_reflection/lich_king_event.cpp
    northrend/frozen_halls/icecrown_citadel/instance_icecrown_citadel.cpp
    northrend/frozen_halls/icecrown_citadel/icecrown_citadel.h
    northrend/frozen_halls/icecrown_citadel/icecrown_teleport.cpp
