@@ -22,4 +22,3 @@ SDCategory: Icecrown Citadel
 EndScriptData */
 
 #include "ScriptedPch.h"
-#include "def_spire.h"

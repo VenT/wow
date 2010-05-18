@@ -422,16 +422,16 @@ void AddSC_pit_of_saron();
 void AddSC_boss_garfrost();
 void AddSC_boss_ick();
 void AddSC_boss_tyrannus();
-//IceCrown Citadel
-void AddSC_Blood_Queen_Lanathel();
+void AddSC_instance_icecrown_citadel(); //Icecrown Citadel
+void AddSC_boss_saurfang();
 void AddSC_Boss_Fauldarm();
 void AddSC_boss_Deahtwisper();
 void AddSC_boss_Marrowgar();
 void AddSC_Boss_ProfessorPutricide();
 void AddSC_Boss_Sindragosa();
 void AddSC_boss_lichking();
-void AddSC_boss_saurfang();
-void AddSC_instance_icecrown_citadel();
+void AddSC_icecrown_teleporter();
+void AddSC_lowerspiretrash();
 
 void AddSC_dalaran();
 void AddSC_borean_tundra();
@@ -934,16 +934,16 @@ void AddScripts()
     AddSC_boss_garfrost();
     AddSC_boss_ick();
     AddSC_boss_tyrannus();
-    //IceCrown Citadel
-    AddSC_Blood_Queen_Lanathel();
+    AddSC_instance_icecrown_citadel(); //Icecrown Citadel
+    AddSC_boss_saurfang();
     AddSC_Boss_Fauldarm();
     AddSC_boss_Deahtwisper();
     AddSC_boss_Marrowgar();
     AddSC_Boss_ProfessorPutricide();
     AddSC_Boss_Sindragosa();
     AddSC_boss_lichking();
-    AddSC_boss_saurfang();
-    AddSC_instance_icecrown_citadel();
+    AddSC_icecrown_teleporter();
+    AddSC_lowerspiretrash();
 
     AddSC_dalaran();
     AddSC_borean_tundra();
