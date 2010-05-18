@@ -59,7 +59,8 @@ bool GoHello_icecrown_teleporter( Player *pPlayer, GameObject *pGO )
 	if(pInstance->GetData(DATA_SAURFANG_EVENT) == DONE || pPlayer->isGameMaster())
     {
     pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Plagueworks", GOSSIP_SENDER_MAIN, PLAGUEWORKS);
-                    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Crimson Halls", GOSSIP_SENDER_MAIN, CRIMSONHALL);
+    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Crimson Halls", GOSSIP_SENDER_MAIN, CRIMSONHALL);
+    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Frostwing Halls", GOSSIP_SENDER_MAIN, FWHALLS);
 	if(pInstance->GetData(DATA_SINDRAGOSA_EVENT) == DONE || pPlayer->isGameMaster())
     {
     pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Frozen Throne", GOSSIP_SENDER_MAIN, LICHKING);
@@ -92,19 +93,19 @@ bool GOSelect_icecrown_teleporter( Player *pPlayer, GameObject *pGO, uint32 send
         pPlayer->TeleportTo(631, -549.073486, 2211.289307, 539.223450, 6.275452);
         pPlayer->CLOSE_GOSSIP_MENU(); break;
     case PLAGUEWORKS:
-        pPlayer->TeleportTo(631, 4357.033691, 2864.192627, 439.336090, 1.583007);
+        pPlayer->TeleportTo(631, 4357.033691, 2864.192627, 349.336090, 1.583007);
         pPlayer->CLOSE_GOSSIP_MENU(); break;
     case CRIMSONHALL:
         pPlayer->TeleportTo(631, 4452.79785, 2769.291504, 349.350342, 0.023817);
         pPlayer->CLOSE_GOSSIP_MENU(); break;
-    /*case FWHALLS:
-        pPlayer->TeleportTo(631, 428.5969, y, z, orientation);
-        pPlayer->CLOSE_GOSSIP_MENU(); break;*/
+    case FWHALLS:
+        pPlayer->TeleportTo(631, 4356.524902, 2674.820068, 349.340515, 4.713434);
+        pPlayer->CLOSE_GOSSIP_MENU(); break;
     case SINDRAGOSA:
         pPlayer->TeleportTo(631, 4356.581543, 2565.748291, 220.401520, 4.886216);
         pPlayer->CLOSE_GOSSIP_MENU(); break;
     case LICHKING:
-        pPlayer->TeleportTo(631, 516.870728, -2124.666260, 1040.860107, 2.982144);
+        pPlayer->TeleportTo(631, 528.552002, -2124.620117, 1040.859985, 3.183670);
         pPlayer->CLOSE_GOSSIP_MENU(); break;
     }
 

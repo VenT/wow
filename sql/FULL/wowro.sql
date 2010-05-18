@@ -5,7 +5,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_marwyn' WHERE `entry` = '381
 UPDATE `creature_template` SET `ScriptName` = 'npc_jaina_or_silvana' WHERE `entry` = '37554';
 UPDATE `creature_template` SET `ScriptName` = 'npc_jaina_or_silvana' WHERE `entry` = '36955';
 UPDATE `creature_template` SET `ScriptName` = 'npc_hall_lich_king' WHERE `entry` = '37226';
-UPDATE `creature_template` SET `ScriptName` = 'npc_slyvanas_hor_start' WHERE `entry` = '38161';
+-- UPDATE `creature_template` SET `ScriptName` = 'npc_slyvanas_hor_start' WHERE `entry` = '38161';
 
 #Icecrown Citadel
 
@@ -315,7 +315,7 @@ UPDATE `creature_template` SET `ScriptName`='mob_swarming_shadows' WHERE (`entry
 UPDATE `creature_template` SET `ScriptName`='boss_saurfang' WHERE (`entry`='37813');
 UPDATE `creature_template` SET `ScriptName`='npc_bloodbeast' WHERE (`entry`='38508');
 UPDATE `creature_template` SET `ScriptName`='Boss_Fauldarm' WHERE (`entry`='36626');
-UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202235,202242,202223, 202244,202243,202245);
+UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202235,202242,202223,202244,202243,202245,202246);
 UPDATE `gameobject_template` SET `flags` = 0 WHERE `entry` = 202223;
 UPDATE `creature_template` SET `ScriptName`='Boss_Lady_Deathwisper' WHERE (`entry`='36855');
 UPDATE `creature_template` SET `ScriptName`='mob_CultAdherents' WHERE (`entry`='37949');
