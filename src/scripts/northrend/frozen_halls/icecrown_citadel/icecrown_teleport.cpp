@@ -48,23 +48,24 @@ bool GoHello_icecrown_teleporter( Player *pPlayer, GameObject *pGO )
     ScriptedInstance *pInstance = (ScriptedInstance *) pGO->GetInstanceData();
     if(!pInstance) return true;
 
-    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to Light's Hammer", GOSSIP_SENDER_MAIN, LIGHTS_HAMMER);
-    if(pInstance->GetData(DATA_MARROWGAR_EVENT) == DONE || pPlayer->isGameMaster())
+	if(pInstance->GetData(DATA_MARROWGAR_EVENT) == DONE || pPlayer->isGameMaster())
     {
-        if(pInstance->GetData(DATA_MARROWGAR_EVENT) == DONE || pPlayer->isGameMaster())
-        pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Oratory of the Damned", GOSSIP_SENDER_MAIN, ORATORY);
-        {
-            if(pInstance->GetData(DATA_SAURFANG_EVENT) == DONE || pPlayer->isGameMaster())
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Rampart of Skulls", GOSSIP_SENDER_MAIN, RAMPART);
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to Deathbringer's Rise", GOSSIP_SENDER_MAIN, DEATHBRINGER);
-            {
-                pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Plagueworks", GOSSIP_SENDER_MAIN, PLAGUEWORKS);
+    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to Light's Hammer", GOSSIP_SENDER_MAIN, LIGHTS_HAMMER);
+    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Oratory of the Damned", GOSSIP_SENDER_MAIN, ORATORY);
+	if(pInstance->GetData(DATA_DEATHWHISPER_EVENT) == DONE || pPlayer->isGameMaster())
+    {
+    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Rampart of Skulls", GOSSIP_SENDER_MAIN, RAMPART);
+    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to Deathbringer's Rise", GOSSIP_SENDER_MAIN, DEATHBRINGER);
+	if(pInstance->GetData(DATA_SAURFANG_EVENT) == DONE || pPlayer->isGameMaster())
+    {
+    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Plagueworks", GOSSIP_SENDER_MAIN, PLAGUEWORKS);
                     pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Crimson Halls", GOSSIP_SENDER_MAIN, CRIMSONHALL);
-					pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Frozen Throne", GOSSIP_SENDER_MAIN, LICHKING);
-
-
-            }
-        }
+	if(pInstance->GetData(DATA_SINDRAGOSA_EVENT) == DONE || pPlayer->isGameMaster())
+    {
+    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Frozen Throne", GOSSIP_SENDER_MAIN, LICHKING);
+    }
+    }
+    }
     }
     pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pGO->GetGUID());
 
@@ -110,7 +111,7 @@ bool GOSelect_icecrown_teleporter( Player *pPlayer, GameObject *pGO, uint32 send
     return true;
 }
 
-bool GOGossipHello_go_plague_sigil(Player *player, GameObject* pGo)
+bool GOHello_go_plague_sigil(Player *player, GameObject* pGo)
 {
     ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
     if(!pInstance) return false;
@@ -123,7 +124,7 @@ bool GOGossipHello_go_plague_sigil(Player *player, GameObject* pGo)
     return true;
 }
 
-bool GOGossipHello_go_bloodwing_sigil(Player *player, GameObject* pGo)
+bool GOHello_go_bloodwing_sigil(Player *player, GameObject* pGo)
 {
     ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
     if(!pInstance) return false;
@@ -134,12 +135,12 @@ bool GOGossipHello_go_bloodwing_sigil(Player *player, GameObject* pGo)
     return true;
 }
 
-bool GOGossipHello_go_frostwing_sigil(Player *player, GameObject* pGo)
+bool GOHello_go_frostwing_sigil(Player *player, GameObject* pGo)
 {
     ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
     if(!pInstance) return false;
 
-    if (pInstance->GetData(TYPE_LANATHEL) == DONE)
+    if (pInstance->GetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT) == DONE)
            pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, DONE);
 
     return true;
@@ -157,16 +158,16 @@ void AddSC_icecrown_teleporter()
 
     newscript = new Script;
     newscript->Name = "go_plague_sigil";
-    newscript->pGOHello  = &GOGossipHello_go_plague_sigil;
+    newscript->pGOHello  = &GOHello_go_plague_sigil;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "go_bloodwing_sigil";
-    newscript->pGOHello  = &GOGossipHello_go_bloodwing_sigil;
+    newscript->pGOHello  = &GOHello_go_bloodwing_sigil;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "go_frostwing_sigil";
-    newscript->pGOHello  = &GOGossipHello_go_frostwing_sigil;
+    newscript->pGOHello  = &GOHello_go_frostwing_sigil;
     newscript->RegisterSelf();
 }

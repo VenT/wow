@@ -428,9 +428,9 @@ struct mob_nightmare_portalAI : public ScriptedAI
         if (pWho->isAlive() && pWho->GetTypeId() == TYPEID_PLAYER && pWho->IsWithinDistInMap(me, 2.0f))
                  {
                  bsw->doCast(SPELL_EMERALD_VIGOR, pWho);
-                 bsw->doAura(SPELL_EMERALD_VIGOR, pWho,EFFECT_INDEX_0);
-                 bsw->doAura(SPELL_EMERALD_VIGOR, pWho,EFFECT_INDEX_1);
-                 bsw->doAura(SPELL_EMERALD_VIGOR, pWho,EFFECT_INDEX_2);
+//                 bsw->doAura(SPELL_EMERALD_VIGOR, pWho,EFFECT_INDEX_0);
+//                 bsw->doAura(SPELL_EMERALD_VIGOR, pWho,EFFECT_INDEX_1);
+//                 bsw->doAura(SPELL_EMERALD_VIGOR, pWho,EFFECT_INDEX_2);
                  portalcasted = true;
                  }
     }
