@@ -393,7 +393,7 @@ CreatureAI* GetAI_Boss_Lady_Deathwisper(Creature* pCreature)
     return new Boss_Lady_DeathwisperAI(pCreature);
 }
 
-struct CultAdherentsAI : public ScriptedAI
+/*struct CultAdherentsAI : public ScriptedAI
 {
     CultAdherentsAI(Creature *pCreature) : ScriptedAI(pCreature) 
 	{
@@ -471,7 +471,7 @@ struct CultAdherentsAI : public ScriptedAI
 CreatureAI* GetAI_CultAdherents(Creature* pCreature)
 {
     return new CultAdherentsAI (pCreature);
-}
+}*/
 
 void AddSC_boss_Deahtwisper()
 {
@@ -481,9 +481,9 @@ void AddSC_boss_Deahtwisper()
     NewScript->Name = "Boss_Lady_Deathwisper";
     NewScript->GetAI = &GetAI_Boss_Lady_Deathwisper;
     NewScript->RegisterSelf();
-
+/*
 	NewScript = new Script;
     NewScript->Name = "mob_cultadherents";
     NewScript->GetAI = &GetAI_CultAdherents;
-    NewScript->RegisterSelf();
+    NewScript->RegisterSelf();*/
 }

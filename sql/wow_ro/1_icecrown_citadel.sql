@@ -318,7 +318,6 @@ UPDATE `creature_template` SET `ScriptName`='Boss_Fauldarm' WHERE (`entry`='3662
 UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202235,202242,202223,202244,202243,202245,202246);
 UPDATE `gameobject_template` SET `flags` = 0 WHERE `entry` = 202223;
 UPDATE `creature_template` SET `ScriptName`='Boss_Lady_Deathwisper' WHERE (`entry`='36855');
-UPDATE `creature_template` SET `ScriptName`='mob_cultadherents' WHERE (`entry`='37949');
 UPDATE `creature_template` SET `minlevel`='80',`maxlevel`='80',`faction_A`='16',`faction_H`='16',`ScriptName`='Cold_Flame' WHERE (`entry`='36672');
 UPDATE `creature_template` SET `minlevel`='83',`maxlevel`='83',`faction_A`='16',`faction_H`='16',`ScriptName`='Boss_Lord_Marrowgar' WHERE (`entry`='36612');
 UPDATE `creature_template` SET `minlevel`='80',`maxlevel`='80',`faction_A`='16',`faction_H`='16',`flags_extra`='2',`ScriptName`='BoneSpike' WHERE (`entry`='38711');
@@ -339,7 +338,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_NerubarBroodkeeper' WHERE `en
 UPDATE `creature_template` SET `ScriptName` = 'npc_TheDamned' WHERE `entry` = 37011;
 UPDATE `creature_template` SET `ScriptName` = 'npc_ServantoftheThrone' WHERE `entry` = 36724;
 UPDATE `creature_template` SET `ScriptName` = 'npc_AncientSkeletalSoldier' WHERE `entry` = 37012;
-UPDATE `creature_template` SET `ScriptName` = 'npc_DeathboundWard' WHERE `entry` = 37007;
+UPDATE `creature_template` SET `ScriptName` = 'npc_DeathboundWard', `unit_flags`='0' WHERE `entry` = 37007;
 UPDATE `creature_template` SET `ScriptName` = 'npc_DeathspeakerAttedant' WHERE `entry` = 36811;
 UPDATE `creature_template` SET `ScriptName` = 'npc_DeathspeakerDisciple' WHERE `entry` = 36807;
 UPDATE `creature_template` SET `ScriptName` = 'npc_DeathspeakerHighPriest' WHERE `entry` = 36829;
