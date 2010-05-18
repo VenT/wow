@@ -428,6 +428,7 @@ void AddSC_boss_falric();
 void AddSC_boss_marwyn();
 void AddSC_instance_icecrown_citadel(); //Icecrown Citadel
 void AddSC_blood_prince_council();
+void AddSC_boss_valithria_dreamwalker();
 void AddSC_boss_saurfang();
 void AddSC_Boss_Fauldarm();
 void AddSC_boss_Deahtwisper();
@@ -949,6 +950,7 @@ void AddScripts()
     AddSC_Boss_Fauldarm();
     AddSC_boss_Deahtwisper();
     AddSC_boss_Marrowgar();
+    AddSC_boss_valithria_dreamwalker();
     AddSC_Boss_ProfessorPutricide();
     AddSC_Boss_Sindragosa();
     AddSC_boss_lichking();
