@@ -22,7 +22,7 @@ SDCategory: Icecrown Citadel
 EndScriptData */
 
 #include "ScriptedPch.h"
-#include "icecrown_citadel.h"
+#include "def_spire.h"
 
 enum BossSpells
 {

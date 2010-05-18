@@ -370,6 +370,7 @@ SET(scripts_STAT_SRCS
    northrend/frozen_halls/halls_of_reflection/lich_king_event.cpp
    northrend/frozen_halls/icecrown_citadel/instance_icecrown_citadel.cpp
    northrend/frozen_halls/icecrown_citadel/icecrown_citadel.h
+   northrend/frozen_halls/icecrown_citadel/def_spire.h
    northrend/frozen_halls/icecrown_citadel/icecrown_teleport.cpp
    northrend/frozen_halls/icecrown_citadel/blood_prince_council.cpp
    northrend/frozen_halls/icecrown_citadel/boss_blood_queen_lanathel.cpp
