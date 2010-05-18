@@ -483,7 +483,7 @@ void AddSC_boss_Deahtwisper()
     NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "mob_CultAdherents";
+    NewScript->Name = "mob_cultadherents";
     NewScript->GetAI = &GetAI_CultAdherents;
     NewScript->RegisterSelf();
 }
