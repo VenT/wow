@@ -330,7 +330,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_tirion_icc' WHERE (`entry`='38
 UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` = 38995;
 UPDATE `creature_template` SET `ScriptName`='mob_Ice_Puls' WHERE (`entry`='36633');
 UPDATE `creature_template` SET `ScriptName`='mob_Valkyr' WHERE (`entry`='36609');
-UPDATE `creature_template` SET `ScriptName`='mob_Ghoul' WHERE (`entry`='37695');
+UPDATE `creature_template` SET `ScriptName`='mob_ghoul_icc' WHERE (`entry`='37695');
 UPDATE `creature_template` SET `ScriptName`='mob_Defile' WHERE (`entry`='38757');
 UPDATE `creature_template` SET `ScriptName`='mob_RagingSpirit' WHERE (`entry`='36701');
 UPDATE `creature_template` SET `Health_mod`='50000' WHERE (`entry`='30494');

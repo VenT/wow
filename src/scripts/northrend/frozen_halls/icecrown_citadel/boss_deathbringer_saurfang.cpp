@@ -288,6 +288,6 @@ void AddSC_boss_saurfang()
 
         NewScript = new Script;
     NewScript->Name = "npc_bloodbeast";
-    NewScript->GetAI = &GetAI_boss_bloodbeast;
+    NewScript->GetAI = &GetAI_npc_bloodbeast;
     NewScript->RegisterSelf();
 }

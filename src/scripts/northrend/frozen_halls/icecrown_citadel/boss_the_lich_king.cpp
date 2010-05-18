@@ -1197,7 +1197,7 @@ void AddSC_boss_lichking()
     NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "mob_Ghoul";
+    NewScript->Name = "mob_ghoul_icc";
     NewScript->GetAI = &GetAI_mob_Ghoul;
     NewScript->RegisterSelf();
 
