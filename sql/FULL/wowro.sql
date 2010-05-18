@@ -1,3 +1,12 @@
+# Halls of Reflection
+UPDATE `instance_template` SET `script` = 'instance_halls_of_reflection' WHERE `map` = '668';
+UPDATE `creature_template` SET `ScriptName` = 'boss_falric' WHERE `entry` = '38112';
+UPDATE `creature_template` SET `ScriptName` = 'boss_marwyn' WHERE `entry` = '38113';
+UPDATE `creature_template` SET `ScriptName` = 'npc_jaina_or_silvana' WHERE `entry` = '37554';
+UPDATE `creature_template` SET `ScriptName` = 'npc_jaina_or_silvana' WHERE `entry` = '36955';
+UPDATE `creature_template` SET `ScriptName` = 'npc_hall_lich_king' WHERE `entry` = '37226';
+UPDATE `creature_template` SET `ScriptName` = 'npc_slyvanas_hor_start' WHERE `entry` = '38161';
+
 #Icecrown Citadel
 
 DELETE FROM script_texts WHERE entry<=-1666034 AND entry>=-1666052;
