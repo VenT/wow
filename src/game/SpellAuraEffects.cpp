@@ -1140,8 +1140,6 @@ void AuraEffect::UpdatePeriodic(Unit * caster)
                     // Chains of Ice
                     if (GetSpellProto()->SpellFamilyFlags[1] & 0x00004000)
                     {
-						if (GetCasterGUID() == target->GetGUID())
-							break;
                         // Get 0 effect aura
                         if (AuraEffect *slow = GetBase()->GetEffect(0))
                         {
