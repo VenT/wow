@@ -118,7 +118,7 @@ enum Creatures
 };
 
 
-const Position CenterOfArena = {563.331848, 139.412125, 393.836639};
+const Position CenterOfArena = {563.734558, 173.907974, 394.326874};
 
 struct boss_gormok_impalerAI : public ScriptedAI
 {

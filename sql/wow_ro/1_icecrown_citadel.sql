@@ -350,4 +350,43 @@ UPDATE `creature_template` SET `ScriptName`='boss_Rotface' WHERE `entry`= 36627;
 UPDATE `creature_template` SET `ScriptName`='npc_OozeLittle' WHERE `entry`= 36897;
 UPDATE `creature_template` SET `ScriptName`='npc_OozeBig' WHERE `entry`= 36899;
 
+-- Taldaram
+ UPDATE `creature_template` SET `ScriptName`='boss_taldaram_icc', `AIName`='' WHERE `entry`= 37973;
+-- Valanar
+UPDATE `creature_template` SET `ScriptName`='boss_valanar_icc', `AIName`='' WHERE `entry`= 37970;
+-- Keleseth
+UPDATE `creature_template` SET `ScriptName`='boss_keleseth_icc', `AIName`='' WHERE `entry`= 37972;
+
+INSERT INTO `script_texts` (`entry`,`content_loc8`, `content_default`, `sound`, `type`, `language`, `emote`, `comment`) VALUES
+('-1631301','Глупые смертные! Думали, что одолели нас? Санлейн, непобедимые воины Короля-Лича! Теперь наши силы едины!','','16795','6','0','0','Lanathel Intro Princes'),
+('-1631302','Кушать подано!','','16681','6','0','0','Valanar Slay 01'),
+('-1631303','Теперь вы видите, насколько мы сильны?','','16682','6','0','0','Valanar Slay 02'),
+('-1631304','Охохо...','','16683','6','0','0','Valanar Death'),
+('-1631305','Хорош тянуть время перед Санлейн!','','16684','6','0','0','Valanar Berserk'),
+('-1631306','Наксанар был досадным недоразумением! Силы сферы позволят Валанару свершить отмщение!','','16685','6','0','0','Valanar Empower'),
+('-1631307','Моя чаша полна','','16686','6','0','0','Valanar Special'),
+('-1631308','Йих!','','16687','6','0','0','Princes say'),
+('-1631309','Э-эх!','','16688','6','0','0','Princes say'),
+('-1631310','До-хо!','','16689','6','0','0','Princes say');
+
+-- Valithria dreamwalker
+UPDATE `creature_template` SET `faction_A` = 35, `faction_H` = 35, `ScriptName`='boss_valithria_dreamwalker' WHERE `entry`= 36789;
+UPDATE `creature_template` SET `faction_A` = 35, `faction_H` = 35, `ScriptName`='mob_nightmare_portal', `AIName`='' WHERE `entry`= 38429;
+UPDATE `creature_template` SET `ScriptName`='mob_mana_void', `AIName`='' WHERE `entry`= 38068;
+
+INSERT INTO `script_texts` (`entry`,`content_loc8`, `content_default`, `sound`, `type`, `language`, `emote`, `comment`) VALUES
+('-1631401','Герои! Вы должны мне помочь! Мои силы на исходе... Залечите мои раны...','','17064','6','0','0','Valithria Aggro'),
+('-1631402','Одержимые не знают отдыха...','','17065','6','0','0','Valithria Slay Bad Hostile NPC'),
+('-1631403','Прискобная потеря.','','17066','6','0','0','Valithria Slay Good - Player'),
+('-1631404','Неудачники!','','17067','6','0','0','Valithria Berserk'),
+('-1631405','Я открыла портал в изумрудный сон. Там вы найдете спасение, герои!','','17068','6','0','0','Valithria Dream World Open'),
+('-1631406','Я долго не продержусь!','','17069','6','0','0','Valithria Health Low'),
+('-1631407','Силы возвращаются ко мне! Герои, еще немного!','','17070','6','0','0','Valithria Health High'),
+('-1631408','Я излечилась! Изера, даруй мне силу покончить с этими нечестивыми тварями!','','17071','6','0','0','Valithria Win'),
+('-1631409','Простите меня, я не могу остано... ВСЕ ВО ВЛАСТИ КОШМА� А!','','17072','6','0','0','Valithria Lose');
+
+UPDATE `gameobject_template` SET `faction` = '0', `ScriptName` = 'go_plague_sigil' WHERE `gameobject_template`.`entry` IN (202182);
+UPDATE `gameobject_template` SET `faction` = '0', `ScriptName` = 'go_bloodwing_sigil' WHERE `gameobject_template`.`entry` IN (202181);
+
+
 UPDATE `instance_template` SET `script`='instance_icecrown_citadel' WHERE (`map`='631');

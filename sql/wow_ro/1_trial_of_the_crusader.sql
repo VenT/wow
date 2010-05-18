@@ -4,6 +4,8 @@ UPDATE `creature_template` SET `ScriptName`='npc_tcrus_announcer' WHERE (`entry`
 UPDATE `creature_template` SET `ScriptName`='npc_tcrus_fizzlebang' WHERE (`entry`='35458');
 UPDATE `creature_template` SET `ScriptName`='npc_tcrus_tirion' WHERE (`entry`='34996');
 UPDATE `creature_template` SET `ScriptName`='npc_LichKing' WHERE (`entry`='35877');
+UPDATE `creature_template` SET `ScriptName`='npc_Garrosh' WHERE (`entry`='34995');
+UPDATE `creature_template` SET `ScriptName`='npc_KingVyrn' WHERE (`entry`='34990');
 
 -- Faction Champions Horde
 UPDATE `creature_template` SET `ScriptName`='boss_gorgrim_shadowcleave' WHERE (`entry`='34458');
@@ -74,8 +76,8 @@ UPDATE `creature_template` SET `ScriptName`='boss_icehowl' WHERE (`entry`='34797
 
 UPDATE `creature_template` SET `ScriptName`='boss_fjola' WHERE (`entry`='34497');
 UPDATE `creature_template` SET `ScriptName`='boss_eydis' WHERE (`entry`='34496');
-UPDATE `creature_template` SET `AIName`='', `ScriptName`='mob_valkyr_orb' WHERE `entry` IN (34628, 34630);
-UPDATE `creature_template` SET unit_flags= 33554434, faction_A =14, faction_H=14 WHERE `entry` IN (34628, 34630);
+UPDATE `creature_template` SET `AIName`='',`ScriptName`='mob_valkyr_orb' WHERE `entry` IN (34628,34630);
+UPDATE `creature_template` SET unit_flags= 33554434, faction_A =14, faction_H=14 WHERE `entry` IN (34628,34630);
 INSERT INTO npc_spellclick_spells VALUES (34567, 65684, 0, 0, 0, 1), (34568, 65686, 0, 0, 0, 1); -- dark/light "portals"
 INSERT INTO spell_script_target values (65875, 1, 34497), (65876, 1, 34496);
 
