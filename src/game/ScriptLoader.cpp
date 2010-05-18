@@ -427,6 +427,7 @@ void AddSC_halls_of_reflection();
 void AddSC_boss_falric();
 void AddSC_boss_marwyn();
 void AddSC_instance_icecrown_citadel(); //Icecrown Citadel
+void AddSC_blood_prince_council();
 void AddSC_boss_saurfang();
 void AddSC_Boss_Fauldarm();
 void AddSC_boss_Deahtwisper();
@@ -943,6 +944,7 @@ void AddScripts()
     AddSC_boss_falric();
     AddSC_boss_marwyn();
     AddSC_instance_icecrown_citadel(); //Icecrown Citadel
+    AddSC_blood_prince_council();
     AddSC_boss_saurfang();
     AddSC_Boss_Fauldarm();
     AddSC_boss_Deahtwisper();

@@ -371,6 +371,7 @@ SET(scripts_STAT_SRCS
    northrend/frozen_halls/icecrown_citadel/instance_icecrown_citadel.cpp
    northrend/frozen_halls/icecrown_citadel/icecrown_citadel.h
    northrend/frozen_halls/icecrown_citadel/icecrown_teleport.cpp
+   northrend/frozen_halls/icecrown_citadel/blood_prince_council.cpp
    northrend/frozen_halls/icecrown_citadel/boss_blood_queen_lanathel.cpp
    northrend/frozen_halls/icecrown_citadel/boss_deathbringer_saurfang.cpp
    northrend/frozen_halls/icecrown_citadel/boss_festergut.cpp
