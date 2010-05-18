@@ -235,11 +235,11 @@ SessionAddDelay = 10000
 GridCleanUpDelay = 300000
 MapUpdateInterval = 100
 ChangeWeatherInterval = 600000
-PlayerSaveInterval = 900000
+PlayerSaveInterval = 600000
 PlayerSave.Stats.MinLevel = 0
 PlayerSave.Stats.SaveOnlyOnLogout = 1
-vmap.enableLOS = 0
-vmap.enableHeight = 0
+vmap.enableLOS = 1
+vmap.enableHeight = 1
 vmap.ignoreMapIds = "369"
 vmap.ignoreSpellIds = "7720"
 vmap.petLOS = 0
@@ -248,7 +248,7 @@ TargetPosRecalculateRange = 1.5
 UpdateUptimeInterval = 10
 LogDB.Opt.ClearInterval = 10
 LogDB.Opt.ClearTime = 1209600
-MaxCoreStuckTime = 0
+MaxCoreStuckTime = 20
 AddonChannel = 1
 MapUpdate.Threads = 1
 
@@ -474,7 +474,7 @@ MapUpdate.Threads = 1
 #
 ###############################################################################
 
-LogSQL = 1
+LogSQL = 0
 PidFile = ""
 LogLevel = 1
 LogFile = "Server.log"
@@ -883,7 +883,7 @@ ChatLogTimestamp = 0
 #
 ###############################################################################
 
-GameType = 0
+GameType = 1
 RealmZone = 1
 Expansion = 2
 DBC.Locale = 255
@@ -934,7 +934,7 @@ SkillChance.Milling = 0
 OffhandCheckAtSpellUnlearn = 0
 ClientCacheVersion = 0
 Event.Announce = 0
-BeepAtStart = 1
+BeepAtStart = 0
 Motd = "Welcome to a Trinity Core server."
 Server.LoginInfo = 0
 
@@ -1293,7 +1293,7 @@ GM.WhisperingTo          = 2
 GM.InGMList.Level        = 3
 GM.InWhoList.Level       = 3
 GM.LogTrade              = 1
-GM.StartLevel            = 80
+GM.StartLevel            = 1
 GM.AllowInvite           = 0
 GM.AllowFriend           = 0
 GM.LowerSecurity         = 0
@@ -1549,19 +1549,20 @@ Rate.RunicPower.Income = 1
 Rate.RunicPower.Loss = 1
 Rate.Focus = 1
 Rate.Loyalty = 1
-Rate.Skill.Discovery = 1
-Rate.Drop.Item.Poor = 1
-Rate.Drop.Item.Normal = 1
-Rate.Drop.Item.Uncommon = 1
-Rate.Drop.Item.Rare = 1
-Rate.Drop.Item.Epic = 1
-Rate.Drop.Item.Legendary = 1
-Rate.Drop.Item.Artifact = 1
-Rate.Drop.Item.Referenced = 1
-Rate.Drop.Money = 1
-Rate.XP.Kill    = 1
-Rate.XP.Quest   = 1
+Rate.Skill.Discovery = 8
+Rate.Drop.Item.Poor = 3
+Rate.Drop.Item.Normal = 3
+Rate.Drop.Item.Uncommon = 3
+Rate.Drop.Item.Rare = 3
+Rate.Drop.Item.Epic = 3
+Rate.Drop.Item.Legendary = 3
+Rate.Drop.Item.Artifact = 3
+Rate.Drop.Item.Referenced = 3
+Rate.Drop.Money = 8
+Rate.XP.Kill    = 10
+Rate.XP.Quest   = 15
 Rate.XP.Explore = 1
+Rate.XP.PastLevel70 = 1
 Rate.RepairCost = 1
 Rate.Rest.InGame = 1
 Rate.Rest.Offline.InTavernOrCity = 1
@@ -1570,19 +1571,19 @@ Rate.Damage.Fall = 1
 Rate.Auction.Time = 1
 Rate.Auction.Deposit = 1
 Rate.Auction.Cut = 1
-Rate.Honor = 1
-Rate.Mining.Amount = 1
-Rate.Mining.Next   = 1
+Rate.Honor = 10
+Rate.Mining.Amount = 5
+Rate.Mining.Next   = 5
 Rate.Talent = 1
-Rate.Reputation.Gain = 1
-Rate.Reputation.LowLevel.Kill    = 1
-Rate.Reputation.LowLevel.Quest   = 1
+Rate.Reputation.Gain = 15
+Rate.Reputation.LowLevel.Kill    = 2
+Rate.Reputation.LowLevel.Quest   = 3
 Rate.MoveSpeed = 1
-Rate.InstanceResetTime = 1
-SkillGain.Crafting = 1
-SkillGain.Defense = 1
-SkillGain.Gathering = 1
-SkillGain.Weapon = 1
+Rate.InstanceResetTime = 0.5
+SkillGain.Crafting = 5
+SkillGain.Defense = 5
+SkillGain.Gathering = 5
+SkillGain.Weapon = 5
 SkillChance.Orange = 100
 SkillChance.Yellow = 75
 SkillChance.Green  = 25
@@ -1600,7 +1601,8 @@ Death.CorpseReclaimDelay.PvP = 1
 Death.CorpseReclaimDelay.PvE = 0
 Death.Bones.World = 1
 Death.Bones.BattlegroundOrArena = 1
-Die.Command.Mode = 1
+Die.Command.Mode = 0
+
 
 ###############################################################################
 # AUTO BROADCAST
@@ -1621,9 +1623,9 @@ Die.Command.Mode = 1
 #
 ###############################################################################
 
-AutoBroadcast.On = 0
+AutoBroadcast.On = 1
 AutoBroadcast.Center = 0
-AutoBroadcast.Timer = 60000
+AutoBroadcast.Timer = 900000
 
 ###############################################################################
 # BATTLEGROUND CONFIG
@@ -1669,13 +1671,13 @@ AutoBroadcast.Timer = 60000
 #
 ###############################################################################
 
-Battleground.CastDeserter = 1
-Battleground.QueueAnnouncer.Enable = 0
+Battleground.CastDeserter = 0
+Battleground.QueueAnnouncer.Enable = 1
 Battleground.QueueAnnouncer.PlayerOnly = 0
 Battleground.InvitationType = 0
 BattleGround.PrematureFinishTimer = 300000
 BattleGround.PremadeGroupWaitForMatch = 1800000
-Battleground.GiveXPForKills = 0
+Battleground.GiveXPForKills = 1
 
 ###############################################################################
 # ARENA CONFIG
@@ -1730,14 +1732,14 @@ Battleground.GiveXPForKills = 0
 
 Arena.MaxRatingDifference = 150
 Arena.RatingDiscardTimer = 600000
-Arena.AutoDistributePoints = 0
-Arena.AutoDistributeInterval = 7
-Arena.QueueAnnouncer.Enable = 0
+Arena.AutoDistributePoints = 1
+Arena.AutoDistributeInterval = 1
+Arena.QueueAnnouncer.Enable = 1
 Arena.QueueAnnouncer.PlayerOnly = 0
 Arena.ArenaSeason.ID = 1
 Arena.ArenaSeason.InProgress = 1
-Arena.ArenaStartRating = 0
-Arena.ArenaStartPersonalRating = 0
+Arena.ArenaStartRating = 1000
+Arena.ArenaStartPersonalRating = 1000
 
 ###############################################################################
 # NETWORK CONFIG
@@ -2064,7 +2066,7 @@ AuctionHouseBot.DisableTGsAboveReqSkillRank = 0
 ###############################################################################
 
 Console.Enable = 1
-Ra.Enable = 0
+Ra.Enable = 1
 Ra.IP = 0.0.0.0
 Ra.Port = 3443
 Ra.MinLevel = 3
@@ -2192,7 +2194,7 @@ PvPToken.ItemID = 29434
 PvPToken.ItemCount = 1
 Guild.AllowMultipleGuildMaster = 0
 NoResetTalentsCost = 0
-ShowKickInWorld = 0
+ShowKickInWorld = 1
 RecordUpdateTimeDiffInterval = 60000
 MinRecordUpdateTimeDiff = 100
 PlayerStart.String = ""
