@@ -212,7 +212,7 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
                         if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
                         {
                                 DoCast(pTarget, SPELL_COLD_FLAME_SPAWN);
-                                m_uiColdFlameTimer = 7000;
+                                m_uiColdFlameTimer = 60000;
                         }
                 }
                 else m_uiColdFlameTimer -= uiDiff;
