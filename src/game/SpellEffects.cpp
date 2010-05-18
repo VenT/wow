@@ -2087,7 +2087,7 @@ void Spell::EffectDummy(uint32 i)
 			{
 			if (unitTarget = m_caster)
 				return false;			
-				m_caster->CastCustomSpell(unitTarget, 55095, &bp, NULL, NULL, true);
+				m_caster->CastSpell(unitTarget, 55095, true);
 				return;
 			}
             // Scourge Strike
