@@ -17,7 +17,7 @@
  */
 
 #include "ScriptedPch.h"
-#include "trial_of_the_crussader.h"
+#include "trial_of_the_crusader.h"
 
 enum DeathKnightSpells
 {

@@ -34,9 +34,9 @@ SQL End */
 #include "ScriptedPch.h"
 #include "trial_of_the_crusader.h"
 
-#define ROOM_CENTER_X   564.04f
-#define ROOM_CENTER_Y   139.98f
-#define ROOM_CENTER_Z   393.84f
+#define ROOM_CENTER_X   559.26f
+#define ROOM_CENTER_Y   90.27f
+#define ROOM_CENTER_Z   395.12f
 
 #define CR_DARK_ORB 34628
 #define CR_LIGHT_ORB 34630
