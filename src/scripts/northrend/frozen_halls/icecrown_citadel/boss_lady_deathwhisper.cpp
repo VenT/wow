@@ -73,7 +73,7 @@ enum Spells
 
 enum Summons
 {
-	NPC_CULT_ADHERENT          = 37949,
+    NPC_CULT_ADHERENT          = 37949,
     NPC_CULT_FANATIC           = 37890,
     NPC_VENGEFUL_SHADE         = 38222,
 };
@@ -308,7 +308,7 @@ struct Boss_Lady_DeathwisperAI : public ScriptedAI
 				{
 					me->SummonCreature(RAND(NPC_CULT_FANATIC, NPC_CULT_ADHERENT), SpawnLoc[i][0], SpawnLoc [i][1], SpawnLoc[i][2],0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
 				}
-				m_uiSummonWaveTimer = 60000;
+				m_uiSummonWaveTimer = 120000;
             }
             else m_uiSummonWaveTimer -= uiDiff;
 
@@ -349,7 +349,7 @@ struct Boss_Lady_DeathwisperAI : public ScriptedAI
 				{
 					me->SummonCreature(RAND(NPC_CULT_FANATIC, NPC_CULT_ADHERENT), HeroicSpawnLoc[i][0], HeroicSpawnLoc [i][1], HeroicSpawnLoc[i][2],0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
 				}
-                m_uiSummonWaveTimer = 60000;
+                m_uiSummonWaveTimer = 120000;
             }
             else m_uiSummonWaveTimer -= uiDiff;
 		}
