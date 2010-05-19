@@ -33,19 +33,19 @@ enum Yells
 enum SaurfangSpells
 {
     SPELL_BLOOD_LINK                    = 72178,
-        SPELL_SUMMON_BLOOD_BEAST    = 72172,
-        SPELL_FRENZY                            = 72737,
-        SPELL_BLOOD_NOVA_TRIGGER        = 72378,
-        SPELL_TASTE_OF_BLOOD            = 69634,
-        SPELL_CLEAVE                            = 15284,
-        SPELL_RENDING_THROW                     = 70309,
+    SPELL_SUMMON_BLOOD_BEAST    = 72172,
+    SPELL_FRENZY                            = 72737,
+    SPELL_BLOOD_NOVA_TRIGGER        = 72378,
+    SPELL_TASTE_OF_BLOOD            = 69634,
+    SPELL_CLEAVE                            = 15284,
+    SPELL_RENDING_THROW                     = 70309,
     N_10_SPELL_FALLEN_CHAMPION  = 72293,
     SPELL_BOILING_BLOOD                 = 72385, // Melees
 
     N_10_SPELL_BLOOD_NOVA       = 72380,
-        N_25_SPELL_BLOOD_NOVA           = 72438,
-        H_10_SPELL_BLOOD_NOVA           = 72380,
-        H_25_SPELL_BLOOD_NOVA           = 72380,
+    N_25_SPELL_BLOOD_NOVA           = 72438,
+    H_10_SPELL_BLOOD_NOVA           = 72380,
+    H_25_SPELL_BLOOD_NOVA           = 72380,
     N_SPELL_RUNE_OF_BLOOD       = 72408,
 
 };
@@ -97,8 +97,8 @@ struct boss_saurfangAI : public ScriptedAI
                 m_uiBoilingBloodTimer   = 15000;
                 m_uiBloodNovaChannelTimer = 22000;
                 m_uiBloodNovaDamageTimer = 25000;
-                m_uiRuneOfBloodTimer = urand (20000,25000);
-                m_uiSummonBloodBeastTimer = 40000;
+                m_uiRuneOfBloodTimer = urand (25000,30000);
+                m_uiSummonBloodBeastTimer = 90000;
 
                 m_bIsEnrage = false;
 
@@ -197,7 +197,7 @@ struct boss_saurfangAI : public ScriptedAI
                                 DoScriptText(SAY_BLOODBEASTS, me);
                                 me->ModifyHealth(me->GetMaxHealth() * 0.02);
                                 me->ModifyPower(me->getPowerType(), +10);
-                                m_uiSummonBloodBeastTimer = 40000;
+                                m_uiSummonBloodBeastTimer = 90000;
                         }
         }
                 else m_uiSummonBloodBeastTimer -= uiDiff;
@@ -216,8 +216,8 @@ struct boss_saurfangAI : public ScriptedAI
                 {
                         if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         DoCast(target, N_SPELL_RUNE_OF_BLOOD);
-                        me->ModifyHealth(me->GetMaxHealth() * 0.05);
-                        m_uiRuneOfBloodTimer = 25000;
+                        me->ModifyHealth(me->GetMaxHealth() * 0.02);
+                        m_uiRuneOfBloodTimer = 30000;
                 }
                 else m_uiRuneOfBloodTimer -= uiDiff;
 
