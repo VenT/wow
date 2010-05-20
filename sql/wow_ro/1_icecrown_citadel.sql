@@ -313,6 +313,7 @@ INSERT INTO script_texts (entry,content_default,content_loc1,content_loc2,conten
 UPDATE `creature_template` SET `ScriptName`='npc_Blood_Queen_Lanathel' WHERE (`entry`='37955');
 UPDATE `creature_template` SET `ScriptName`='mob_swarming_shadows' WHERE (`entry`='38163');
 UPDATE `creature_template` SET `ScriptName`='boss_saurfang' WHERE (`entry`='37813');
+UPDATE `creature_template` set `health_mod`='11.7255' where entry in (14915,38508,14914,14916);
 UPDATE `creature_template` SET `ScriptName`='npc_bloodbeast' WHERE (`entry`='38508');
 UPDATE `creature_template` SET `ScriptName`='Boss_Fauldarm' WHERE (`entry`='36626');
 UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202235,202242,202244,202243,202245,202246);

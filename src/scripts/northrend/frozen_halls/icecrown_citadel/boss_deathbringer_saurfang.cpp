@@ -97,7 +97,7 @@ struct boss_saurfangAI : public ScriptedAI
                 m_uiBoilingBloodTimer   = 15000;
                 m_uiBloodNovaChannelTimer = 22000;
                 m_uiBloodNovaDamageTimer = 25000;
-                m_uiRuneOfBloodTimer = urand (25000,30000);
+                m_uiRuneOfBloodTimer = urand (40000,60000);
                 m_uiSummonBloodBeastTimer = 90000;
 
                 m_bIsEnrage = false;
@@ -216,8 +216,8 @@ struct boss_saurfangAI : public ScriptedAI
                 {
                         if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         DoCast(target, N_SPELL_RUNE_OF_BLOOD);
-                        me->ModifyHealth(me->GetMaxHealth() * 0.02);
-                        m_uiRuneOfBloodTimer = 30000;
+                        me->ModifyHealth(me->GetMaxHealth() * 0.03);
+                        m_uiRuneOfBloodTimer = 64000;
                 }
                 else m_uiRuneOfBloodTimer -= uiDiff;
 
