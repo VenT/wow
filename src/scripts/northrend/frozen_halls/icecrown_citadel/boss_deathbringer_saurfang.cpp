@@ -135,7 +135,7 @@ struct boss_saurfangAI : public ScriptedAI
             case 0: DoScriptText(SAY_KILL1, me); break;
             case 1: DoScriptText(SAY_KILL2, me); break;
         }
-                me->ModifyHealth(me->GetMaxHealth() * 0.03);
+                me->ModifyHealth(me->GetMaxHealth() * 0.02);
     }
 
         void JustSummoned(Creature *summon)
@@ -182,7 +182,7 @@ struct boss_saurfangAI : public ScriptedAI
             {
                                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                                 DoCast(target, RAID_MODE(N_10_SPELL_BLOOD_NOVA,N_25_SPELL_BLOOD_NOVA,H_10_SPELL_BLOOD_NOVA,H_25_SPELL_BLOOD_NOVA));
-                                me->ModifyHealth(me->GetMaxHealth() * 0.01);
+//                                me->ModifyHealth(me->GetMaxHealth() * 0.01);
                                 m_uiBloodNovaDamageTimer = 95000;
                         }
                 }
