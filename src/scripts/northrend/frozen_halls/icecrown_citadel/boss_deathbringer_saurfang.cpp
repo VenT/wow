@@ -97,8 +97,8 @@ struct boss_saurfangAI : public ScriptedAI
                 m_uiBoilingBloodTimer   = 35000;
                 m_uiBloodNovaChannelTimer = 32000;
                 m_uiBloodNovaDamageTimer = 35000;
-                m_uiRuneOfBloodTimer = urand (40000,60000);
-                m_uiSummonBloodBeastTimer = 90000;
+                m_uiRuneOfBloodTimer = urand (20000,25000);
+                m_uiSummonBloodBeastTimer = 40000;
 
                 m_bIsEnrage = false;
 
@@ -197,7 +197,7 @@ struct boss_saurfangAI : public ScriptedAI
                                 DoScriptText(SAY_BLOODBEASTS, me);
                                 me->ModifyHealth(me->GetMaxHealth() * 0.01);
                                 me->ModifyPower(me->getPowerType(), +10);
-                                m_uiSummonBloodBeastTimer = 90000;
+                                m_uiSummonBloodBeastTimer = 40000;
                         }
         }
                 else m_uiSummonBloodBeastTimer -= uiDiff;
@@ -254,7 +254,7 @@ struct boss_bloodbeastAI : public ScriptedAI
     {
                 if (Creature* Saurfang = me->GetCreature(*me, m_pInstance->GetData64(DATA_SAURFANG)))
         {
-                        Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.03);
+                        Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.05);
                 }
     }
 
