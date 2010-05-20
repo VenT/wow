@@ -206,7 +206,7 @@ struct boss_saurfangAI : public ScriptedAI
                 {
                         DoScriptText(SAY_FALLENCHAMPION, me);
                         if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        DoCast(target, N_10_SPELL_FALLEN_CHAMPION);
+                       // DoCast(target, N_10_SPELL_FALLEN_CHAMPION);
                         me->ModifyHealth(me->GetMaxHealth() * 0.01);
                         m_uiFallenChampionTimer = RAID_MODE(90000,60000,90000,60000);
                 }

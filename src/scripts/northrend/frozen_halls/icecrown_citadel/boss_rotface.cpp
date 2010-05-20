@@ -76,8 +76,8 @@ struct boss_RotfaceAI : public ScriptedAI
 	m_uiSlimeSprayTimer = 20000+rand()%2000;
 	m_uiMutatedInfectionTimer = 6000+rand()%4000;
     m_uiBerserkTimer = 360000;
-	m_uiSummonLittleTimer = 5000; // not officially ?
-	m_uiSummonBigTimer = 15000; // not officially
+	m_uiSummonLittleTimer = 10000; // not officially ?
+	m_uiSummonBigTimer = 20000; // not officially
 	 
 
 		if(m_pInstance)
@@ -118,7 +118,7 @@ struct boss_RotfaceAI : public ScriptedAI
             { 
                  me->SummonCreature(36897, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
 
-                m_uiSummonLittleTimer = 23000+rand()%4000; 
+                m_uiSummonLittleTimer = 43000+rand()%4000; 
             }  
             else m_uiSummonLittleTimer -= diff;
 
@@ -126,7 +126,7 @@ struct boss_RotfaceAI : public ScriptedAI
             { 
                  me->SummonCreature(36899, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
 
-                m_uiSummonBigTimer = 32000+rand()%4000; 
+                m_uiSummonBigTimer = 52000+rand()%4000; 
             }  
             else m_uiSummonBigTimer -= diff;
 
