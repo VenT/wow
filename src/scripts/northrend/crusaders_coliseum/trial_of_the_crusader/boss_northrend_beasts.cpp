@@ -204,7 +204,7 @@ struct boss_gormok_impalerAI : public ScriptedAI
                 ++m_uiSnoboldsLaunched;
                 DoCast(me, SPELL_RISING_ANGER, true);
             }
-            m_uiSnoboldTimer = 30000 + rand()%15000;
+            m_uiSnoboldTimer = 50000 + rand()%15000;
         }
         else
             m_uiSnoboldTimer -= uiDiff;
@@ -862,7 +862,7 @@ struct mob_FireBombAI : public Scripted_NoMovementAI
     void Reset()
         {
                 m_uiDespawnTimer = 65000;
-                m_uiFireBombTimer = 2000;
+                m_uiFireBombTimer = 4000;
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
                 me->SetReactState(REACT_PASSIVE);
                 me->SetDisplayId(MODEL_INVISIBLE);
@@ -873,7 +873,7 @@ struct mob_FireBombAI : public Scripted_NoMovementAI
                 if (m_uiFireBombTimer <= uiDiff)
                 {
                         DoCast(me, SPELL_FIRE_BOMB_VISUAL_DAMAGE);
-                        m_uiFireBombTimer = 70000;
+                        m_uiFireBombTimer = 90000;
                 }
                 else m_uiFireBombTimer -= uiDiff;
 

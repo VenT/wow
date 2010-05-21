@@ -190,7 +190,7 @@ struct boss_saurfangAI : public ScriptedAI
 
                 if (m_uiSummonBloodBeastTimer <= uiDiff)
         {
-                        for (uint8 i = 0; i < RAID_MODE(1,4,1,4); ++i)
+                        for (uint8 i = 0; i < RAID_MODE(1,2,1,2); ++i)
                         {
                                 DoCast(me, SPELL_SUMMON_BLOOD_BEAST);
                                 me->SummonCreature(CREATURE_BLOOD_BEAST, BloodBeastSpawnLocation[i][0],BloodBeastSpawnLocation[i][1],BloodBeastSpawnLocation[i][2],BloodBeastSpawnLocation[i][3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
