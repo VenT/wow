@@ -29,10 +29,10 @@ EndScriptData */
 enum eSpells
 {
     //Vehicle
-	
+
     SPELL_SHIELD_BREAKER            = 68504,
     SPELL_SHIELD                    = 62544,
-	
+
     // Marshal Jacob Alerius && Mokra the Skullcrusher || Warrior
     SPELL_MORTAL_STRIKE             = 68783,
     SPELL_MORTAL_STRIKE_H           = 68784,
@@ -75,7 +75,7 @@ enum eEnums
     SAY_START                       = -1999939,
     SAY_START2                      = -1999937
 };
-	
+
 enum eSeat
 {
     SEAT_ID_0                       = 0
@@ -180,9 +180,9 @@ struct generic_vehicleAI_toc5AI : public npc_escortAI
                 AddWaypoint(1,771.434, 642.606, 411.9);
                 AddWaypoint(2,779.807, 617.535, 411.716);
                 AddWaypoint(3,771.098, 594.635, 411.625);
-				AddWaypoint(4,746.887, 583.425, 411.668);
-				AddWaypoint(5,715.176, 583.782, 412.394);
-				AddWaypoint(6,720.719, 591.141, 411.737);
+                                AddWaypoint(4,746.887, 583.425, 411.668);
+                                AddWaypoint(5,715.176, 583.782, 412.394);
+                                AddWaypoint(6,720.719, 591.141, 411.737);
                 uiWaypointPath = 1;
                 break;
             case 2:
@@ -190,9 +190,9 @@ struct generic_vehicleAI_toc5AI : public npc_escortAI
                 AddWaypoint(1,771.434, 642.606, 411.9);
                 AddWaypoint(2,779.807, 617.535, 411.716);
                 AddWaypoint(3,771.098, 594.635, 411.625);
-				AddWaypoint(4,746.887, 583.425, 411.668);
-				AddWaypoint(5,746.16, 571.678, 412.389);
-				AddWaypoint(6,746.887, 583.425, 411.668);
+                                AddWaypoint(4,746.887, 583.425, 411.668);
+                                AddWaypoint(5,746.16, 571.678, 412.389);
+                                AddWaypoint(6,746.887, 583.425, 411.668);
                 uiWaypointPath = 2;
                 break;
             case 3:
@@ -200,8 +200,8 @@ struct generic_vehicleAI_toc5AI : public npc_escortAI
                 AddWaypoint(1,771.434, 642.606, 411.9);
                 AddWaypoint(2,779.807, 617.535, 411.716);
                 AddWaypoint(3,771.098, 594.635, 411.625);
-				AddWaypoint(4,777.759, 584.577, 412.393);
-				AddWaypoint(5,772.48, 592.99, 411.68);
+                                AddWaypoint(4,777.759, 584.577, 412.393);
+                                AddWaypoint(5,772.48, 592.99, 411.68);
                 uiWaypointPath = 3;
                 break;
         }
@@ -346,8 +346,8 @@ struct boss_warrior_toc5AI : public ScriptedAI
         {
             bDone = true;
 
-			
- 		DoScriptText(SAY_START2, me);	
+
+                DoScriptText(SAY_START2, me);
 
             if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_1))
                 me->SetHomePosition(739.678,662.541,412.393,4.49);
@@ -409,7 +409,7 @@ struct boss_warrior_toc5AI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-	 		DoScriptText(SAY_START, me);	
+                        DoScriptText(SAY_START, me);
         if (pInstance)
             pInstance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
     }
@@ -536,7 +536,7 @@ struct boss_mage_toc5AI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-	 		DoScriptText(SAY_START, me);	
+                        DoScriptText(SAY_START, me);
         if (pInstance)
             pInstance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
     }
@@ -678,10 +678,10 @@ struct boss_shaman_toc5AI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-	 		DoScriptText(SAY_START, me);	
+                        DoScriptText(SAY_START, me);
         if (pInstance)
             pInstance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
-		if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE1)))
+                if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE1)))
                     pInstance->HandleGameObject(pGO->GetGUID(),true);
     }
 };
@@ -769,7 +769,7 @@ struct boss_hunter_toc5AI : public ScriptedAI
             EnterEvadeMode();
             bHome = true;
         }
-				
+
         if (uiPhaseTimer <= uiDiff)
         {
             if (uiPhase == 1)
@@ -791,12 +791,12 @@ struct boss_hunter_toc5AI : public ScriptedAI
             }
             uiDisengageCooldown = 20000;
         }else uiDisengageCooldown -= uiDiff;
-		
+
         if (uiLightningArrowsTimer <= uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(pTarget,SPELL_LIGHTNING_ARROWS);
-				
+
             uiLightningArrowsTimer = 15000;
 
         } else uiLightningArrowsTimer -= uiDiff;
@@ -845,10 +845,10 @@ struct boss_hunter_toc5AI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-	 		DoScriptText(SAY_START, me);	
+                        DoScriptText(SAY_START, me);
         if (pInstance)
             pInstance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
-		if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE1)))
+                if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE1)))
                     pInstance->HandleGameObject(pGO->GetGUID(),true);
     }
 };
@@ -963,10 +963,10 @@ struct boss_rouge_toc5AI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-		DoScriptText(SAY_START, me);	
+                DoScriptText(SAY_START, me);
         if (pInstance)
             pInstance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
-		if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE1)))
+                if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE1)))
                     pInstance->HandleGameObject(pGO->GetGUID(),true);
     }
 };
