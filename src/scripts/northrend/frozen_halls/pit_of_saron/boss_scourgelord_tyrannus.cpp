@@ -235,12 +235,12 @@ struct boss_rimefangAI : public ScriptedAI
                     return;
                 case EVENT_ICY_BLAST:
                     if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        DoCast(pTarget, SPELL_ICY_BLAST);
+                  //      DoCast(pTarget, SPELL_ICY_BLAST);
                     events.ScheduleEvent(EVENT_ICY_BLAST_2, 5000);
                     return;
                 case EVENT_ICY_BLAST_2:
                     if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        DoCast(pTarget->getVictim(), SPELL_ICY_BLAST_2);
+                //        DoCast(pTarget->getVictim(), SPELL_ICY_BLAST_2);
                     events.ScheduleEvent(EVENT_ICY_BLAST, 30000);
                     return;
             }
