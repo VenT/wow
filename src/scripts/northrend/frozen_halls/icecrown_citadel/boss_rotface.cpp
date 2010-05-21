@@ -153,7 +153,7 @@ struct boss_RotfaceAI : public ScriptedAI
 		{
                         if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
                         {
-			DoCast(pTarget), 71213);
+			DoCast(pTarget, 71213);
 			m_uiMutatedInfectionTimer = 8000+rand()%4000;
                         }
 		} else m_uiMutatedInfectionTimer -= diff;
@@ -163,7 +163,7 @@ struct boss_RotfaceAI : public ScriptedAI
                         if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
                         {
                   DoScriptText(SAY_BERSERK, me);
-			DoCast(pTarget), 47008);
+			DoCast(pTarget, 47008);
 			m_uiBerserkTimer = 540000;
                         }
 		} else m_uiBerserkTimer -= diff;
