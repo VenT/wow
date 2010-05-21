@@ -76,8 +76,8 @@ struct boss_RotfaceAI : public ScriptedAI
 	m_uiSlimeSprayTimer = 20000+rand()%2000;
 	m_uiMutatedInfectionTimer = 6000+rand()%4000;
     m_uiBerserkTimer = 360000;
-	m_uiSummonLittleTimer = 60000; // not officially ?
-	m_uiSummonBigTimer = 90000; // not officially
+	m_uiSummonLittleTimer = 90000; // not officially ?
+	m_uiSummonBigTimer = 120000; // not officially
 	 
 
 		if(m_pInstance)
@@ -118,7 +118,7 @@ struct boss_RotfaceAI : public ScriptedAI
             { 
                  me->SummonCreature(36897, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
 
-                m_uiSummonLittleTimer = 60000+rand()%4000; 
+                m_uiSummonLittleTimer = 90000+rand()%4000; 
             }  
             else m_uiSummonLittleTimer -= diff;
 
@@ -126,34 +126,46 @@ struct boss_RotfaceAI : public ScriptedAI
             { 
                  me->SummonCreature(36899, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
 
-                m_uiSummonBigTimer = 90000+rand()%4000; 
+                m_uiSummonBigTimer = 120000+rand()%4000; 
             }  
             else m_uiSummonBigTimer -= diff;
 
 		if (m_uiOozeFloodTimer <= diff)
 		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1), 71215);
+                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
+                        {
+			DoCast(pTarget, 71215);
 			m_uiOozeFloodTimer = 12000+rand()%3000;
+                        }
 		} else m_uiOozeFloodTimer -= diff;
 
 		if (m_uiSlimeSprayTimer <= diff)
 		{
+                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
+                        {
 			DoScriptText(SAY_SLIME_SPRAY, me);
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1), 71213);
+			DoCast(pTarget, 71213);
 			m_uiSlimeSprayTimer = 20000+rand()%2000;
+                        }
 		} else m_uiSlimeSprayTimer -= diff;
 
 		if (m_uiMutatedInfectionTimer <= diff)
 		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1), 71213);
+                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
+                        {
+			DoCast(pTarget), 71213);
 			m_uiMutatedInfectionTimer = 8000+rand()%4000;
+                        }
 		} else m_uiMutatedInfectionTimer -= diff;
 
 		if (m_uiBerserkTimer <= diff)
 		{
+                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
+                        {
                   DoScriptText(SAY_BERSERK, me);
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1), 47008);
-			m_uiBerserkTimer = 360000;
+			DoCast(pTarget), 47008);
+			m_uiBerserkTimer = 540000;
+                        }
 		} else m_uiBerserkTimer -= diff;
 
 		DoMeleeAttackIfReady();
