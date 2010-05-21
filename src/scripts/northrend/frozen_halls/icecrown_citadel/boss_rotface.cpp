@@ -132,27 +132,27 @@ struct boss_RotfaceAI : public ScriptedAI
 
 		if (m_uiOozeFloodTimer <= diff)
 		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71215);
+			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1), 71215);
 			m_uiOozeFloodTimer = 12000+rand()%3000;
 		} else m_uiOozeFloodTimer -= diff;
 
 		if (m_uiSlimeSprayTimer <= diff)
 		{
 			DoScriptText(SAY_SLIME_SPRAY, me);
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71213);
+			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1), 71213);
 			m_uiSlimeSprayTimer = 20000+rand()%2000;
 		} else m_uiSlimeSprayTimer -= diff;
 
 		if (m_uiMutatedInfectionTimer <= diff)
 		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71213);
-			m_uiMutatedInfectionTimer = 6000+rand()%4000;
+			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1), 71213);
+			m_uiMutatedInfectionTimer = 8000+rand()%4000;
 		} else m_uiMutatedInfectionTimer -= diff;
 
 		if (m_uiBerserkTimer <= diff)
 		{
                   DoScriptText(SAY_BERSERK, me);
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 47008);
+			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1), 47008);
 			m_uiBerserkTimer = 360000;
 		} else m_uiBerserkTimer -= diff;
 
@@ -176,8 +176,8 @@ struct npc_OozeBigAI : public ScriptedAI
 
     void Reset()
     {
-	m_uiStickyOozeTimer = 5000+rand()%3000;
-	m_uiRadiatingOozeTimer = 7000+rand()%2000;
+	m_uiStickyOozeTimer = 6000+rand()%3000;
+	m_uiRadiatingOozeTimer = 8000+rand()%2000;
     }
 
     void EnterCombat(Unit* who)
@@ -196,7 +196,7 @@ struct npc_OozeBigAI : public ScriptedAI
 		if (m_uiStickyOozeTimer <= diff)
 		{
 			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71208);
-			m_uiStickyOozeTimer = 5000+rand()%3000;
+			m_uiStickyOozeTimer = 6000+rand()%3000;
 		} else m_uiStickyOozeTimer -= diff;
 
 		if (m_uiRadiatingOozeTimer <= diff)
@@ -223,7 +223,7 @@ struct npc_OozeLittleAI : public ScriptedAI
 
     void Reset()
     {
-	m_uiStickyOozeTimer = 5000+rand()%2000;
+	m_uiStickyOozeTimer = 6000+rand()%2000;
 	m_uiRadiatingOozeTimer = 6000+rand()%3000;
     }
 
@@ -243,7 +243,7 @@ struct npc_OozeLittleAI : public ScriptedAI
 		if (m_uiStickyOozeTimer <= diff)
 		{
 			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71208);
-			m_uiStickyOozeTimer = 5000+rand()%3000;
+			m_uiStickyOozeTimer = 6000+rand()%3000;
 		} else m_uiStickyOozeTimer -= diff;
 
 		if (m_uiRadiatingOozeTimer <= diff)
