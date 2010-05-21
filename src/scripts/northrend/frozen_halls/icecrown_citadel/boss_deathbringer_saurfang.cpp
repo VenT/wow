@@ -183,7 +183,7 @@ struct boss_saurfangAI : public ScriptedAI
                                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                                 DoCast(target, RAID_MODE(N_10_SPELL_BLOOD_NOVA,N_25_SPELL_BLOOD_NOVA,H_10_SPELL_BLOOD_NOVA,H_25_SPELL_BLOOD_NOVA));
 //                                me->ModifyHealth(me->GetMaxHealth() * 0.01);
-                                m_uiBloodNovaDamageTimer = 95000;
+                                m_uiBloodNovaDamageTimer = 65000;
                         }
                 }
                 else m_uiBloodNovaDamageTimer -= uiDiff;
