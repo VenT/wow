@@ -204,7 +204,7 @@ struct boss_gormok_impalerAI : public ScriptedAI
                 ++m_uiSnoboldsLaunched;
                 DoCast(me, SPELL_RISING_ANGER, true);
             }
-            m_uiSnoboldTimer = 50000 + rand()%15000;
+            m_uiSnoboldTimer = 55000 + rand()%15000;
         }
         else
             m_uiSnoboldTimer -= uiDiff;
