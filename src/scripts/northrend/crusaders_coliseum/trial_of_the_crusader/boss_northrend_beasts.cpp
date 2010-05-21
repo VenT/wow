@@ -146,8 +146,8 @@ struct boss_gormok_impalerAI : public ScriptedAI
                 me->SetSpeed(MOVE_RUN, 1.5f);
 
                 m_uiStaggeringStompTimer = urand(13*IN_MILISECONDS,15*IN_MILISECONDS);
-                m_uiImpaleTimer = urand(10*IN_MILISECONDS,11*IN_MILISECONDS);
-                m_uiFireBombTimer = urand(15*IN_MILISECONDS,20*IN_MILISECONDS);
+                m_uiImpaleTimer = urand(40*IN_MILISECONDS,50*IN_MILISECONDS);
+                m_uiFireBombTimer = urand(30*IN_MILISECONDS,40*IN_MILISECONDS);
                 m_uiFireBombTriggerTimer = urand(10*IN_MILISECONDS,18*IN_MILISECONDS);
                 m_uiMaxSnobolds = RAID_MODE(4,5,4,5);
                 m_uiSnoboldsLaunched = 0;
@@ -212,7 +212,7 @@ struct boss_gormok_impalerAI : public ScriptedAI
                 if (m_uiImpaleTimer <= uiDiff)
                 {
                         DoCast(me->getVictim(), SPELL_IMPALE);
-                        m_uiImpaleTimer = urand(10*IN_MILISECONDS,11*IN_MILISECONDS);
+                        m_uiImpaleTimer = urand(40*IN_MILISECONDS,50*IN_MILISECONDS);
                 }
                 else m_uiImpaleTimer -= uiDiff;
 
@@ -228,7 +228,7 @@ struct boss_gormok_impalerAI : public ScriptedAI
                         if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                         {
                                 DoCast(pTarget, SPELL_FIRE_BOMB);
-                                m_uiFireBombTimer = urand(15*IN_MILISECONDS,20*IN_MILISECONDS);
+                                m_uiFireBombTimer = urand(30*IN_MILISECONDS,50*IN_MILISECONDS);
                         }
                 }
                 else m_uiFireBombTimer -= uiDiff;
@@ -862,7 +862,7 @@ struct mob_FireBombAI : public Scripted_NoMovementAI
     void Reset()
         {
                 m_uiDespawnTimer = 65000;
-                m_uiFireBombTimer = 4000;
+                m_uiFireBombTimer = 5000;
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
                 me->SetReactState(REACT_PASSIVE);
                 me->SetDisplayId(MODEL_INVISIBLE);
@@ -873,7 +873,7 @@ struct mob_FireBombAI : public Scripted_NoMovementAI
                 if (m_uiFireBombTimer <= uiDiff)
                 {
                         DoCast(me, SPELL_FIRE_BOMB_VISUAL_DAMAGE);
-                        m_uiFireBombTimer = 90000;
+                        m_uiFireBombTimer = 12000;
                 }
                 else m_uiFireBombTimer -= uiDiff;
 
