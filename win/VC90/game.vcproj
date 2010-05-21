@@ -1575,6 +1575,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\game\OutdoorPvPWG.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\game\OutdoorPvPWG.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\game\OutdoorPvPHP.cpp"
 				>
 			</File>
@@ -3127,6 +3135,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\scripts\northrend\storm_peaks.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\scripts\northrend\wintergrasp.cpp"
 					>
 				</File>
 				<File
