@@ -35,13 +35,6 @@
 #include "ObjectMgr.h"
 #include "World.h"
 
-<<<<<<< HEAD:src/game/MovementHandler.cpp
-// Movement anticheat defines
-//#define ANTICHEAT_DEBUG
-#define ANTICHEAT_EXCEPTION_INFO
-// End Movement anticheat defines
-
-=======
 //#define __ANTI_DEBUG__
 
 #ifdef __ANTI_DEBUG__

@@ -655,7 +655,6 @@ class World
         static int32 GetVisibilityNotifyPeriodInInstances() { return m_visibility_notify_periodInInstances;  }
         static int32 GetVisibilityNotifyPeriodInBGArenas()  { return m_visibility_notify_periodInBGArenas;   }
 
-<<<<<<< HEAD:src/game/World.h
         void SetWintergrapsTimer(uint32 timer, uint32 state)
         {
             m_WintergrapsTimer = timer;
@@ -668,16 +667,6 @@ class World
         uint32 m_WintergrapsTimer;
         uint32 m_WintergrapsState;
 
-
-        // movement anticheat
-        static bool GetEnableMvAnticheat()       { return m_EnableMvAnticheat;     }
-        static uint32 GetTeleportToPlaneAlarms() { return m_TeleportToPlaneAlarms; }
-        static uint32 GetMistimingDelta()        { return m_MistimingDelta;        }
-        static uint32 GetMistimingAlarms()       { return m_MistimingAlarms;       }
-        // end movement anticheat		
-		
-=======
->>>>>>> 2a294af... Anticheat based on AC-2 and intersected with MaNGOS.:src/game/World.h
         void ProcessCliCommands();
         void QueueCliCommand(CliCommandHolder::Print* zprintf, char const* input) { cliCmdQueue.add(new CliCommandHolder(input, zprintf)); }
 
