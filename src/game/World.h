@@ -655,6 +655,7 @@ class World
         static int32 GetVisibilityNotifyPeriodInInstances() { return m_visibility_notify_periodInInstances;  }
         static int32 GetVisibilityNotifyPeriodInBGArenas()  { return m_visibility_notify_periodInBGArenas;   }
 
+<<<<<<< HEAD:src/game/World.h
         void SetWintergrapsTimer(uint32 timer, uint32 state)
         {
             m_WintergrapsTimer = timer;
@@ -675,6 +676,8 @@ class World
         static uint32 GetMistimingAlarms()       { return m_MistimingAlarms;       }
         // end movement anticheat		
 		
+=======
+>>>>>>> 2a294af... Anticheat based on AC-2 and intersected with MaNGOS.:src/game/World.h
         void ProcessCliCommands();
         void QueueCliCommand(CliCommandHolder::Print* zprintf, char const* input) { cliCmdQueue.add(new CliCommandHolder(input, zprintf)); }
 
@@ -774,11 +777,6 @@ class World
         static int32 m_visibility_notify_periodOnContinents;
         static int32 m_visibility_notify_periodInInstances;
         static int32 m_visibility_notify_periodInBGArenas;
-        // movement anticheat enable flag
-        static bool m_EnableMvAnticheat;
-        static uint32 m_TeleportToPlaneAlarms;
-        static uint32 m_MistimingDelta;
-        static uint32 m_MistimingAlarms;
 
         // CLI command holder to be thread safe
         ACE_Based::LockedQueue<CliCommandHolder*,ACE_Thread_Mutex> cliCmdQueue;
