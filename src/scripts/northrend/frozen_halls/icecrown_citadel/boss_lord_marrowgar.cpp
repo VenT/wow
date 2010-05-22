@@ -139,7 +139,7 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
     void Reset()
     {
                 m_uiBoneSpikeGraveyardTimer     = 18000; // alle 15 Sek 10 Version 1 25 Version 3 Player
-                m_uiColdFlameTimer                      = 7000;
+                m_uiColdFlameTimer                      = 9000;
                 m_uiBoneStormChannelTimer       = 50000; // 1:30
                 m_uiColdFlameTimer2                     = 5000;
                 m_uiBoneStormDamageTimer = urand(2000,3000);
@@ -324,7 +324,7 @@ struct Cold_FlameAI : public ScriptedAI
                 DoCast(me, RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
                 me->SetReactState(REACT_PASSIVE);
                 me->SetSpeed(MOVE_WALK, 1.5f, true);
-                m_uiColdFlameTimer = 2000;
+                m_uiColdFlameTimer = 20000;
     }
 
         void UpdateAI(const uint32 uiDiff)
@@ -332,7 +332,7 @@ struct Cold_FlameAI : public ScriptedAI
                 if(m_uiColdFlameTimer <= uiDiff)
                 {
                         DoCast(me, RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
-                        m_uiColdFlameTimer = 2000;
+                        m_uiColdFlameTimer = 20000;
                 }
                 else m_uiColdFlameTimer -= uiDiff;
 
