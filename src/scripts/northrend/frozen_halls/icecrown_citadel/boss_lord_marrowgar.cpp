@@ -143,7 +143,7 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
                 m_uiBoneStormChannelTimer       = 50000; // 1:30
                 m_uiColdFlameTimer2                     = 5000;
                 m_uiBoneStormDamageTimer = urand(2000,3000);
-                m_uiBerserkTimer = 600000;
+                m_uiBerserkTimer = 720000;
 
                 me->SetSpeed(MOVE_RUN, 2.0f, true);
                 me->SetSpeed(MOVE_WALK, 2.0f, true);
