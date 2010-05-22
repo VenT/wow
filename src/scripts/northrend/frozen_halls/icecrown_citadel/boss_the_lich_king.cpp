@@ -21,7 +21,7 @@
 #include "ScriptedPch.h"
 #include "icecrown_citadel.h"
 
-#define GOSSIP_START_EVENT "Eventstart"
+#define GOSSIP_START_EVENT "We are ready Fordring!"
 
 enum Yells
 {

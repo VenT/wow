@@ -72,11 +72,10 @@ UPDATE `creature_template` SET `ScriptName`='boss_acidmaw' WHERE (`entry`='35144
 UPDATE `creature_template` SET `ScriptName`='boss_dreadscale' WHERE (`entry`='34799');
 
 -- IceHowl
+UPDATE `creature_template` SET `AIName`='',`ScriptName`='mob_valkyr_orb' WHERE `entry` IN(34628,34630);
 UPDATE `creature_template` SET `ScriptName`='boss_icehowl' WHERE (`entry`='34797');
-
 UPDATE `creature_template` SET `ScriptName`='boss_fjola' WHERE (`entry`='34497');
 UPDATE `creature_template` SET `ScriptName`='boss_eydis' WHERE (`entry`='34496');
-UPDATE `creature_template` SET `AIName`='',`ScriptName`='mob_valkyr_orb' WHERE `entry` IN(34628,34630);
 UPDATE `creature_template` SET unit_flags= 33554434, faction_A =14, faction_H=14 WHERE `entry` IN (34628,34630);
 INSERT INTO npc_spellclick_spells VALUES (34567, 65684, 0, 0, 0, 1), (34568, 65686, 0, 0, 0, 1); -- dark/light "portals"
 INSERT INTO spell_script_target values (65875, 1, 34497), (65876, 1, 34496);
@@ -93,7 +92,7 @@ UPDATE `creature_template` SET `ScriptName`='Mob_NerubianTrigger' WHERE (`entry`
 INSERT INTO `script_texts` VALUES ('0', '-1600205', 'Welcome champions, you have heard the call of the Argent Crusade, and you have boldly answered. It is here, in the Crusader\'s Coliseum, that you will face your greatest challenges. Those of you, who survive the rigors of the coliseum will join the Argent Crusade on it\'s march to Icecrown Citadel.', null, null, 'Willkommen, Champions! Ihr habt den Ruf des Argentumkreuzzugs vernommen und seid ihm mutig gefolgt! Hier, im Kolosseum der Kreuzfahrer, werdet Ihr auf Eure größten Herausforderungen treffen.Die jenigen unter Euch, welche die Gefahren des Kolosseums überleben, werden den Kreuzzug bei seinem Marsch auf die Eiskronenzitadelle begleiten.', null, null, null, null, null, '16036', '1', '0', '0', null);
 INSERT INTO `script_texts` VALUES ('0', '-1600206', 'Hailing from the deepest, darkest carverns of the storm peaks, Gormok the Impaler! Battle on, heroes!', null, null, 'Er kommt aus den tiefsten, dunkelsten Höhlen der Sturmgifpel - Gormok der Pfähler! Voran, Helden!', null, null, null, null, null, '16038', '1', '0', '0', null);
 REPLACE INTO `script_texts` VALUES ('0', '-1600207', 'Let the game begin!', '', null, 'Lasst die Spiele beginnen.', null, null, null, null, null, '16037', '1', '0', '0', null);
-INSERT INTO `script_texts` VALUES ('0', '-1600208', 'Im Ring des Blutes habe ich würdigere Kämpfer gesehen. Ihr verschwendet unsere Zeit, Paladin!', null, null, 'Im Ring des Blutes habe ich würdigere Kämpfer gesehen. Ihr verschwendet unsere Zeit, Paladin!', null, null, null, null, null, '16026', '1', '0', '0', null);
+INSERT INTO `script_texts` VALUES ('0', '-1600208', ' I have seen more worthy challenges in the ring of blood, you waste our time paladin!', null, null, 'Im Ring des Blutes habe ich würdigere Kämpfer gesehen. Ihr verschwendet unsere Zeit, Paladin!', null, null, null, null, null, '16026', '1', '0', '0', null);
 INSERT INTO `script_texts` VALUES ('0', '-1600209', 'Steel yourselves, heroes, for the twin terrors Acidmaw and Dreadscale. Enter the arena!', null, null, 'Stellt euch Helden, den die Zwillingsschrecken Ätschlund und Schreckensmaul erscheinen in der Arena.', null, null, null, null, null, '16039', '1', '0', '0', null);
 INSERT INTO `script_texts` VALUES ('0', '-1600210', 'The air freezes with the introduction of our next combatant, Icehowl! Kill or be killed, champions!', null, null, 'Mit der Ankündigung unseres nächsten Kämpers gefriert die Luft selbst: Eisheuler! Tötet oder werdet getötet, Champions!', null, null, null, null, null, '16040', '1', '0', '0', null);
 INSERT INTO `script_texts` VALUES ('0', '-1600211', 'Grand Warlock Wilfred Fizzlebang will summon forth your next challenge. Stand by for his entry!', null, null, 'Großhexenmeister Wilfred Zischknall wird Eure nächste Herausforderung beschwören. Harrt seiner Ankunft.', null, null, null, null, null, '16043', '1', '0', '0', null);
