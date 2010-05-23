@@ -324,7 +324,7 @@ struct Cold_FlameAI : public ScriptedAI
                 DoCast(me, RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
                 me->SetReactState(REACT_PASSIVE);
                 me->SetSpeed(MOVE_WALK, 1.5f, true);
-                m_uiColdFlameTimer = 20000;
+                m_uiColdFlameTimer = 8000;
     }
 
         void UpdateAI(const uint32 uiDiff)
@@ -332,7 +332,7 @@ struct Cold_FlameAI : public ScriptedAI
                 if(m_uiColdFlameTimer <= uiDiff)
                 {
                         DoCast(me, RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
-                        m_uiColdFlameTimer = 20000;
+                        m_uiColdFlameTimer = 8000;
                 }
                 else m_uiColdFlameTimer -= uiDiff;
 
