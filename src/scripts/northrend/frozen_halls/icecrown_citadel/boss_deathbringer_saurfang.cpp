@@ -254,7 +254,7 @@ struct boss_bloodbeastAI : public ScriptedAI
     {
                 if (Creature* Saurfang = me->GetCreature(*me, m_pInstance->GetData64(DATA_SAURFANG)))
         {
-                        Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.05);
+                        Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.03);
                 }
     }
 
