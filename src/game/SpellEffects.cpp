@@ -5259,7 +5259,7 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                 }
                 case 48025:                                     // Headless Horseman's Mount
                 {
-                iif (!unitTarget || unitTarget->GetTypeId() != TYPEID_PLAYER)
+                if (!unitTarget || unitTarget->GetTypeId() != TYPEID_PLAYER)
                         return;
 
                     switch(unitTarget->ToPlayer()->GetBaseSkillValue(762))
