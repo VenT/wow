@@ -406,8 +406,6 @@ void ThreatManager::_addThreat(Unit *pVictim, float fThreat)
         HostileReference* hostilReference = new HostileReference(pVictim, this, 0);
         iThreatContainer.addReference(hostilReference);
         hostilReference->addThreat(fThreat);                // now we add the real threat
-        if(!pVictim->isInCombat())
-        pVictim->SetInCombat();
         if (pVictim->GetTypeId() == TYPEID_PLAYER && pVictim->ToPlayer()->isGameMaster())
             hostilReference->setOnlineOfflineState(false);  // GM is always offline
     }
