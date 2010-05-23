@@ -2470,6 +2470,13 @@ bool InstanceMap::CanEnter(Player *player)
         return false;
     }
 
+    // Vault of Archavon
+    if (GetId() == 624 && !sOutdoorPvPMgr.CanEnterVaultOfArchavon(player))
+    {
+        player->SendTransferAborted(GetId(), TRANSFER_ABORT_MAP_NOT_ALLOWED);
+        return false;
+    }
+
     return Map::CanEnter(player);
 }
 
