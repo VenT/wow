@@ -41,6 +41,7 @@
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
 #include "GossipDef.h"
+#include "OutdoorPvPMgr.h"
 
 #include "MapInstanced.h"
 #include "InstanceSaveMgr.h"
