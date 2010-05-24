@@ -170,20 +170,20 @@ struct boss_saurfangAI : public ScriptedAI
                 {
                         DoCast(me, SPELL_BLOOD_NOVA_TRIGGER);
                         me->ModifyPower(me->getPowerType(), +10);
-                        m_uiBloodNovaChannelTimer = 22000;
+                        m_uiBloodNovaChannelTimer = 19000;
                         m_uiBloodNovaDamageTimer = 2000;
                 }
                 else m_uiBloodNovaChannelTimer -= uiDiff;
 
                 if (m_uiBloodNovaDamageTimer < uiDiff)
                 {
-                        uint32 count = RAID_MODE(1,3,1,3);
+                        uint32 count = RAID_MODE(1,4,1,4);
             for (uint8 i = 1; i <= count; i++)
             {
                                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                                 DoCast(target, RAID_MODE(N_10_SPELL_BLOOD_NOVA,N_25_SPELL_BLOOD_NOVA,H_10_SPELL_BLOOD_NOVA,H_25_SPELL_BLOOD_NOVA));
 //                                me->ModifyHealth(me->GetMaxHealth() * 0.01);
-                                m_uiBloodNovaDamageTimer = 65000;
+                                m_uiBloodNovaDamageTimer = 50000;
                         }
                 }
                 else m_uiBloodNovaDamageTimer -= uiDiff;
@@ -195,7 +195,7 @@ struct boss_saurfangAI : public ScriptedAI
                                 DoCast(me, SPELL_SUMMON_BLOOD_BEAST);
                                 me->SummonCreature(CREATURE_BLOOD_BEAST, BloodBeastSpawnLocation[i][0],BloodBeastSpawnLocation[i][1],BloodBeastSpawnLocation[i][2],BloodBeastSpawnLocation[i][3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
                                 DoScriptText(SAY_BLOODBEASTS, me);
-                                me->ModifyHealth(me->GetMaxHealth() * 0.01);
+                                me->ModifyHealth(me->GetMaxHealth() * 0.02);
                                 me->ModifyPower(me->getPowerType(), +10);
                                 m_uiSummonBloodBeastTimer = 40000;
                         }
