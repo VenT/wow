@@ -150,17 +150,17 @@ void AddSC_blood_prince_council()
     Script* NewScript;
 
     NewScript = new Script;
-    NewScript->Name = "boss_valanar_icc";
+    NewScript->Name = "boss_Valanar";
     NewScript->GetAI = &GetAI_boss_Valanar;
     NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "boss_taldaram_icc";
+    NewScript->Name = "boss_Taldaram";
     NewScript->GetAI = &GetAI_boss_Taldaram;
     NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "boss_keleset_icc";
+    NewScript->Name = "boss_Keleset";
     NewScript->GetAI = &GetAI_boss_Keleset;
     NewScript->RegisterSelf();
 }
