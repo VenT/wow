@@ -93,29 +93,60 @@ bool GOSelect_icecrown_teleporter( Player *pPlayer, GameObject *pGO, uint32 send
         pPlayer->TeleportTo(631, -549.073486, 2211.289307, 539.223450, 6.275452);
         pPlayer->CLOSE_GOSSIP_MENU(); break;
     case PLAGUEWORKS:
-        pPlayer->TeleportTo(631, 4357.033691, 2864.192627, 349.337006, 1.559445);
-        pPlayer->CLOSE_GOSSIP_MENU();
-		break;
+        pPlayer->TeleportTo(631, 4357.033691, 2864.192627, 349.336090, 1.583007);
+        pPlayer->CLOSE_GOSSIP_MENU(); break;
     case CRIMSONHALL:
         pPlayer->TeleportTo(631, 4452.79785, 2769.291504, 349.350342, 0.023817);
-        pPlayer->CLOSE_GOSSIP_MENU();
-		break;
+        pPlayer->CLOSE_GOSSIP_MENU(); break;
     case FWHALLS:
-        pPlayer->TeleportTo(631, 4357.003906, 2674.260010, 349.342346, 4.736377);
-        pPlayer->CLOSE_GOSSIP_MENU();
-		break;
+        pPlayer->TeleportTo(631, 4356.524902, 2674.820068, 349.340515, 4.713434);
+        pPlayer->CLOSE_GOSSIP_MENU(); break;
     case SINDRAGOSA:
         pPlayer->TeleportTo(631, 4356.581543, 2565.748291, 220.401520, 4.886216);
-        pPlayer->CLOSE_GOSSIP_MENU(); 
-		break;
+        pPlayer->CLOSE_GOSSIP_MENU(); break;
     case LICHKING:
-        pPlayer->TeleportTo(631, 529.3969, -2124.879883, 1055.959961, 0.120937);
-        pPlayer->CLOSE_GOSSIP_MENU(); 
-		break;
+        pPlayer->TeleportTo(631, 530.606018, -2124.770020, 1040.859985, 3.033980);
+        pPlayer->CLOSE_GOSSIP_MENU(); break;
     }
 
     return true;
 }
+
+bool GOHello_go_plague_sigil(Player *player, GameObject* pGo)
+{
+    ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
+    if(!pInstance) return false;
+
+    if (pInstance->GetData(DATA_FESTERGURT_EVENT) == DONE)
+           pInstance->SetData(DATA_FESTERGURT_EVENT, DONE);
+    if (pInstance->GetData(DATA_ROTFACE_EVENT) == DONE)
+           pInstance->SetData(DATA_ROTFACE_EVENT, DONE);
+
+    return true;
+}
+
+bool GOHello_go_bloodwing_sigil(Player *player, GameObject* pGo)
+{
+    ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
+    if(!pInstance) return false;
+
+    if (pInstance->GetData(DATA_PROFESSOR_PUTRICIDE_EVENT) == DONE)
+           pInstance->SetData(DATA_PROFESSOR_PUTRICIDE_EVENT, DONE);
+
+    return true;
+}
+
+bool GOHello_go_frostwing_sigil(Player *player, GameObject* pGo)
+{
+    ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
+    if(!pInstance) return false;
+
+    if (pInstance->GetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT) == DONE)
+           pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, DONE);
+
+    return true;
+}
+
 
 void AddSC_icecrown_teleporter()
 {
@@ -124,5 +155,20 @@ void AddSC_icecrown_teleporter()
     newscript->Name = "icecrown_teleporter";
     newscript->pGOHello = &GoHello_icecrown_teleporter;
     newscript->pGOSelect = &GOSelect_icecrown_teleporter;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_plague_sigil";
+    newscript->pGOHello  = &GOHello_go_plague_sigil;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_bloodwing_sigil";
+    newscript->pGOHello  = &GOHello_go_bloodwing_sigil;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_frostwing_sigil";
+    newscript->pGOHello  = &GOHello_go_frostwing_sigil;
     newscript->RegisterSelf();
 }

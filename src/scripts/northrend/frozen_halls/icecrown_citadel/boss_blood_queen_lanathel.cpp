@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 - 2010 TrinityCore <http://www.trinitycore.org/>
+ /* Copyright (C) 2009 - 2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-  
+ 
+ /* Script Data Start
+Name: Blood-Queen Lana'thel
+Commend: 
+Complet: 20%
+Todo: Spell Fixxes!
+Script Data End */
+ 
 #include "ScriptedPch.h"
 #include "icecrown_citadel.h"
 
@@ -33,15 +40,15 @@ enum Yells
 
 enum BloodQuennSpells
 {
-	SPELL_SHROUD_OF_SORROW			=	72982,
+	SPELL_SHROUD_OF_SORROW			=	72982, // Dauerhafter Debuff
 	SPELL_DELIRIOUS_SLASH			=	71623,
 	SPELL_BLOOD_MIRROR_1			=	70821,
 	SPELL_BLOOD_MIRROR_2			=	71510,
 	SPELL_VAMPIRIC_BITE				=	71726,
-	SPELL_PACT_OF_THE_DARKFALLEN_1	=	71340, 
-	SPELL_PACT_OF_THE_DARKFALLEN_2	=	71341, 
+	SPELL_PACT_OF_THE_DARKFALLEN_1	=	71340, // Trigger
+	SPELL_PACT_OF_THE_DARKFALLEN_2	=	71341, // Damage
 	SPELL_SWARMING_SHADOWS			=	71264, // Spawn Creature 38163 need Visual Spell ID :/
-	SPELL_TWILIGHT_BLOODBOLT		=	71446, 
+	SPELL_TWILIGHT_BLOODBOLT		=	71446, // Cast on Random targets
 	SPELL_BLOODBOLD_WHIRL			=	71772,
 	SPELL_BLOODBOLD_SPLASH			=	71481,
 	SPELL_BERSERK					=	47008,
@@ -71,9 +78,9 @@ enum Achievments
 const Position Phase2Position = { 4595.640137, 2769.195557, 400.137054};
 const Position FlyPosition = { 4595.904785, 2769.315918, 421.838623};
 
-struct boss_blood_queen_lanathelAI : public ScriptedAI
+struct Boss_Blood_Queen_LanathelAI : public ScriptedAI
 {
-    boss_blood_queen_lanathelAI(Creature *pCreature) : ScriptedAI(pCreature)
+    Boss_Blood_Queen_LanathelAI(Creature *pCreature) : ScriptedAI(pCreature)
 	{
         m_pInstance = pCreature->GetInstanceData();
     }
@@ -121,29 +128,21 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
 		me->SetFlying(false);
 
 		me->SetReactState(REACT_AGGRESSIVE);
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, NOT_STARTED);
 	}
 
 	void EnterCombat(Unit *who)
 	{
 		DoScriptText(SAY_AGGRO, me);
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, IN_PROGRESS);
 	}
 
 	void KilledUnit(Unit* victim)
 	{
+		//DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
 	}
 
 	void JustDied(Unit* Killer)
 	{
 		DoScriptText(SAY_DEATH, me);
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, DONE);
 	}
 
      void UpdateAI(const uint32 uiDiff)
@@ -256,9 +255,9 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
 	}
 };
 
-struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
+struct mob_swarming_shadowsAI : public Scripted_NoMovementAI
 {
-    npc_swarming_shadowsAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
+    mob_swarming_shadowsAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
     {
         m_pInstance = pCreature->GetInstanceData();
     }
@@ -286,27 +285,27 @@ struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_boss_blood_queen_lanathel(Creature* pCreature)
+CreatureAI* GetAI_mob_swarming_shadows(Creature* pCreature)
 {
-     return new boss_blood_queen_lanathelAI (pCreature);
+     return new mob_swarming_shadowsAI (pCreature);
 }
 
-CreatureAI* GetAI_npc_swarming_shadows(Creature* pCreature)
+CreatureAI* GetAI_Boss_Blood_Queen_Lanathel(Creature* pCreature)
 {
-     return new npc_swarming_shadowsAI (pCreature);
+     return new Boss_Blood_Queen_LanathelAI (pCreature);
 }
 
-void AddSC_Blood_Queen_Lanathel()
+void AddSC_blood_queen_lanathel()
 {
      Script *newscript;
 
      newscript = new Script;
-     newscript->Name = "boss_blood_queen_lanathel";
-     newscript->GetAI = &GetAI_boss_blood_queen_lanathel;
+     newscript->Name = "npc_blood_queen_lanathel";
+     newscript->GetAI = &GetAI_Boss_Blood_Queen_Lanathel;
      newscript->RegisterSelf();
 
 	 newscript = new Script;
-     newscript->Name = "npc_swarming_shadows";
-     newscript->GetAI = &GetAI_npc_swarming_shadows;
+     newscript->Name = "mob_swarming_shadows";
+     newscript->GetAI = &GetAI_mob_swarming_shadows;
      newscript->RegisterSelf();
 }

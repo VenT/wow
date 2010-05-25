@@ -275,8 +275,6 @@ struct boss_lich_kingAI : public ScriptedAI
 		summons.DespawnAll();
 
 		me->SetSpeed(MOVE_RUN, 1.8f);
-
-		me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISARMED);
     }
 
     void EnterCombat(Unit* pWho)
@@ -292,21 +290,21 @@ struct boss_lich_kingAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH_KING, me);
 
-		//play movie after lich king's death
-		Map::PlayerList const &PlList = me->GetMap()->GetPlayers();
-
-		if (PlList.isEmpty())
-			return;
-
-		for (Map::PlayerList::const_iterator i = PlList.begin(); i != PlList.end(); ++i)
-		{
-			if (Player* pPlayer = i->getSource())
-			{
-				pPlayer->SendMovieStart(16);
-			}
-		}
-
-		if(m_pInstance)
+	//play movie after lich king's death
+	Map::PlayerList const &PlList = me->GetMap()->GetPlayers();
+	
+	if (PlList.isEmpty())
+	    return;
+	
+	for (Map::PlayerList::const_iterator i = PlList.begin(); i != PlList.end(); ++i)
+	{
+	    if (Player* pPlayer = i->getSource())
+	    {
+		pPlayer->SendMovieStart(16);
+	    }
+	}
+	//end
+			if(m_pInstance)
 		m_pInstance->SetData(DATA_LICH_KING_EVENT, DONE);  
     }
 
@@ -337,6 +335,22 @@ struct boss_lich_kingAI : public ScriptedAI
 	}
 
 	/************* 10% Ending Start ************/
+	void ReviveCinematic()
+	{
+    Map::PlayerList const &PlList = pFather->GetMap()->GetPlayers();
+
+    if (PlList.isEmpty())
+            return;
+
+    for (Map::PlayerList::const_iterator i = PlList.begin(); i != PlList.end(); ++i)
+    {
+        if (Player* pPlayer = i->getSource())
+        {
+		    if (pPlayer && pPlayer->isDead())
+                pFather->CastSpell(pPlayer, 26687, true);
+        }
+    }
+    }
 	void SetEnding()
 	{
 		m_uiEndingTimer	= 4000;
@@ -619,26 +633,6 @@ struct boss_lich_kingAI : public ScriptedAI
 		}
 	}
 	/************ 10% Ending *************/
-	void ReviveCinematic()
-	{
-		Map::PlayerList const &PlList = pFather->GetMap()->GetPlayers();
-
-		if (PlList.isEmpty())
-			return;
-
-		for (Map::PlayerList::const_iterator i = PlList.begin(); i != PlList.end(); ++i)
-		{
-			if (Player* pPlayer = i->getSource())
-			{
-				if (pPlayer && pPlayer->isDead())
-				{
-					pFather->CastSpell(pPlayer, 26687, true);
-					pPlayer->ResurrectPlayer(100, false);
-				}
-			}
-		}
-	}
-
 	void EndingPhase()
 	{
 		if( m_uiEndingTimer )
@@ -703,6 +697,7 @@ struct boss_lich_kingAI : public ScriptedAI
 				case 13:
 					me->RemoveAura(SPELL_CHANNEL_KING);
 					me->CastSpell(me, SPELL_BOOM_VISUAL, false);
+                    pTirion->SetOrientation(pTirion->GetAngle(me->GetPositionX(), me->GetPositionY()));
 					KingEnding(300);
 					break;
 				case 14:
@@ -722,7 +717,6 @@ struct boss_lich_kingAI : public ScriptedAI
 					pFrostmourne->CastSpell(pFrostmourne, SPELL_BROKEN_FROSTMOURNE, false);
 					pFrostmourne->CastSpell(pFrostmourne, SPELL_FROSTMOURNE_TRIGGER, false);
 					pFrostmourne->GetMotionMaster()->MoveChase(me);
-					me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISARMED);
 					//pTirion->CastSpell(pTirion, SPELL_DISENGAGE, false);
 					KingEnding(2000);
 					break;
@@ -738,8 +732,9 @@ struct boss_lich_kingAI : public ScriptedAI
 					KingEnding(6000);
 					break;
 				case 20:
+					pFather = me->SummonCreature(CREAUTRE_MENETHIL, me->GetPositionX()+5, me->GetPositionY()+5, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 99999999);
+                    pFather->SetReactState(REACT_PASSIVE);
 					DoScriptText(SAY_ENDING_9_FATHER, pFather);
-					pFather = me->SummonCreature(CREAUTRE_MENETHIL, me->GetPositionX()+5, me->GetPositionY()+5, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 0);
 					KingEnding(6000);
 					break;
 				case 21:
@@ -754,9 +749,6 @@ struct boss_lich_kingAI : public ScriptedAI
 					break;
 				case 23:
 					DoScriptText(SAY_ENDING_12_KING, me);
-					//pTirion->SetReactState(REACT_AGGRESSIVE);
-					//pTirion->AI()->AttackStart(me);
-					//pFather->AI()->AttackStart(me);
 					KingEnding(5000);
 					break;
 			}
@@ -784,7 +776,6 @@ struct boss_TirionCitadellAI : public ScriptedAI
 
 		me->SetReactState(REACT_PASSIVE);
 		me->SetSpeed(MOVE_RUN, 1.8f);
-		me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
     }
 
 	void StartEvent()
@@ -841,7 +832,7 @@ struct boss_TirionCitadellAI : public ScriptedAI
 				case 7:
 					me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 397);
 					DoScriptText(SAY_INTRO_4_TIRION, me);
-					KingIntro(1000);
+					KingIntro(1500);
 					break;
 				case 8:
 					me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
@@ -1173,8 +1164,7 @@ bool GossipSelect_Tirion_ICC(Player* pPlayer, Creature* pCreature, uint32 uiSend
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-		pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-		pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CLOSE_GOSSIP_MENU();
 		((boss_TirionCitadellAI*)pCreature->AI())->StartEvent();
     }
     return true;
@@ -1207,7 +1197,7 @@ void AddSC_boss_lichking()
     NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "mob_ghoul";
+    NewScript->Name = "mob_ghoul_icc";
     NewScript->GetAI = &GetAI_mob_Ghoul;
     NewScript->RegisterSelf();
 

@@ -88,25 +88,16 @@ struct Boss_ProfessorPutricideAI : public ScriptedAI
 		m_uiPhase = 1;
 		m_uiUnstableExperimentTimer = 10000;
 		m_uiAddSpawnTimer = 60000;
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_PROFESSOR_PUTRICIDE_EVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit* who)
     {
 		DoScriptText(SAY_AGGRO, me);
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_PROFESSOR_PUTRICIDE_EVENT, IN_PROGRESS);
     }
 
 	void JustDied(Unit* killer)
     {  
 		DoScriptText(SAY_DEATH, me);
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_PROFESSOR_PUTRICIDE_EVENT, DONE);
     }
 
 	void KilledUnit(Unit *victim)

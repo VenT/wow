@@ -36,23 +36,23 @@ enum Yells
 
 enum Spells
 {
-	N_10_SPELL_PUNGENT_BLIGHT		=	69195, 
-	N_10_SPELL_GASTRIC_EXPLOSION	=	72227, 
-	SPELL_INHALE_BLIGHT				=	69165,
-	N_10_SPELL_VILE_GAS				=	72272, //
-	N_10_SPELL_GASTRIC_BLOAT		=	72219, //
+	N_10_SPELL_PUNGENT_BLIGHT		=	69195, // 
+	N_10_SPELL_GASTRIC_EXPLOSION	=	72227, //
+	SPELL_INHALE_BLIGHT				=	69165, //
+	N_10_SPELL_VILE_GAS				=	72272, // Random
+	N_10_SPELL_GASTRIC_BLOAT		=	72219, // Tank
 	SPELL_GAS_VISUAL_SMAL			=	69154, //
 	SPELL_GAS_VISUAL_MIDDEL			=	69152, //
-	SPELL_GAS_VISUAL_BIG			=	69126, // 
+	SPELL_GAS_VISUAL_BIG			=	69126, // 69157 ?? :/
 	SPELL_GAS_SPORES				=	69279, // 10 Version 2 Player 25 Version 3 Player
-	SPELL_BERSERK					=	47008, //
-	SPELL_INOCULATED				=	72103, //
+	SPELL_BERSERK					=	47008, // 5 Min :O
+	SPELL_INOCULATED				=	72103, // Impfung
 	SPELL_BLIGHTED_SPORES			=	69290, 
 };
 
-struct Boss_FestergutAI : public ScriptedAI
+struct Boss_FauldarmAI : public ScriptedAI
 {
-    Boss_FestergutAI(Creature *pCreature) : ScriptedAI(pCreature)
+    Boss_FauldarmAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
 		m_pInstance = pCreature->GetInstanceData();
     }
@@ -65,7 +65,6 @@ struct Boss_FestergutAI : public ScriptedAI
 	uint32 m_uiGasSporesTimer;
 	uint32 m_uiVileGasTimer;
 	uint32 m_uiGastricBloatTimer;
-      uint32 m_uiBerserkTimer;
 
     void Reset()
     {
@@ -74,26 +73,16 @@ struct Boss_FestergutAI : public ScriptedAI
 		m_uiVileGasTimer = urand(10000,15000);
 		m_uiGasSporesTimer = 20000;
 		m_uiGastricBloatTimer = 10000;
-            m_uiBerserkTimer = 300000;
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_FESTERGURT_EVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit* who)
     {
 		DoScriptText(SAY_AGGRO, me);
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_FESTERGURT_EVENT, IN_PROGRESS);
     }
 
 	void JustDied(Unit* killer)
     {  
 		DoScriptText(SAY_DEATH_1, me);
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_FESTERGURT_EVENT, DONE);
     }
 
 	void KilledUnit(Unit *victim)
@@ -131,7 +120,6 @@ struct Boss_FestergutAI : public ScriptedAI
 	
 	if (m_uiGastricBloatTimer < uiDiff)
 	{
-		if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1))
 		DoCast(me->getVictim(), N_10_SPELL_GASTRIC_BLOAT);
 		m_uiGastricBloatTimer = 15000;
 	}
@@ -169,27 +157,21 @@ struct Boss_FestergutAI : public ScriptedAI
 	}
 	else m_uiPungentBlightTimer -= uiDiff;
 
-	if(m_uiBerserkTimer < uiDiff)
-	{
-		DoCast(me, SPELL_BERSERK);
-		m_uiBerserkTimer = 300000;
-	}
-
 	DoMeleeAttackIfReady();
 	}
 };
 
-CreatureAI* GetAI_Boss_Festergut(Creature* pCreature)
+CreatureAI* GetAI_Boss_Fauldarm(Creature* pCreature)
 {
-    return new Boss_FestergutAI(pCreature);
+    return new Boss_FauldarmAI(pCreature);
 }
 
-void AddSC_Boss_Festergut()
+void AddSC_Boss_Fauldarm()
 {
     Script* NewScript;
 
     NewScript = new Script;
-    NewScript->Name = "boss_Festergut";
-    NewScript->GetAI = &GetAI_Boss_Festergut;
+    NewScript->Name = "Boss_Fauldarm";
+    NewScript->GetAI = &GetAI_Boss_Fauldarm;
     NewScript->RegisterSelf();
 }

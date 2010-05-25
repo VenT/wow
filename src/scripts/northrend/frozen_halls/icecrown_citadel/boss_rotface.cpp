@@ -16,9 +16,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-/*Comment:
-Script created by Goga (TrinDev Team special for trinity-core.ru and wowjp.net) Please if you use this script contact copiryght*/
-
 #include "ScriptedPch.h"
 #include "icecrown_citadel.h"
 
@@ -37,9 +34,8 @@ SAY_EXPLOSION              = -1666018,
 
 enum Creatures
 {
-CREATURE_OOZE_BIG             = 36899,
-CREATURE_LITTLE_OOZE          = 36897,
-CREATURE_PROFFESOR_PUTRICIDE  = 36678,
+CREATURE_OOZE_BIG          = 36899,
+CREATURE_LITTLE_OOZE       = 36897,
 };
 
 enum RotfaceSpells
@@ -50,15 +46,13 @@ SPELL_MUTATED_INFECTION    = 71224,
 SPELL_BERSERK              = 47008,
 };
 
-enum OozeSpells
+enum OozeBigSpells
 {
 SPELL_STICKY_OOZE          = 71208,
 SPELL_RADIATING_OOZE       = 71212,
 SPELL_UNSTABLE_OOZE        = 69558,
 SPELL_UNSTABLE_EXPLOSION   = 71209,
 };
-
-Creature* pProfessor_Putricide;
 
 struct boss_RotfaceAI : public ScriptedAI
 {
@@ -82,8 +76,8 @@ struct boss_RotfaceAI : public ScriptedAI
 	m_uiSlimeSprayTimer = 20000+rand()%2000;
 	m_uiMutatedInfectionTimer = 6000+rand()%4000;
     m_uiBerserkTimer = 360000;
-	m_uiSummonLittleTimer = 5000; // not officially ? // hack
-	m_uiSummonBigTimer = 15000; // not officially // hack
+	m_uiSummonLittleTimer = 90000; // not officially ?
+	m_uiSummonBigTimer = 120000; // not officially
 	 
 
 		if(m_pInstance)
@@ -93,7 +87,6 @@ struct boss_RotfaceAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, me);
-        DoScriptText(SAY_DEATH_2, pProfessor_Putricide);
 
 		if(m_pInstance)
 		m_pInstance->SetData(DATA_ROTFACE_EVENT, DONE);  
@@ -102,9 +95,6 @@ struct boss_RotfaceAI : public ScriptedAI
     void EnterCombat(Unit* who)
     {
 		DoScriptText(SAY_AGGRO, me);
-
-		if(m_pInstance)
-		m_pInstance->SetData(DATA_ROTFACE_EVENT, IN_PROGRESS);  
     }
 
     void JustReachedHome()
@@ -128,7 +118,7 @@ struct boss_RotfaceAI : public ScriptedAI
             { 
                  me->SummonCreature(36897, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
 
-                m_uiSummonLittleTimer = 23000+rand()%4000; 
+                m_uiSummonLittleTimer = 90000+rand()%4000; 
             }  
             else m_uiSummonLittleTimer -= diff;
 
@@ -136,35 +126,46 @@ struct boss_RotfaceAI : public ScriptedAI
             { 
                  me->SummonCreature(36899, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
 
-                m_uiSummonBigTimer = 32000+rand()%4000; 
+                m_uiSummonBigTimer = 120000+rand()%4000; 
             }  
             else m_uiSummonBigTimer -= diff;
 
-
 		if (m_uiOozeFloodTimer <= diff)
 		{
-                  DoCast(SPELL_OOZE_FLOOD);
+                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
+                        {
+			DoCast(pTarget, 71215);
 			m_uiOozeFloodTimer = 12000+rand()%3000;
+                        }
 		} else m_uiOozeFloodTimer -= diff;
 
 		if (m_uiSlimeSprayTimer <= diff)
 		{
+                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
+                        {
 			DoScriptText(SAY_SLIME_SPRAY, me);
-                  DoCast(SPELL_SLIME_SPRAY);
+			DoCast(pTarget, 71213);
 			m_uiSlimeSprayTimer = 20000+rand()%2000;
+                        }
 		} else m_uiSlimeSprayTimer -= diff;
 
 		if (m_uiMutatedInfectionTimer <= diff)
 		{
-                  DoCast(SPELL_MUTATED_INFECTION);
-			m_uiMutatedInfectionTimer = 6000+rand()%4000;
+                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
+                        {
+			DoCast(pTarget, 71213);
+			m_uiMutatedInfectionTimer = 8000+rand()%4000;
+                        }
 		} else m_uiMutatedInfectionTimer -= diff;
 
 		if (m_uiBerserkTimer <= diff)
 		{
+                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
+                        {
                   DoScriptText(SAY_BERSERK, me);
-                  DoCast(SPELL_BERSERK);
-			m_uiBerserkTimer = 360000;
+			DoCast(pTarget, 47008);
+			m_uiBerserkTimer = 540000;
+                        }
 		} else m_uiBerserkTimer -= diff;
 
 		DoMeleeAttackIfReady();
@@ -187,10 +188,8 @@ struct npc_OozeBigAI : public ScriptedAI
 
     void Reset()
     {
-	m_uiStickyOozeTimer = 5000+rand()%3000;
-	m_uiRadiatingOozeTimer = 7000+rand()%2000;
-      m_uiUnstableOozeTimer = 4000;
-      m_uiUnstableExplosionTimer = 20000;
+	m_uiStickyOozeTimer = 6000+rand()%3000;
+	m_uiRadiatingOozeTimer = 8000+rand()%2000;
     }
 
     void EnterCombat(Unit* who)
@@ -208,27 +207,15 @@ struct npc_OozeBigAI : public ScriptedAI
 
 		if (m_uiStickyOozeTimer <= diff)
 		{
-                  DoCast(SPELL_STICKY_OOZE);
-			m_uiStickyOozeTimer = 5000+rand()%3000;
+			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71208);
+			m_uiStickyOozeTimer = 6000+rand()%3000;
 		} else m_uiStickyOozeTimer -= diff;
 
 		if (m_uiRadiatingOozeTimer <= diff)
 		{
-                  DoCast(SPELL_RADIATING_OOZE);
+			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71212);
 			m_uiRadiatingOozeTimer = 360000;
 		} else m_uiRadiatingOozeTimer -= diff;
-
-		if (m_uiUnstableOozeTimer <= diff)
-		{
-			DoCast(me, SPELL_UNSTABLE_OOZE);
-			 m_uiUnstableOozeTimer = 4000;
-		} else m_uiUnstableOozeTimer -= diff;
-
-		if (m_uiUnstableExplosionTimer <= diff)
-		{
-                  DoCast(SPELL_UNSTABLE_EXPLOSION);
-			m_uiUnstableExplosionTimer = 20000;
-		} else m_uiUnstableExplosionTimer -= diff;
 
 		DoMeleeAttackIfReady();
 	}
@@ -248,7 +235,7 @@ struct npc_OozeLittleAI : public ScriptedAI
 
     void Reset()
     {
-	m_uiStickyOozeTimer = 5000+rand()%2000;
+	m_uiStickyOozeTimer = 6000+rand()%2000;
 	m_uiRadiatingOozeTimer = 6000+rand()%3000;
     }
 
@@ -267,13 +254,13 @@ struct npc_OozeLittleAI : public ScriptedAI
 
 		if (m_uiStickyOozeTimer <= diff)
 		{
-			DoCast(SPELL_STICKY_OOZE);
-			m_uiStickyOozeTimer = 5000+rand()%3000;
+			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71208);
+			m_uiStickyOozeTimer = 6000+rand()%3000;
 		} else m_uiStickyOozeTimer -= diff;
 
 		if (m_uiRadiatingOozeTimer <= diff)
 		{
-			DoCast(SPELL_RADIATING_OOZE);
+			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71210);
 			m_uiRadiatingOozeTimer = 360000;
 		} else m_uiRadiatingOozeTimer -= diff;
 

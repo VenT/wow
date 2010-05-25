@@ -24,16 +24,16 @@ const Position LandPosition = { 4407.439453, 2484.90541,  203.374374, 3.166791};
 
 enum Yells
 {
-	SAY_AGGRO				=	-1666070,
-	SAY_UNCHAIND_MAGIC		=	-1666071,
-	SAY_BLISTERING_COLD		=	-1666072,
-	SAY_BREATH				=	-1666073,
-	SAY_AIR_PHASE			=	-1666074,
-	SAY_PHASE_3				=	-1666075,
-	SAY_KILL_1				=	-1666076,
-	SAY_KILL_2				=	-1666077,
-	SAY_BERSERK				=	-1666078,
-	SAY_DEATH				=	-1666079,
+	SAY_AGGRO		= -1666070,
+	SAY_UNCHAIND_MAGIC	= -1666071,
+	SAY_BLISTERING_COLD	= -1666072,
+	SAY_BREATH		= -1666073,
+	SAY_AIR_PHASE		= -1666074,
+	SAY_PHASE_3		= -1666075,
+	SAY_KILL_1		= -1666076,
+	SAY_KILL_2		= -1666077,
+	SAY_BERSERK		= -1666078,
+	SAY_DEATH		= -1666079,
 };
 
 enum Spells
@@ -74,11 +74,11 @@ enum Mobs
 	
 enum Phase
 {
-    PHASE_LAND     = 1,
-    PHASE_FLY      = 2, 
-    PHASE_ENRAGE   = 3,  
+    PHASE_LAND     = 1, // Start Phase am Boden.
+    PHASE_FLY      = 2, // Hebt in die Luft ab und Friert 2 - 5 Leute ein.
+    PHASE_ENRAGE   = 3, // ab 35% Soft Enrage und es kommt keine Flyphase mehr.
 };
-/*
+
 float IntroWays[8][3] =
 {
     {-11053.37,-1794.48,149},
@@ -90,7 +90,7 @@ float IntroWays[8][3] =
     {-11140   , -1915  ,122},
     {-11163   , -1903  ,91.473}
 };
-*/
+
 struct Boss_SindragosaAI : public ScriptedAI
 {
 	Boss_SindragosaAI(Creature*pCreature) : ScriptedAI (pCreature)
@@ -124,25 +124,11 @@ struct Boss_SindragosaAI : public ScriptedAI
 		me->SetSpeed(MOVE_WALK, 1.5f, true);
         me->SetSpeed(MOVE_RUN, 1.5f, true);
         me->SetSpeed(MOVE_FLIGHT, 2.5f, true);
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_SINDRAGOSA_EVENT, NOT_STARTED);
     }
 
 	void EnterCombat(Unit* who)
     {
 		DoCast(me, RAID_MODE(SPELL_FROST_AURA_10_NORMAL,SPELL_FROST_AURA_25_NORMAL));
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_SINDRAGOSA_EVENT, IN_PROGRESS);
-    }
-
-	void JustDied(Unit* killer)
-    {  
-		DoScriptText(SAY_DEATH, me);
-
-		if (m_pInstance)
-            m_pInstance->SetData(DATA_SINDRAGOSA_EVENT, DONE);
     }
 
 	void MarkPlayer()
@@ -185,9 +171,9 @@ struct Boss_SindragosaAI : public ScriptedAI
 
         me->InterruptSpell(CURRENT_GENERIC_SPELL);
         me->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-        /*me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+        me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
         (*me).GetMotionMaster()->Clear(false);
-        (*me).GetMotionMaster()->MovePoint(0,IntroWays[2][0],IntroWays[2][1],IntroWays[2][2]);*/
+        (*me).GetMotionMaster()->MovePoint(0,IntroWays[2][0],IntroWays[2][1],IntroWays[2][2]);
 
         FlyTimer = urand(45000,60000); //timer wrong between 45 and 60 seconds
      }
@@ -254,7 +240,7 @@ struct Boss_SindragosaAI : public ScriptedAI
 
 	if(Phase == PHASE_ENRAGE)
 	{
-	// 
+	// Alle 5 sek Iceblock Count auf ein Random Spieler
 	}
 
 	if(Phase == PHASE_LAND || Phase == PHASE_FLY)
@@ -286,7 +272,7 @@ void AddSC_Boss_Sindragosa()
 }
 
 
-		/* Für Später für die Mana spells
+		/* F?r Sp?ter f?r die Mana spells
 		 std::vector<Unit*> unitList;
                         std::list<HostilReference*> *threatList = &me->getThreatManager().getThreatList();
                         for (std::list<HostilReference*>::const_iterator itr = threatList->begin(); itr != threatList->end(); ++itr)
