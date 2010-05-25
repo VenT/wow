@@ -431,10 +431,11 @@ void AddSC_halls_of_reflection();
 void AddSC_boss_falric();
 void AddSC_boss_marwyn();
 void AddSC_instance_icecrown_citadel(); //Icecrown Citadel
+void AddSC_Blood_Queen_Lanathel();
 void AddSC_blood_prince_council();
 void AddSC_boss_valithria_dreamwalker();
 void AddSC_boss_saurfang();
-void AddSC_Boss_Fauldarm();
+void AddSC_Boss_Festergut();
 void AddSC_boss_Rotface();
 void AddSC_boss_Deahtwisper();
 void AddSC_boss_Marrowgar();
@@ -955,13 +956,14 @@ void AddScripts()
     AddSC_boss_falric();
     AddSC_boss_marwyn();
     AddSC_instance_icecrown_citadel(); //Icecrown Citadel
+    AddSC_Blood_Queen_Lanathel();
     AddSC_blood_prince_council();
+    AddSC_boss_valithria_dreamwalker();
     AddSC_boss_saurfang();
-    AddSC_Boss_Fauldarm();
+    AddSC_Boss_Festergut();
+    AddSC_boss_Rotface();
     AddSC_boss_Deahtwisper();
     AddSC_boss_Marrowgar();
-    AddSC_boss_Rotface();
-    AddSC_boss_valithria_dreamwalker();
     AddSC_Boss_ProfessorPutricide();
     AddSC_Boss_Sindragosa();
     AddSC_boss_lichking();
