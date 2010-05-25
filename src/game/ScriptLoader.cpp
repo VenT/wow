@@ -443,7 +443,7 @@ void AddSC_Boss_ProfessorPutricide();
 void AddSC_Boss_Sindragosa();
 void AddSC_boss_lichking();
 void AddSC_icecrown_teleporter();
-void AddSC_lowerspiretrash();
+void AddSC_LowerSpireTrash();
 
 void AddSC_dalaran();
 void AddSC_borean_tundra();
@@ -968,7 +968,7 @@ void AddScripts()
     AddSC_Boss_Sindragosa();
     AddSC_boss_lichking();
     AddSC_icecrown_teleporter();
-    AddSC_lowerspiretrash();
+    AddSC_LowerSpireTrash();
 
     AddSC_dalaran();
     AddSC_borean_tundra();

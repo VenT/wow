@@ -339,5 +339,4 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_CultAdherent' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName` = 'boss_Valanar' WHERE `entry` = 37970;
 UPDATE `creature_template` SET `ScriptName` = 'boss_Keleset' WHERE `entry` = 37972;
 UPDATE `creature_template` SET `ScriptName` = 'boss_Taldaram' WHERE `entry` = 37973;
-
 UPDATE `instance_template` SET `script`='instance_icecrown_citadel' WHERE (`map`='631');
