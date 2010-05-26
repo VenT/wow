@@ -86,25 +86,9 @@ UPDATE `gameobject_template` SET `ScriptName`='go_dragonflayer_cage' WHERE entry
 UPDATE `gameobject_template` SET `ScriptName`='go_black_cage' WHERE `entry`=195310;
 
 /* GUARD */
-UPDATE `creature_template` SET `ScriptName`='guard_azuremyst' WHERE `entry`=18038;
+UPDATE `creature_template` SET `ScriptName`='guard_generic' WHERE `entry` IN (727,1423,1735,1738,1742,1743,1744,1745,1746,2209,2210,3084,3212,3215,3217,3218,3219,3220,3221,3222,3223,3224,3502,3571,4262,4264,5595,5624,5725,5953,9460,11190,13076,15184,16221,16222,16733,18038,19687);
 UPDATE `creature_template` SET `ScriptName`='guard_orgrimmar' WHERE `entry`=3296;
 UPDATE `creature_template` SET `ScriptName`='guard_stormwind' WHERE `entry` IN (68,1976);
-UPDATE `creature_template` SET `ScriptName`='guard_contested' WHERE `entry` IN (9460,4624,3502,11190,15184);
-UPDATE `creature_template` SET `ScriptName`='guard_elwynnforest' WHERE `entry`=1423;
-UPDATE `creature_template` SET `ScriptName`='guard_eversong' WHERE `entry`=16221;
-UPDATE `creature_template` SET `ScriptName`='guard_darnassus' WHERE `entry`=4262;
-UPDATE `creature_template` SET `ScriptName`='guard_teldrassil' WHERE `entry`=3571;
-UPDATE `creature_template` SET `ScriptName`='guard_ironforge' WHERE `entry`=5595;
-UPDATE `creature_template` SET `ScriptName`='guard_dunmorogh' WHERE `entry` IN (727,13076);
-UPDATE `creature_template` SET `ScriptName`='guard_undercity' WHERE `entry`=5624;
-UPDATE `creature_template` SET `ScriptName`='guard_bluffwatcher' WHERE `entry`=3084;
-UPDATE `creature_template` SET `ScriptName`='guard_durotar' WHERE `entry`=5953;
-UPDATE `creature_template` SET `ScriptName`='guard_mulgore' WHERE `entry` IN (3212,3215,3217,3218,3219,3220,3221,3222,3223,3224);
-UPDATE `creature_template` SET `ScriptName`='guard_dunmorogh' WHERE `entry` IN (727,13076);
-UPDATE `creature_template` SET `ScriptName`='guard_tirisfal' WHERE `entry` IN (1735,1738,2210,1744,1745,5725,1743,2209,1746,1742);
-UPDATE `creature_template` SET `ScriptName`='guard_silvermoon' WHERE `entry`=16222;
-UPDATE `creature_template` SET `ScriptName`='guard_exodar' WHERE `entry`=16733;
-UPDATE `creature_template` SET `ScriptName`='guard_shattrath' WHERE `entry`=19687;
 UPDATE `creature_template` SET `ScriptName`='guard_shattrath_aldor' WHERE `entry`=18549;
 UPDATE `creature_template` SET `ScriptName`='guard_shattrath_scryer' WHERE `entry`=18568;
 
@@ -792,6 +776,19 @@ UPDATE `gameobject_template` SET `ScriptName`='go_manticron_cube' WHERE `entry`=
 UPDATE `creature_template` SET `ScriptName`='boss_magtheridon' WHERE `entry`=17257;
 UPDATE `creature_template` SET `ScriptName`='mob_hellfire_channeler' WHERE `entry`=17256;
 UPDATE `creature_template` SET `ScriptName`='mob_abyssal' WHERE `entry`=17454;
+
+/* HALLS OF REFLECTION */
+UPDATE `instance_template` SET `script`='instance_halls_of_reflection' WHERE `map`=668;
+UPDATE `creature_template` SET `Scriptname`='boss_falric' WHERE `entry`=38112;
+UPDATE `creature_template` SET `Scriptname`='boss_marwyn' WHERE `entry`=38113;
+UPDATE `creature_template` SET `Scriptname`='npc_jaina_hor_part1' WHERE `entry`=37221;
+UPDATE `creature_template` SET `Scriptname`='npc_sylvanas_hor_part1' WHERE `entry`=37223;
+UPDATE `creature_template` SET `Scriptname`='npc_ghostly_priest' WHERE `entry`=38175;
+UPDATE `creature_template` SET `Scriptname`='npc_phantom_mage' WHERE `entry`=38172;
+UPDATE `creature_template` SET `Scriptname`='npc_phantom_hallucination' WHERE `entry`=38567;
+UPDATE `creature_template` SET `Scriptname`='npc_shadowy_mercenary' WHERE `entry`=38177;
+UPDATE `creature_template` SET `Scriptname`='npc_spectral_footman' WHERE `entry`=38173;
+UPDATE `creature_template` SET `Scriptname`='npc_tortured_rifleman' WHERE `entry`=38176;
 
 /* HELLFIRE PENINSULA */
 UPDATE `creature_template` SET `ScriptName`='boss_doomlord_kazzak' WHERE `entry`=18728;
