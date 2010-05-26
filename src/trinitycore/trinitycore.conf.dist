@@ -1635,6 +1635,10 @@ AutoBroadcast.Timer = 900000
 #        Default: 1 (enable)
 #                 0 (disable)
 #
+#    Battleground.Random.ResetHour
+#        Reset random battlegrounds at specified hour of the day (0-23)
+#        Default: 6
+#
 #    Battleground.QueueAnnouncer.Enable
 #        Enable queue announcer posting to chat
 #        Default: 0 (disable)
@@ -1678,6 +1682,7 @@ Battleground.InvitationType = 0
 BattleGround.PrematureFinishTimer = 300000
 BattleGround.PremadeGroupWaitForMatch = 1800000
 Battleground.GiveXPForKills = 1
+Battleground.Random.ResetHour = 6
 
 ###############################################################################
 # ARENA CONFIG
