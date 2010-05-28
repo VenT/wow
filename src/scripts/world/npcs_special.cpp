@@ -2447,11 +2447,11 @@ bool GossipSelect_npc_experience(Player* pPlayer, Creature* /*pCreature*/, uint3
 #define GOSSIP_TEXT_MARKS_TRADER    101
 #define GOSSIP_ITEM_ARENA_TO_HONOR  "Exchange 50 Arena to 1000 Honor"
 #define GOSSIP_ITEM_HONOR_TO_ARENA  "Exchange 1000 Honor to 50 Arena"
-#define GOSSIP_AV_MARKS             "I have Alterac Valley Marks."
-#define GOSSIP_AB_MARKS             "I have Arathi Basin Marks."
-#define GOSSIP_ES_MARKS             "I have Eye of the Storm Marks."
-#define GOSSIP_SA_MARKS             "I have Stand of the Ancients Marks."
-#define GOSSIP_WSG_MARKS            "I have Warsong Gulch Marks."
+#define GOSSIP_AV_MARKS             "I have Alterac Valley Marks to trade."
+#define GOSSIP_AB_MARKS             "I have Arathi Basin Marks to trade."
+#define GOSSIP_ES_MARKS             "I have Eye of the Storm Marks to trade."
+#define GOSSIP_SA_MARKS             "I have Stand of the Ancients Marks to trade."
+#define GOSSIP_WSG_MARKS            "I have Warsong Gulch Marks to trade."
 #define AV_MARK                     20560
 #define AB_MARK                     20559
 #define ES_MARK                     29024
