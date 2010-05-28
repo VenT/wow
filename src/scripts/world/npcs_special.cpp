@@ -2523,18 +2523,18 @@ bool GossipSelect_npc_marks_trader(Player* pPlayer, Creature* /*pCreature*/, uin
         }
         case GOSSIP_ACTION_INFO_DEF + 6:
         {
-		if (pPlayer->GetHonorPoints() >= 1000)
+		if (pPlayer->GetHonorPoints() >= 1000){
                 pPlayer->ModifyHonorPoints(-1000); 
                 pPlayer->ModifyArenaPoints(+50);
         }
-		else if
-        (action == GOSSIP_ACTION_INFO_DEF + 7);
-        if (pPlayer->GetArenaPoints() >= 50 && player->GetHonorPoints() <= 74000)
+		else
+        case GOSSIP_ACTION_INFO_DEF + 7:
+        if (pPlayer->GetArenaPoints() >= 50 && pPlayer->GetHonorPoints() <= 74000){
         {
             pPlayer->ModifyArenaPoints(-50); 
             pPlayer->ModifyHonorPoints(+1000);
         }
-    }
+    }}}
 
     pPlayer->PlayerTalkClass->CloseGossip();
     return true;
