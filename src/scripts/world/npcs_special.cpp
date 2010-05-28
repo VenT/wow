@@ -2445,6 +2445,8 @@ bool GossipSelect_npc_experience(Player* pPlayer, Creature* /*pCreature*/, uint3
 ######*/
 
 #define GOSSIP_TEXT_MARKS_TRADER    101
+#define GOSSIP_ITEM_ARENA_TO_HONOR  "Change 50 Arena to 1000 Honor"
+#define GOSSIP_ITEM_HONOR_TO_ARENA  "Change 1000 Honor to 50 Arena"
 #define GOSSIP_AV_MARKS             "I have Alterac Valley Marks."
 #define GOSSIP_AB_MARKS             "I have Arathi Basin Marks."
 #define GOSSIP_ES_MARKS             "I have Eye of the Storm Marks."
@@ -2464,6 +2466,8 @@ bool GossipHello_npc_marks_trader(Player* pPlayer, Creature* pCreature)
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ES_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SA_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WSG_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_HONOR_TO_ARENA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARENA_TO_HONOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
     pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_MARKS_TRADER, pCreature->GetGUID());
     return true;
 }
@@ -2516,6 +2520,19 @@ bool GossipSelect_npc_marks_trader(Player* pPlayer, Creature* /*pCreature*/, uin
             }
             else 
                 pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
+        }
+        case GOSSIP_ACTION_INFO_DEF + 6:
+        {
+		if (pPlayer->GetHonorPoints() >= 1000)
+                pPlayer->ModifyHonorPoints(-1000); 
+                pPlayer->ModifyArenaPoints(+50);
+        }
+		else if
+        (action == GOSSIP_ACTION_INFO_DEF + 7);
+        if (pPlayer->GetArenaPoints() >= 50 && player->GetHonorPoints() <= 74000)
+        {
+            pPlayer->ModifyArenaPoints(-50); 
+            pPlayer->ModifyHonorPoints(+1000);
         }
     }
 
