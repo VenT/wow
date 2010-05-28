@@ -2397,7 +2397,7 @@ bool GossipHello_npc_experience(Player* pPlayer, Creature* pCreature)
 {
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_XP_OFF, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_XP_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-    pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXT_EXP, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_EXP, pCreature->GetGUID());
     return true;
 }
 
@@ -2436,6 +2436,89 @@ bool GossipSelect_npc_experience(Player* pPlayer, Creature* /*pCreature*/, uint3
             pPlayer->SetFlag(PLAYER_FLAGS, PLAYER_FLAGS_NO_XP_GAIN);
         }
     }
+    pPlayer->PlayerTalkClass->CloseGossip();
+    return true;
+}
+
+/*###### 
+## npc_marks_trader
+######*/
+
+#define GOSSIP_TEXT_MARKS_TRADER    101
+#define GOSSIP_AV_MARKS             "I have Alterac Valley Marks."
+#define GOSSIP_AB_MARKS             "I have Arathi Basin Marks."
+#define GOSSIP_ES_MARKS             "I have Eye of the Storm Marks."
+#define GOSSIP_SA_MARKS             "I have Stand of the Ancients Marks."
+#define GOSSIP_WSG_MARKS            "I have Warsong Gulche Marks."
+#define AV_MARK                     20560
+#define AB_MARK                     20559
+#define ES_MARK                     29024
+#define SA_MARK                     42425
+#define WSG_MARK                    20558
+#define HONOR_VALUE                 165
+
+bool GossipHello_npc_marks_trader(Player* pPlayer, Creature* pCreature)
+{
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_AV_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_AB_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ES_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SA_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WSG_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_MARKS_TRADER, pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_marks_trader(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+{
+    switch(uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF + 1:
+        {
+            if (pPlayer->HasItemCount(AV_MARK, 1)) {
+                pPlayer->ModifyHonorPoints(HONOR_VALUE);
+                pPlayer->DestroyItemCount(AV_MARK, 1, true);
+            }
+            else 
+                pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
+        }
+        case GOSSIP_ACTION_INFO_DEF + 2:
+        {
+            if (pPlayer->HasItemCount(AB_MARK, 1)) {
+                pPlayer->ModifyHonorPoints(HONOR_VALUE);
+                pPlayer->DestroyItemCount(AB_MARK, 1, true);
+            }
+            else 
+                pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
+        }
+        case GOSSIP_ACTION_INFO_DEF + 3:
+        {
+            if (pPlayer->HasItemCount(ES_MARK, 1)) {
+                pPlayer->ModifyHonorPoints(HONOR_VALUE);
+                pPlayer->DestroyItemCount(ES_MARK, 1, true);
+            }
+            else 
+                pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
+        }
+        case GOSSIP_ACTION_INFO_DEF + 4:
+        {
+            if (pPlayer->HasItemCount(SA_MARK, 1)) {
+                pPlayer->ModifyHonorPoints(HONOR_VALUE);
+                pPlayer->DestroyItemCount(SA_MARK, 1, true);
+            }
+            else 
+                pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
+        }
+        case GOSSIP_ACTION_INFO_DEF + 5:
+        {
+            if (pPlayer->HasItemCount(WSG_MARK, 1)) {
+                pPlayer->ModifyHonorPoints(HONOR_VALUE);
+                pPlayer->DestroyItemCount(WSG_MARK, 1, true);
+            }
+            else 
+                pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
+        }
+    }
+
     pPlayer->PlayerTalkClass->CloseGossip();
     return true;
 }
@@ -2595,6 +2678,12 @@ void AddSC_npcs_special()
     newscript->Name = "npc_experience";
     newscript->pGossipHello =  &GossipHello_npc_experience;
     newscript->pGossipSelect = &GossipSelect_npc_experience;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_marks_trader";
+    newscript->pGossipHello =  &GossipHello_npc_marks_trader;
+    newscript->pGossipSelect = &GossipSelect_npc_marks_trader;
     newscript->RegisterSelf();
 }
 
