@@ -1666,6 +1666,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\game\sc_boss_spell_worker.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\game\sc_boss_spell_worker.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\game\ScriptLoader.cpp"
 					>
 				</File>
@@ -3550,6 +3558,45 @@
 					</File>
 					<File
 						RelativePath="..\..\src\scripts\northrend\crusaders_coliseum\trial_of_the_champion\trial_of_the_champion.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Trial of the Crusader"
+					>
+					<File
+						RelativePath="..\..\src\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\alliance_champions.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\boss_anubarak_trial.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\boss_jaraxxus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\boss_northrend_beasts.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\boss_twin_valkyr.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\horde_champions.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\instance_trial_of_the_crusader.cpp"
+						>
+					</File>					<File
+						RelativePath="..\..\src\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\trial_of_the_crusader.cpp"
+						>
+					</File>
+					</File>					<File
+						RelativePath="..\..\src\scripts\northrend\crusaders_coliseum\trial_of_the_crusader\trial_of_the_crusader.h"
 						>
 					</File>
 				</Filter>
