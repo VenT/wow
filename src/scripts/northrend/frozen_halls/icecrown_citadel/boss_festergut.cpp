@@ -70,7 +70,7 @@ struct Boss_FauldarmAI : public ScriptedAI
     {
 		m_uiPungentBlightTimer	= 120000;
 		m_uiInhaleBlightTimer 	= 33000;
-		m_uiVileGasTimer = urand(10000,15000);
+		m_uiVileGasTimer = urand(60000,90000);
 		m_uiGasSporesTimer = 20000;
 		m_uiGastricBloatTimer = 10000;
     }
@@ -136,7 +136,7 @@ struct Boss_FauldarmAI : public ScriptedAI
 	{
 		if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
 		DoCast(target, N_10_SPELL_VILE_GAS);
-		m_uiVileGasTimer = 30000;
+		m_uiVileGasTimer = 90000;
 	}
 	else m_uiVileGasTimer -= uiDiff;
 
