@@ -1512,6 +1512,7 @@
 			</Filter>
 			<Filter
 				Name="ScriptedAI"
+
 				>
 				<File
 					RelativePath="..\..\src\game\ScriptedEscortAI.cpp"
@@ -3249,9 +3250,6 @@
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="Icecrown Citadel"
-					>
 					<Filter
 						Name="Forge of Souls"
 						>
@@ -3304,71 +3302,67 @@
 						Name="Icecrown Citadel"
 						>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\blood_prince_council.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\blood_prince_council.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\boss_blood_queen_lanathel.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\boss_blood_queen_lanathel.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\boss_deathbringer_saurfang.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\boss_deathbringer_saurfang.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\boss_festergut.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\boss_festergut.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\boss_lady_deathwhisper.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\boss_lady_deathwhisper.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\boss_lord_marrowgar.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\boss_lord_marrowgar.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\boss_proffesor_putricide.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\boss_proffesor_putricide.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\boss_rotface.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\boss_rotface.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\boss_sindragosa.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\boss_sindragosa.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\boss_the_lich_king.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\boss_the_lich_king.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\boss_valithria_dreamwalker.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\boss_valithria_dreamwalker.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\def_spire.h"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\gunship_battle.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\gunship_battle.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\icecrown_citadel.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\icecrown_citadel.h"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\icecrown_teleport.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\icecrown_teleport.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\instance_icecrown_citadel.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\instance_icecrown_citadel.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\..\src\scripts\northrend\frozen_halls\icecrown_citadel\lower_spire_trash.cpp"
+							RelativePath="..\..\src\scripts\northrend\icecrown_citadel\lower_spire_trash.cpp"
 							>
 						</File>
 					</Filter>
