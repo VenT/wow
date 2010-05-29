@@ -112,42 +112,6 @@ bool GOSelect_icecrown_teleporter( Player *pPlayer, GameObject *pGO, uint32 send
     return true;
 }
 
-bool GOHello_go_plague_sigil(Player *player, GameObject* pGo)
-{
-    ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
-    if(!pInstance) return false;
-
-    if (pInstance->GetData(DATA_FESTERGURT_EVENT) == DONE)
-           pInstance->SetData(DATA_FESTERGURT_EVENT, DONE);
-    if (pInstance->GetData(DATA_ROTFACE_EVENT) == DONE)
-           pInstance->SetData(DATA_ROTFACE_EVENT, DONE);
-
-    return true;
-}
-
-bool GOHello_go_bloodwing_sigil(Player *player, GameObject* pGo)
-{
-    ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
-    if(!pInstance) return false;
-
-    if (pInstance->GetData(DATA_PROFESSOR_PUTRICIDE_EVENT) == DONE)
-           pInstance->SetData(DATA_PROFESSOR_PUTRICIDE_EVENT, DONE);
-
-    return true;
-}
-
-bool GOHello_go_frostwing_sigil(Player *player, GameObject* pGo)
-{
-    ScriptedInstance *pInstance = (ScriptedInstance *) pGo->GetInstanceData();
-    if(!pInstance) return false;
-
-    if (pInstance->GetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT) == DONE)
-           pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, DONE);
-
-    return true;
-}
-
-
 void AddSC_icecrown_teleporter()
 {
     Script *newscript;
@@ -155,20 +119,5 @@ void AddSC_icecrown_teleporter()
     newscript->Name = "icecrown_teleporter";
     newscript->pGOHello = &GoHello_icecrown_teleporter;
     newscript->pGOSelect = &GOSelect_icecrown_teleporter;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "go_plague_sigil";
-    newscript->pGOHello  = &GOHello_go_plague_sigil;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "go_bloodwing_sigil";
-    newscript->pGOHello  = &GOHello_go_bloodwing_sigil;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "go_frostwing_sigil";
-    newscript->pGOHello  = &GOHello_go_frostwing_sigil;
     newscript->RegisterSelf();
 }
