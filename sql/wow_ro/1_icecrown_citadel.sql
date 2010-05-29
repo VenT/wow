@@ -31,11 +31,11 @@ UPDATE `creature_template` SET `ScriptName`='Boss_Sindragosa' WHERE (`entry`='36
 UPDATE `creature_template` SET `ScriptName`='boss_the_lich_king' WHERE (`entry`='36597');
 UPDATE `creature_template` SET `ScriptName`='boss_tirion_icc' WHERE (`entry`='38995');
 UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` = 38995;
-UPDATE `creature_template` SET `ScriptName`='mob_ice_puls_icc' WHERE (`entry`='36633');
-UPDATE `creature_template` SET `ScriptName`='mob_valkyr_icc' WHERE (`entry`='36609');
-UPDATE `creature_template` SET `ScriptName`='mob_ghoul_icc' WHERE (`entry`='37695');
-UPDATE `creature_template` SET `ScriptName`='mob_defile_icc' WHERE (`entry`='38757');
-UPDATE `creature_template` SET `ScriptName`='mob_raging_spirit_icc' WHERE (`entry`='36701');
+UPDATE `creature_template` SET `ScriptName`='npc_Ice_Puls' WHERE (`entry`='36633');
+UPDATE `creature_template` SET `ScriptName`='npc_Valkyr' WHERE (`entry`='36609');
+UPDATE `creature_template` SET `ScriptName`='npc_Ghoul' WHERE (`entry`='37695');
+UPDATE `creature_template` SET `ScriptName`='npc_Defile' WHERE (`entry`='38757');
+UPDATE `creature_template` SET `ScriptName`='npc_RagingSpirit' WHERE (`entry`='36701');
 UPDATE `creature_template` SET `Health_mod`='50000' WHERE (`entry`='30494');
 UPDATE `creature_template` SET `vehicleId` = 318 WHERE `entry` = 36609;
 UPDATE `creature_template` SET `ScriptName`='boss_Rotface' WHERE `entry`= 36627;
@@ -56,7 +56,6 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_CultAdherent' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName` = 'boss_blood_elf_Valanar' WHERE `entry` = 37970;
 UPDATE `creature_template` SET `ScriptName` = 'boss_blood_elf_Keleset' WHERE `entry` = 37972;
 UPDATE `creature_template` SET `ScriptName` = 'boss_blood_elf_Taldaram' WHERE `entry` = 37973;
-UPDATE creature_template SET ScriptName='npc_manavoid' WHERE entry=38068;
 
 -- Script text
 

@@ -1180,27 +1180,27 @@ void AddSC_boss_lichking()
     NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "mob_ice_puls_icc";
+    NewScript->Name = "mob_Ice_Puls";
     NewScript->GetAI = &GetAI_mob_IcePuls;
     NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "mob_valkyr_icc";
+    NewScript->Name = "mob_Valkyr";
     NewScript->GetAI = &GetAI_mob_Valkyr;
     NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "mob_ghoul_icc";
+    NewScript->Name = "mob_ghoul";
     NewScript->GetAI = &GetAI_mob_Ghoul;
     NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "mob_defile_icc";
+    NewScript->Name = "mob_Defile";
     NewScript->GetAI = &GetAI_mob_Defile;
     NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "mob_raging_spirit_icc";
+    NewScript->Name = "mob_RagingSpirit";
     NewScript->GetAI = &GetAI_mob_RagingSpirit;
     NewScript->RegisterSelf();
 }
