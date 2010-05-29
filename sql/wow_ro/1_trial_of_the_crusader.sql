@@ -72,19 +72,15 @@ UPDATE `creature_template` SET `ScriptName`='boss_acidmaw' WHERE (`entry`='35144
 UPDATE `creature_template` SET `ScriptName`='boss_dreadscale' WHERE (`entry`='34799');
 
 -- IceHowl
-UPDATE `creature_template` SET `AIName`='',`ScriptName`='mob_valkyr_orb' WHERE `entry` IN(34628,34630);
 UPDATE `creature_template` SET `ScriptName`='boss_icehowl' WHERE (`entry`='34797');
-UPDATE `creature_template` SET `ScriptName`='boss_fjola' WHERE (`entry`='34497');
-UPDATE `creature_template` SET `ScriptName`='boss_eydis' WHERE (`entry`='34496');
-UPDATE `creature_template` SET unit_flags= 33554434, faction_A =14, faction_H=14 WHERE `entry` IN (34628,34630);
-INSERT INTO npc_spellclick_spells VALUES (34567, 65684, 0, 0, 0, 1), (34568, 65686, 0, 0, 0, 1); -- dark/light "portals"
+
+
+UPDATE `creature_template` SET `AIName`='', `ScriptName`='boss_eydis' WHERE `entry`=34496;
+UPDATE `creature_template` SET `AIName`='', `ScriptName`='boss_fjola' WHERE `entry`=34497;
+UPDATE `creature_template` SET `AIName`='', `ScriptName`='mob_valkyr_orb' WHERE `entry` IN (34628, 34630);
+UPDATE `creature_template` SET unit_flags= 33554434, faction_A =14, faction_H=14 WHERE `entry` IN (34628, 34630);
+INSERT INTO npc_spellclick_spells VALUES (34567, 65684, 0, 0, 0, 1, 0, 0, 0), (34568, 65686, 0, 0, 0, 1, 0, 0, 0); -- dark/light "portals"
 INSERT INTO spell_script_target values (65875, 1, 34497), (65876, 1, 34496);
-
-UPDATE `creature_template` SET `ScriptName`='mob_power_of_twin' WHERE (`entry`='34630');
-UPDATE `creature_template` SET `ScriptName`='mob_power_of_twin' WHERE (`entry`='34628');
-
-UPDATE `creature_template` SET `ScriptName`='mob_essence_of_twin' WHERE (`entry`='34630');
-UPDATE `creature_template` SET `ScriptName`='mob_essence_of_twin' WHERE (`entry`='34628');
 
 UPDATE `creature_template` SET `ScriptName`='Boss_Raid_Anubarak' WHERE (`entry`='34564');
 UPDATE `creature_template` SET `ScriptName`='Mob_NerubianTrigger' WHERE (`entry`='34862');
