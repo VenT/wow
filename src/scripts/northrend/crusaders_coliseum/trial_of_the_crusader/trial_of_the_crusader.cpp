@@ -24,1178 +24,964 @@ EndScriptData */
 #include "ScriptedPch.h"
 #include "trial_of_the_crusader.h"
 
-struct _Messages
+#define GOSSIP_START_EVENT1     "Are you ready?"
+#define GOSSIP_START_EVENT2     "Are you ready for next event?"
+
+enum Spells
 {
-    AnnounserMessages msgnum;
-    uint32 id;
-    bool state;
-    uint32 encounter;
+         SPELL_ROOTET_JARAXXUS                          = 67924,
+         SPELL_WILFRED_PORTAL                           = 68424,
+         SPELL_WILFRED_CAST_PORTAL                      = 46589,
 };
 
-static _Messages _GossipMessage[]=
+enum Mobs
 {
-    {MSG_BEASTS,GOSSIP_ACTION_INFO_DEF+1,false,TYPE_BEASTS},
-    {MSG_JARAXXUS,GOSSIP_ACTION_INFO_DEF+2,false,TYPE_JARAXXUS},
-    {MSG_CRUSADERS,GOSSIP_ACTION_INFO_DEF+3,false,TYPE_CRUSADERS},
-    {MSG_VALKIRIES,GOSSIP_ACTION_INFO_DEF+4,false,TYPE_VALKIRIES},
-    {MSG_LICH_KING,GOSSIP_ACTION_INFO_DEF+5,false,TYPE_ANUBARAK},
-    {MSG_ANUBARAK,GOSSIP_ACTION_INFO_DEF+6,true,TYPE_ANUBARAK}
+        CREATURE_JARAXXUS_PORTAL_TRIGGER        =       41000,
 };
 
-enum
+static uint32 ChampHealers[2][4] =
 {
-         NUM_MESSAGES = 6,
+    //Druid, Pala, Priest, Shammy
+    {34469, 34465, 34466, 34470}, //Alliance
+    {34459, 34445, 34447, 34444} //Horde
 };
 
-
-struct npc_toc_announcerAI : public ScriptedAI
+static uint32 ChampRanged[2][5] =
 {
-    npc_toc_announcerAI(Creature* pCreature) : ScriptedAI(pCreature)
+    //Boomkin, Hunter, Mage, SPriest, Warlock
+    {34460, 34467, 34468, 34473, 34474}, //Alliance
+    {34451, 34448, 34449, 34441, 34450} //Horde
+};
+
+static uint32 ChampMelee[2][5] =
+{
+    //DK, RetPala, Rogue, Enh.Shammy, Warrior
+    {34461, 34471, 34472, 34463, 34475}, //Alliance
+    {34458, 34456, 34454, 34455, 34453} //Horde
+};
+
+/* Champions Coordinates
+r h h h r 0 4 5 6 2
+r m m m r 1 7 8 9 3
+*/
+static float ChampSpawnLocs[2][10][4] =
+{
     {
-        pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
+        //Alliance (North Side)
+        {610.74f, 143.20f, 395.14f, 3.14f}, {605.38f, 143.81f, 394.67f, 3.13f},
+        {607.97f, 121.16f, 395.14f, 3.07f}, {602.02f, 122.15f, 395.66f, 2.97f},
+        {611.24f, 138.07f, 395.13f, 2.90f}, {610.11f, 132.49f, 395.14f, 2.91f},
+        {608.55f, 127.28f, 395.14f, 2.93f}, {605.62f, 138.90f, 394.65f, 3.06f},
+        {604.59f, 133.98f, 394.66f, 2.89f}, {603.48f, 128.42f, 394.66f, 3.00f}
+    },
+    {
+        //Horde (South Side)
+        {520.48f, 120.54f, 395.14f, 0.26f}, {525.19f, 121.89f, 394.66f, 0.18f},
+        {516.03f, 140.94f, 395.13f, 6.28f}, {521.19f, 141.24f, 394.67f, 0.00f},
+        {519.24f, 124.74f, 395.14f, 0.28f}, {518.05f, 129.36f, 395.14f, 0.14f},
+        {517.23f, 135.03f, 395.14f, 0.04f}, {523.98f, 125.91f, 394.66f, 0.25f},
+        {522.65f, 130.43f, 394.67f, 0.18f}, {521.40f, 136.07f, 394.67f, 0.18f}
+    }
+};
+
+struct npc_tcrus_announcerAI : public ScriptedAI
+{
+    npc_tcrus_announcerAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        pInstance = (ScriptedInstance*)me->GetInstanceData();
     }
 
-    ScriptedInstance* pInstance;
-    uint32 DelayTimer;
-    uint32 substage;
+    InstanceData* pInstance;
+
+        Creature* Fjola;
+        Creature* Eydis;
+
+        uint32 mMaxChampions;
+    uint32 mHChampRnd1;
+    uint32 mHChampRnd2;
+    uint32 mRChampRnd1;
+    uint32 mRChampRnd2;
+    uint32 mMChampRnd1;
+    uint32 mMChampRnd2;
+        uint32 mPlayerTeam;
+        uint64 mChampionsGUID[10];
+        uint32 mChampionsDead;
 
     void Reset()
     {
-    if (!pInstance) return;
-    pInstance->SetData(TYPE_STAGE,0);
-    DelayTimer = 0;
-    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-    if(Creature *pAlly = GetClosestCreatureWithEntry(me, NPC_THRALL, 300.0f))
-                      pAlly->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-    if(Creature *pAlly = GetClosestCreatureWithEntry(me, NPC_PROUDMOORE, 300.0f))
-                      pAlly->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-    me->SetRespawnDelay(DAY);
+                mChampionsDead = 0;
+        mMaxChampions = RAID_MODE(6,10,6,10);
+        mHChampRnd1 = urand(0,3);
+        mHChampRnd2 = urand(1,3);
+        mRChampRnd1 = urand(0,4);
+        mRChampRnd2 = urand(1,4);
+        mMChampRnd1 = urand(0,4);
+        mMChampRnd2 = urand(1,4);
     }
 
-    void AttackStart(Unit *who)
+         void SummonChampions()
     {
-        //ignore all attackstart commands
-        return;
+        Map::PlayerList const &players = pInstance->instance->GetPlayers();
+        uint32 TeamInInstance = 0;
+                Difficulty diffic = getDifficulty();
+
+        uint8 team = (mPlayerTeam==ALLIANCE) ? 1 : 0;
+        uint8 coordsIdx = 0;
+        uint8 guidIdx = 0;
+        uint8 entryIdx = 0;
+        uint8 r = RAID_MODE(2,4);
+        uint8 hm = RAID_MODE(2,3);
+
+        //Ranged
+        entryIdx = mRChampRnd1;
+        for(coordsIdx=0; coordsIdx < r; ++coordsIdx)
+        {
+            if(Unit *champ = me->SummonCreature(ChampRanged[team][entryIdx],
+                ChampSpawnLocs[team][coordsIdx][0],
+                ChampSpawnLocs[team][coordsIdx][1],
+                ChampSpawnLocs[team][coordsIdx][2],
+                ChampSpawnLocs[team][coordsIdx][3],
+                TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
+            {
+                mChampionsGUID[guidIdx++] = champ->GetGUID();
+            }
+            entryIdx = (entryIdx + mRChampRnd2) % 5;
+        }
+        //Healers
+        entryIdx = mHChampRnd1;
+        for(coordsIdx=4; coordsIdx < hm+4; ++coordsIdx)
+        {
+            if(Unit *champ = me->SummonCreature(ChampHealers[team][entryIdx],
+                ChampSpawnLocs[team][coordsIdx][0],
+                ChampSpawnLocs[team][coordsIdx][1],
+                ChampSpawnLocs[team][coordsIdx][2],
+                ChampSpawnLocs[team][coordsIdx][3],
+                TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
+            {
+                mChampionsGUID[guidIdx++] = champ->GetGUID();
+            }
+            entryIdx = (entryIdx + mHChampRnd2) % 4;
+        }
+        //Melee
+        entryIdx = mMChampRnd1;
+        for(coordsIdx=7; coordsIdx < hm+7; ++coordsIdx)
+        {
+            if(Unit *champ = me->SummonCreature(ChampMelee[team][entryIdx],
+                ChampSpawnLocs[team][coordsIdx][0],
+                ChampSpawnLocs[team][coordsIdx][1],
+                ChampSpawnLocs[team][coordsIdx][2],
+                ChampSpawnLocs[team][coordsIdx][3],
+                TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
+            {
+                mChampionsGUID[guidIdx++] = champ->GetGUID();
+            }
+            entryIdx = (entryIdx + mMChampRnd2) % 5;
+        }
+
+        mChampionsDead = 0;
+    }
+
+    void StartEvent()
+    {
+                pInstance = (ScriptedInstance*)me->GetInstanceData();
+
+        if(pInstance && pInstance->GetData(PHASE_1) == NOT_STARTED
+                        && pInstance->GetData(PHASE_2) == NOT_STARTED
+                        && pInstance->GetData(PHASE_3) == NOT_STARTED
+                        && pInstance->GetData(PHASE_4) == NOT_STARTED
+                        && pInstance->GetData(PHASE_5) == NOT_STARTED
+                        && pInstance->GetData(PHASE_6) == NOT_STARTED
+                        && pInstance->GetData(PHASE_7) == NOT_STARTED)
+        {
+                        pInstance->SetData(PHASE_1, IN_PROGRESS);
+                }
+
+        if(pInstance && pInstance->GetData(PHASE_1) == DONE
+                        && pInstance->GetData(PHASE_2) == DONE
+                        && pInstance->GetData(PHASE_3) == DONE
+                        && pInstance->GetData(PHASE_4) == NOT_STARTED
+                        && pInstance->GetData(PHASE_5) == NOT_STARTED
+                        && pInstance->GetData(PHASE_6) == NOT_STARTED
+                        && pInstance->GetData(PHASE_7) == NOT_STARTED)
+                {
+            pInstance->SetData(PHASE_4, IN_PROGRESS);
+        }
+
+        if(pInstance && pInstance->GetData(PHASE_1) == DONE
+                        && pInstance->GetData(PHASE_2) == DONE
+                        && pInstance->GetData(PHASE_3) == DONE
+                        && pInstance->GetData(PHASE_4) == DONE
+                        && pInstance->GetData(PHASE_5) == NOT_STARTED
+                        && pInstance->GetData(PHASE_6) == NOT_STARTED
+                        && pInstance->GetData(PHASE_7) == NOT_STARTED)
+        {
+                        pInstance->SetData(PHASE_5, IN_PROGRESS);
+                        SummonChampions();
+        }
+
+        if(pInstance && pInstance->GetData(PHASE_1) == DONE
+                        && pInstance->GetData(PHASE_2) == DONE
+                        && pInstance->GetData(PHASE_3) == DONE
+                        && pInstance->GetData(PHASE_4) == DONE
+                        && pInstance->GetData(PHASE_5) == DONE
+                        && pInstance->GetData(PHASE_6) == NOT_STARTED
+                        && pInstance->GetData(PHASE_7) == NOT_STARTED)
+        {
+            Fjola = me->SummonCreature(NPC_FJOLA, 565.11, 260.0, 397.09+4, 4.72, TEMPSUMMON_MANUAL_DESPAWN, 0);
+                        Fjola->SetFlying(true);
+                        Fjola->GetMotionMaster()->MovePoint(0, 579.90f, 172.35f, 394.68f);
+
+            Eydis = me->SummonCreature(NPC_EYDIS, 563.11, 260.0, 397.09+4, 4.72, TEMPSUMMON_MANUAL_DESPAWN, 0);
+                        Eydis->SetFlying(true);
+                        Eydis->GetMotionMaster()->MovePoint(0, 548.57f, 172.59f, 394.68f);
+            pInstance->SetData(PHASE_6, IN_PROGRESS);
+        }
+
+        if(pInstance && pInstance->GetData(PHASE_1) == DONE
+                        && pInstance->GetData(PHASE_2) == DONE
+                        && pInstance->GetData(PHASE_3) == DONE
+                        && pInstance->GetData(PHASE_4) == DONE
+                        && pInstance->GetData(PHASE_5) == DONE
+                        && pInstance->GetData(PHASE_6) == DONE
+                        && pInstance->GetData(PHASE_7) == NOT_STARTED)
+        {
+                        pInstance->SetData(PHASE_7, IN_PROGRESS);
+                        pInstance->HandleGameObject(pInstance->GetData64(20), true);
+        }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (!pInstance) return;
-
-        if (pInstance->IsEncounterInProgress() && me->GetVisibility() == VISIBILITY_ON)
-            me->SetVisibility(VISIBILITY_OFF);
-        else if (!pInstance->IsEncounterInProgress() && me->GetVisibility() == VISIBILITY_OFF)
-            me->SetVisibility(VISIBILITY_ON);
-
-    if(DelayTimer < diff) {
-        switch (pInstance->GetData(TYPE_STAGE)) {
-        case 0: break;
-        case 1: {
-            if (pInstance->GetData(TYPE_NORTHREND_BEASTS) == GORMOK_DONE) {
-                         pInstance->SetData(TYPE_STAGE,2);
-                         pInstance->SetData(TYPE_EVENT,200);
-                         pInstance->SetData(TYPE_NORTHREND_BEASTS,IN_PROGRESS);
-                         pInstance->SetData(TYPE_BEASTS,IN_PROGRESS);
-                         };
-            if (pInstance->GetData(TYPE_NORTHREND_BEASTS) == FAIL) {
-                         pInstance->SetData(TYPE_STAGE,0);
-                         pInstance->SetData(TYPE_EVENT,666);
-                         pInstance->SetData(TYPE_BEASTS,NOT_STARTED);
-                         };
-                 break;
-                 };
-        case 2: {
-            if (pInstance->GetData(TYPE_NORTHREND_BEASTS) == SNAKES_DONE) {
-                         pInstance->SetData(TYPE_STAGE,3);
-                         pInstance->SetData(TYPE_EVENT,300);
-                         pInstance->SetData(TYPE_NORTHREND_BEASTS,IN_PROGRESS);
-                         pInstance->SetData(TYPE_BEASTS,IN_PROGRESS);
-                 };
-            if (pInstance->GetData(TYPE_NORTHREND_BEASTS) == FAIL) {
-                         pInstance->SetData(TYPE_STAGE,0);
-                         pInstance->SetData(TYPE_EVENT,666);
-                         pInstance->SetData(TYPE_BEASTS,NOT_STARTED);
-                         };
-                 break;
-                 }
-        case 3: {
-            if (pInstance->GetData(TYPE_NORTHREND_BEASTS) == ICEHOWL_DONE) {
-                         pInstance->SetData(TYPE_STAGE,0);
-                         pInstance->SetData(TYPE_BEASTS,DONE);
-                         pInstance->SetData(TYPE_EVENT,400);
-                         pInstance->SetData(TYPE_NORTHREND_BEASTS,DONE);
-                        }
-            if (pInstance->GetData(TYPE_NORTHREND_BEASTS) == FAIL) {
-                         pInstance->SetData(TYPE_STAGE,0);
-                         pInstance->SetData(TYPE_EVENT,666);
-                         pInstance->SetData(TYPE_BEASTS,NOT_STARTED);
-                         };
-                 break;
-                 };
-
-        case 4: {
-                 break;
-                 };
-
-        case 5: {
-                break;
-                };
-
-        case 6: {
-                 if (pInstance->GetData(TYPE_CRUSADERS_COUNT) == 0
-                     && pInstance->GetData(TYPE_CRUSADERS) == IN_PROGRESS)
-                     {
-                        pInstance->SetData(TYPE_STAGE,0);
-                        pInstance->SetData(TYPE_CRUSADERS,DONE);
-                        pInstance->SetData(TYPE_EVENT,3100);
-                     }
-                 if (pInstance->GetData(TYPE_CRUSADERS) == NOT_STARTED)
-                     {
-                        pInstance->SetData(TYPE_STAGE,0);
-                        pInstance->SetData(TYPE_EVENT,0);
-                     }
-                break;
-                };
-
-        case 7: {
-                 if (pInstance->GetData(TYPE_VALKIRIES) == DONE) {
-                                 pInstance->SetData(TYPE_STAGE,0);
-                                 pInstance->SetData(TYPE_EVENT,4020);
-                                 }
-                 if (pInstance->GetData(TYPE_VALKIRIES) == FAIL) {
-                                 pInstance->SetData(TYPE_STAGE,0);
-                                 pInstance->SetData(TYPE_EVENT,0);
-                                 }
-                break;
-                };
-        case 8: {
-                 break;
-                 };
-        case 9: {
-             if (pInstance->GetData(TYPE_ANUBARAK) == DONE) {
-                                 pInstance->SetData(TYPE_STAGE,10);
-                                 pInstance->SetData(TYPE_EVENT,6000);
-                                 }
-             if (pInstance->GetData(TYPE_ANUBARAK) == FAIL) {
-                                 pInstance->SetData(TYPE_STAGE,0);
-                                 pInstance->SetData(TYPE_EVENT,0);
-                                 }
-                 break;
-                 };
-        case 10: {
-//                 me->ForcedDespawn();
-                 break;
-                 };
-
-          }
-        } else DelayTimer -= diff;
     }
 };
 
-CreatureAI* GetAI_npc_toc_announcer(Creature* pCreature)
+CreatureAI* GetAI_npc_tcrus_announcer(Creature* pCreature)
 {
-    return new npc_toc_announcerAI(pCreature);
+    return new npc_tcrus_announcerAI(pCreature);
 }
 
-bool GossipHello_npc_toc_announcer(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_tcrus_announcer(Player* pPlayer, Creature* pCreature)
 {
- 
-    ScriptedInstance* pInstance;
-    pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-    
-    char const* _message = "We are ready!";
-    uint8 i;
+    InstanceData* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
 
-    if (!pInstance) return false;
+        bool inProgress = false;
+    for(uint8 i = 0; i < 7; ++i)
+    {
+                if (pInstance && pInstance->GetData(i) == IN_PROGRESS)
+                        inProgress = true;
+    }
 
-    if( !pPlayer->getAttackers().empty() ||
-        //pInstance->IsEncounterInProgress() || Hack to fix feezes of announcer
-        pInstance->GetData(TYPE_EVENT)) 
-           return true;
+    if(pInstance && pInstance->GetData(PHASE_1) == NOT_STARTED
+                && pInstance->GetData(PHASE_2) == NOT_STARTED
+                && pInstance->GetData(PHASE_3) == NOT_STARTED
+                && pInstance->GetData(PHASE_4) == NOT_STARTED
+                && pInstance->GetData(PHASE_5) == NOT_STARTED
+                && pInstance->GetData(PHASE_6) == NOT_STARTED
+                && pInstance->GetData(PHASE_7) == NOT_STARTED && !inProgress)
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    else if(!inProgress)
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
-    for(i = 0; i < NUM_MESSAGES; i++) {
-    if (!_GossipMessage[i].state && (pInstance->GetData(_GossipMessage[i].encounter) != DONE )) {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, _message, GOSSIP_SENDER_MAIN,_GossipMessage[i].id);
-        break;
-        }
-    if (_GossipMessage[i].state && pInstance->GetData(_GossipMessage[i].encounter) == DONE) {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, _message, GOSSIP_SENDER_MAIN,_GossipMessage[i].id);
-        break;
-        }
-    };
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetEntry(), pCreature->GetGUID());
+    return true;
+}
 
-    pPlayer->SEND_GOSSIP_MENU(_GossipMessage[i].msgnum, pCreature->GetGUID());
+bool GossipSelect_npc_tcrus_announcer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+        InstanceData* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        if(!pInstance)
+                return false;
+
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+                pInstance->SetData(PHASE_SPECHIAL, 1);
+    }
+
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+                CAST_AI(npc_tcrus_announcerAI, pCreature->AI())->StartEvent();
+    }
 
     return true;
 }
 
-bool GossipSelect_npc_toc_announcer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+struct npc_tcrus_tirionAI : public ScriptedAI
 {
-    ScriptedInstance* pInstance;
-    pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-    if (!pInstance) return false;
-
-    pPlayer->CLOSE_GOSSIP_MENU();
-
-    switch(uiAction) {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            if (pInstance->GetData(TYPE_BEASTS) != DONE)
-            {
-                pInstance->SetData(TYPE_EVENT,110);
-                pInstance->SetData(TYPE_NORTHREND_BEASTS,NOT_STARTED);
-            }
-            break;
-
-        case GOSSIP_ACTION_INFO_DEF+2:
-            if (pInstance->GetData(TYPE_JARAXXUS) != DONE) 
-                pInstance->SetData(TYPE_EVENT,1010);
-            break;
-
-        case GOSSIP_ACTION_INFO_DEF+3:
-            if (pInstance->GetData(TYPE_CRUSADERS) != DONE)
-            {
-                if (pPlayer->GetTeam() == ALLIANCE) pInstance->SetData(TYPE_EVENT,3000);
-                else pInstance->SetData(TYPE_EVENT,3001);
-            }
-            break;
-
-        case GOSSIP_ACTION_INFO_DEF+4:
-            if (pInstance->GetData(TYPE_VALKIRIES) != DONE)
-                pInstance->SetData(TYPE_EVENT,4000);
-            break;
-
-        case GOSSIP_ACTION_INFO_DEF+5:
-        {
-           if (pInstance->GetData(TYPE_LICH_KING) != DONE)
-               return false;
-
-           if (GameObject* pGoFloor = pInstance->instance->GetGameObject(pInstance->GetData64(GO_ARGENT_COLISEUM_FLOOR)))
-                  pGoFloor->DestroyForNearbyPlayers();
-
-            pCreature->CastSpell(pCreature,69016,false);
-
-            Creature* pTemp = Unit::GetCreature((*pCreature),pInstance->GetData64(NPC_ANUBARAK));
-            if (!pTemp || !pTemp->isAlive())
-                pCreature->SummonCreature(NPC_ANUBARAK, SpawnLoc[19].x, SpawnLoc[19].y, SpawnLoc[19].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-            if (pTemp)
-            {
-                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[20].x, SpawnLoc[20].y, SpawnLoc[20].z);
-                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                pTemp->SetInCombatWithZone();
-            }
-
-            pInstance->SetData(TYPE_STAGE,9);
-            pInstance->SetData(TYPE_ANUBARAK,IN_PROGRESS);
-
-            if (pCreature->GetVisibility() == VISIBILITY_ON)
-                pCreature->SetVisibility(VISIBILITY_OFF);
-            break;
-         }
-        case GOSSIP_ACTION_INFO_DEF+6:
-            pInstance->SetData(TYPE_STAGE,10);
-            break;
-
-  };
-
-return true;
-}
-
-struct boss_lich_king_tocAI : public ScriptedAI
-{
-    boss_lich_king_tocAI(Creature *pCreature) : ScriptedAI(pCreature)
-    {
-        pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        WayPointList.clear();
-        JustRespawned();
-    }
-
-    ScriptedInstance* pInstance;
-    uint32 UpdateTimer;
-    uint32 event_state_lich_king;
-    bool Event;
-    bool MovementStarted;
-    std::list<WayPoints> WayPointList;
-    std::list<WayPoints>::iterator WayPoint;
-    uint32 WalkTimer;
-    bool IsWalking;
-    Creature* pPortal;
-
-    void Reset()
-    {
-        UpdateTimer = 0;
-        event_state_lich_king = 0;
-        Event = false;
-        MovementStarted = false;
-        me->SetRespawnDelay(DAY);
-        pPortal = me->SummonCreature(NPC_TRIGGER, SpawnLoc[2].x, SpawnLoc[2].y, SpawnLoc[2].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-        pPortal->SetRespawnDelay(DAY);
-        pPortal->CastSpell(pPortal, 51807, false);
-        pPortal->SetDisplayId(17612);
-        if(pInstance) pInstance->SetData(TYPE_LICH_KING,IN_PROGRESS);
-    }
-
-    void AttackStart(Unit *who)
-    {
-        //ignore all attackstart commands
-        return;
-    }
-
-    void JustRespawned()
-    {
-        Reset();
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-    }
-
-    void StartMovement()
-    {
-        if(!WayPointList.empty() || MovementStarted)
-            return;
-
-        AddWaypoint(0, SpawnLoc[2].x, SpawnLoc[2].y, SpawnLoc[2].z);
-        AddWaypoint(1, SpawnLoc[17].x, SpawnLoc[17].y, SpawnLoc[17].z);
-        AddWaypoint(2, SpawnLoc[18].x, SpawnLoc[18].y, SpawnLoc[18].z);
-        me->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-        WayPoint = WayPointList.begin();
-        MovementStarted = true;
-        IsWalking = true;
-        WalkTimer = 200;
-        event_state_lich_king = 1;
-        UpdateTimer = pInstance->GetData(TYPE_EVENT_TIMER);
-    }
-
-    void AddWaypoint(uint32 id, float x, float y, float z)
-    {
-        WayPoints wp(id, x, y, z);
-        WayPointList.push_back(wp);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-
-    if(!pInstance) return;
-    if (pInstance->GetData(TYPE_EVENT_NPC) != NPC_LICH_KING_1) return;
-    if (!MovementStarted) StartMovement();
-
-        if (IsWalking && WalkTimer)
-        {
-            if (WalkTimer <= diff)
-            {
-                if (WayPoint != WayPointList.end())
-                {
-                    me->GetMotionMaster()->MovePoint(WayPoint->id, WayPoint->x, WayPoint->y,WayPoint->z);
-                    WalkTimer = 0;
-                }
-            }else WalkTimer -= diff;
-        }
-
-        UpdateTimer = pInstance->GetData(TYPE_EVENT_TIMER);
-
-        if (UpdateTimer <= diff)
-        {
-        switch (pInstance->GetData(TYPE_EVENT))
-        {
-        case 5010:
-               DoScriptText(-1713550,me);
-               UpdateTimer = 3000;
-               pInstance->SetData(TYPE_EVENT,5020);
-               break;
-        case 5030:
-               DoScriptText(-1713552,me);
-               me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
-               UpdateTimer =  10000;
-               pInstance->SetData(TYPE_EVENT,5040);
-               break;
-        case 5040:
-               me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
-               UpdateTimer =  1000;
-               pInstance->SetData(TYPE_EVENT,5050);
-               break;
-        case 5050:
-               me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
-               UpdateTimer =  3000;
-               pInstance->SetData(TYPE_EVENT,5060);
-               break;
-        case 5060: if (Event) {
-               DoScriptText(-1713553,me);
-               me->HandleEmoteCommand(EMOTE_ONESHOT_KNEEL);
-               UpdateTimer =  2500;
-               pInstance->SetData(TYPE_EVENT,5070);
-               }
-               break;
-        case 5070:
-               me->CastSpell(me,68198,false);
-               UpdateTimer = 1500;
-               pInstance->SetData(TYPE_EVENT,5080);
-               break;
-        case 5080:
-               if (GameObject* pGoFloor = pInstance->instance->GetGameObject(pInstance->GetData64(GO_ARGENT_COLISEUM_FLOOR)))
-                  {
-                      pGoFloor->DestroyForNearbyPlayers();
-                  }
-                me->CastSpell(me,69016,false);
-                if(pInstance) pInstance->SetData(TYPE_LICH_KING,DONE);
-
-               pInstance->SetData(TYPE_ANUBARAK,IN_PROGRESS);
-                  me->SummonCreature(NPC_ANUBARAK, SpawnLoc[19].x, SpawnLoc[19].y, SpawnLoc[19].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                  if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_ANUBARAK))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[20].x, SpawnLoc[20].y, SpawnLoc[20].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                pTemp->SetInCombatWithZone();
-                                }
-               pInstance->SetData(TYPE_STAGE,9);
-               Event=false;
-               me->ForcedDespawn();
-               pPortal->ForcedDespawn();
-               pInstance->SetData(TYPE_EVENT,0);
-               UpdateTimer = 20000;
-               break;
-        }
-        } else UpdateTimer -= diff;
-       pInstance->SetData(TYPE_EVENT_TIMER, UpdateTimer);
-
-    }
-
-    void MovementInform(uint32 type, uint32 id)
-    {
-        if(pInstance)
-        {
-            if(id == 2)
-            {
-                Event = true;
-            }
-        }
-        if(type != POINT_MOTION_TYPE) return;
-        if(WayPoint->id != id) return;
-        ++WayPoint;
-        WalkTimer = 200;
-    }
-};
-
-CreatureAI* GetAI_boss_lich_king_toc(Creature* pCreature)
-{
-    return new boss_lich_king_tocAI(pCreature);
-}
-
-struct npc_fizzlebang_tocAI : public ScriptedAI
-{
-    npc_fizzlebang_tocAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_tcrus_tirionAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)me->GetInstanceData();
-        Reset();
     }
 
     InstanceData* pInstance;
-    uint32 UpdateTimer;
-    Creature* pPortal;
+        uint32 UpdateTimer;
 
-    void JustDied(Unit* pKiller)
-    {
-        DoScriptText(-1713715, me, pKiller);
-        pInstance->SetData(TYPE_EVENT, 1180);
-        if (pPortal) pPortal->ForcedDespawn();
-    }
+        Creature* Fizzle;
+        Creature* Jaraxxus;
+        Creature* Gormok;
+        Creature* Lichking;
+        Creature* Dreadscale;
+        Creature* Acidmaw;
+        Creature* IceHowl;
+
+        uint64 JaraxxusGUID;
+        uint64 GormokGUID;
+        uint64 LichkingGUID;
+        uint64 DreadscaleGUID;
+        uint64 AcidmawGUID;
+        uint64 IceHowlGUID;
 
     void Reset()
     {
-        me->SetRespawnDelay(DAY);
-        me->GetMotionMaster()->MovePoint(1, SpawnLoc[27].x, SpawnLoc[27].y, SpawnLoc[27].z);
-        pPortal = NULL;
+                pInstance->SetData(SPECHIAL_TIMER, 2000);
     }
 
     void UpdateAI(const uint32 diff)
     {
-      if(!pInstance) return;
+                if(!pInstance)
+                        return;
 
-      if (pInstance->GetData(TYPE_EVENT_NPC) != NPC_FIZZLEBANG) return;
+                ScriptedAI::UpdateAI(diff);
 
-        UpdateTimer = pInstance->GetData(TYPE_EVENT_TIMER);
+                UpdateTimer = pInstance->GetData(SPECHIAL_TIMER);
+
         if(UpdateTimer <= diff)
         {
-        switch(pInstance->GetData(TYPE_EVENT))
-              {
-               case 1110:
-                    pInstance->SetData(TYPE_EVENT, 1120);
-                    UpdateTimer = 4000;
-                    break;
-               case 1120:
-                    DoScriptText(-1713511, me);
-                    pInstance->SetData(TYPE_EVENT, 1130);
-                    UpdateTimer = 12000;
-                    break;
-               case 1130:
-                    me->GetMotionMaster()->MovementExpired();
-                    pPortal = me->SummonCreature(NPC_PORTAL, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                    if (pPortal) pPortal->SetRespawnDelay(DAY);
-                    DoScriptText(-1713512, me);
-                    pInstance->SetData(TYPE_EVENT, 1135);
-                    UpdateTimer = 4000;
-                    break;
-               case 1135:
-                    me->GetMotionMaster()->MovementExpired();
-                    if (pPortal) pPortal->SetDisplayId(15900);
-                    pInstance->SetData(TYPE_EVENT, 1140);
-                    UpdateTimer = 4000;
-                    break;
-               case 1140:
-                    me->CastSpell(pPortal,69016,false);
-                    pInstance->SetData(TYPE_STAGE,4);
-                    pInstance->SetData(TYPE_JARAXXUS,IN_PROGRESS);
-                          me->SummonCreature(NPC_JARAXXUS, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                          if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_JARAXXUS))) {
-                                pTemp->SetInCombatWithZone();
-                                me->SetInCombatWith(pTemp);
-                                pTemp->AddThreat(me, 1000.0f);
-                                pTemp->AI()->AttackStart(me);
+                        switch(pInstance->GetData(PHASE_SPECHIAL))
+                        {
+                                case 1:
+                                        if(pInstance->GetData(PHASE_1)==0)
+                                        {
+                                                DoScriptText(SAY_INTRO_START, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 2);
+                                                pInstance->SetData(SPECHIAL_TIMER, 70000);
+                                        }
+                                break;
+
+                                case 2:
+                                        if(pInstance->GetData(PHASE_1)==0)
+                                        {
+                                                DoScriptText(SAY_INTRO_BEGINN, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 3);
+                                                pInstance->SetData(SPECHIAL_TIMER, 15000);
+                                        }
+                                break;
+
+                                case 3:
+                                        if(pInstance->GetData(PHASE_1)==0)
+                                        {
+                                                DoScriptText(SAY_INTRO_3, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 4);
+                                                pInstance->SetData(SPECHIAL_TIMER, 15000);
+                                        }
+                                break;
+
+                                case 4:
+                                        if(pInstance->GetData(PHASE_1)==0)
+                                        {
+                                                Gormok = me->SummonCreature(NPC_GORMOK_IMPALER, 563.14f, 215.38f, 395.08f, 4.68f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                                                Gormok->GetMotionMaster()->MovePoint(0, 563.74f, 173.53f, 394.32f);
+                                                Gormok->SetReactState(REACT_PASSIVE);
+                                                Gormok->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                                pInstance->SetData(PHASE_SPECHIAL, 5);
+                                                pInstance->SetData(SPECHIAL_TIMER, 15000);
+                                        }
+                                break;
+
+                                case 6:
+                                        if(pInstance->GetData(PHASE_1)==0)
+                                        {
+
+                                                pInstance->SetData(PHASE_SPECHIAL, 7);
+                                                pInstance->SetData(SPECHIAL_TIMER, 5000);
+                                        }
+                                break;
+
+                                case 7:
+                                        if(pInstance->GetData(PHASE_1)==0)
+                                        {
+                                                Creature* cre = Unit::GetCreature(*me, pInstance->GetData64(NPC_ANONSER));
+                                                CAST_AI(npc_tcrus_announcerAI, cre->AI())->StartEvent();
+                                                Gormok->SetReactState(REACT_AGGRESSIVE);
+                                                Gormok->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                                pInstance->SetData(PHASE_SPECHIAL, 8);
+                                                pInstance->SetData(SPECHIAL_TIMER, 6000);
+                                        }
+                                break;
+
+                                case 8:
+                                        if(pInstance->GetData(PHASE_1)==IN_PROGRESS)
+                                        {
+                                                pInstance->SetData(PHASE_SPECHIAL, 9);
+                                                pInstance->SetData(SPECHIAL_TIMER, 500);
+                                        }
+                                        break;
+
+                                case 9:
+                                        if(pInstance->GetData(PHASE_2)==IN_PROGRESS)
+                                        {
+                                                DoScriptText(SAY_INTRO_DREADSCALE, me);
+                                                Dreadscale = me->SummonCreature(NPC_DREADSCALE,562.354675, 215.781113, 395.087036, 4.725680,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
+                                                Dreadscale->SetReactState(REACT_PASSIVE);
+                                                Dreadscale->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                                Dreadscale->GetMotionMaster()->MovePoint(0, 563.74f, 173.53f, 394.32f);
+                                                Acidmaw = me->SummonCreature(NPC_ACIDMAW,546.526184, 157.534195, 394.320557, 4.725680,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
+                                                Acidmaw->SetVisibility(VISIBILITY_OFF);
+                                                Acidmaw->SetReactState(REACT_PASSIVE);
+                                                pInstance->SetData(PHASE_SPECHIAL, 10);
+                                                pInstance->SetData(SPECHIAL_TIMER, 25000);
+                                        }
+                                break;
+
+                                case 10:
+                                        if(pInstance->GetData(PHASE_2)==IN_PROGRESS)
+                                        {
+                                                Acidmaw->SetVisibility(VISIBILITY_ON);
+                                                Acidmaw->CastSpell(Acidmaw, 35177, false);
+                                                Acidmaw->SetReactState(REACT_AGGRESSIVE);
+                                                Dreadscale->SetReactState(REACT_AGGRESSIVE);
+                                                Dreadscale->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                                pInstance->SetData(PHASE_SPECHIAL, 11);
+                                                pInstance->SetData(SPECHIAL_TIMER, 5000);
+                                        }
+                                break;
+
+                                case 11:
+                                        if(pInstance->GetData(PHASE_3)==IN_PROGRESS)
+                                        {
+                                                IceHowl = me->SummonCreature(NPC_ICEHOWL, 563.14f, 215.38f, 395.08f, 4.68f, TEMPSUMMON_DEAD_DESPAWN, 600000);
+                                                IceHowl->GetMotionMaster()->MovePoint(0, 563.74f, 173.53f, 394.32f);
+                                                IceHowl->SetReactState(REACT_PASSIVE);
+                                                IceHowl->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                                DoScriptText(SAY_INTRO_EISHEULER, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 12);
+                                                pInstance->SetData(SPECHIAL_TIMER, 20000);
+                                        }
+                                break;
+
+                                case 12:
+                                        if(pInstance->GetData(PHASE_3)==IN_PROGRESS)
+                                        {
+                                                IceHowl->SetReactState(REACT_AGGRESSIVE);
+                                                IceHowl->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                                pInstance->SetData(PHASE_SPECHIAL, 13);
+                                                pInstance->SetData(SPECHIAL_TIMER, 500);
+                                        }
+                                break;
+
+                                case 13:
+                                        if(pInstance->GetData(PHASE_3)==DONE)
+                                        {
+                                                DoScriptText(-1999930, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 14);
+                                                pInstance->SetData(SPECHIAL_TIMER, 500);
+                                        }
+                                break;
+
+                                case 15:
+                                        DoScriptText(SAY_JARAXXUS_INTRO_1, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 16);
+                                        Fizzle = me->SummonCreature(NPC_FIZZLEBANG, 564.008057, 176.066330, 394.372772, 4.719572, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                                        pInstance->SetData(SPECHIAL_TIMER, 500);
+                                break;
+
+                                case 29:
+                                        DoScriptText(SAY_JARAXXUS_INTRO_7, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 30);
+                                        pInstance->SetData(SPECHIAL_TIMER, 10000);
+                                break;
+
+                                case 30:
+                                        if (Creature* pJaraxxus = GetClosestCreatureWithEntry(me, NPC_LORD_JARAXXUS, 100.0f))
+                                        Jaraxxus = pJaraxxus;
+                                        Jaraxxus->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                        Jaraxxus->SetReactState(REACT_AGGRESSIVE);
+                                        pInstance->SetData(PHASE_SPECHIAL, 31);
+                                        pInstance->SetData(SPECHIAL_TIMER, 5000);
+                                break;
+
+                                case 31:
+                                        if(pInstance->GetData(PHASE_4)==IN_PROGRESS)
+                                        {
+                                                pInstance->SetData(PHASE_SPECHIAL, 32);
+                                                pInstance->SetData(SPECHIAL_TIMER, 5000);
+                                        }
+                                break;
+
+                                case 32:
+                                        if(pInstance->GetData(PHASE_4)==DONE)
+                                        {
+                                                DoScriptText(SAY_JARAXXUS_OUTRO_1, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 33);
+                                                pInstance->SetData(SPECHIAL_TIMER, 45500);
+                                        }
+                                break;
+
+                                case 35:
+                                        if(pInstance->GetData(PHASE_4)==DONE)
+                                        {
+                                                DoScriptText(SAY_JARAXXUS_OUTRO_4, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 36);
+                                                pInstance->SetData(SPECHIAL_TIMER, 15500);
+                                        }
+                                break;
+
+                                case 37:
+                                                DoScriptText(SAY_INTRO_LICHTKING_1, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 38);
+                                                pInstance->SetData(SPECHIAL_TIMER, 36000);
+                                break;
+
+                                case 38:
+                                                Lichking = me->SummonCreature(NPC_LICH_KING, 564.008057, 176.066330, 394.372772, 4.719572);
+                                                Lichking->GetMotionMaster()->MovePoint(0, 563.955444f, 140.563583f, 393.836548f);
+                                                Lichking->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                                                pInstance->SetData(PHASE_SPECHIAL, 39);
+                                                pInstance->SetData(SPECHIAL_TIMER, 500);
+                                break;
+
+                                case 40:
+                                                DoScriptText(SAY_INTRO_LICHTKING_3, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 41);
+                                                pInstance->SetData(SPECHIAL_TIMER, 10500);
+                                break;
+
+                                case 50:
+                                if(pInstance->GetData(PHASE_5)==IN_PROGRESS)
+                                {
+                                        DoScriptText(SAY_INTRO_FACTION_HORDE_1, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 51);
+                                        pInstance->SetData(SPECHIAL_TIMER, 25000);
                                 }
-                    pInstance->SetData(TYPE_EVENT, 1150);
-                    UpdateTimer = 500;
-                    break;
-               case 1150:
-                    DoScriptText(-1713513, me);
-                    pInstance->SetData(TYPE_EVENT, 1160);
-                    UpdateTimer = 1000;
-                    break;
-               case 1160:
-                    DoScriptText(-1713515, me);
-                    pInstance->SetData(TYPE_EVENT, 1170);
-                    UpdateTimer = 1000;
-                    break;
-               case 1170:
-                    pInstance->SetData(TYPE_EVENT, 1175);
-                    UpdateTimer = 1000;
-                    break;
-              }
-        } else UpdateTimer -= diff;
-        pInstance->SetData(TYPE_EVENT_TIMER, UpdateTimer);
+                                break;
+
+                                case 52:
+                                        DoScriptText(SAY_INTRO_FACTION_HORDE_3, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 53);
+                                        pInstance->SetData(SPECHIAL_TIMER, 25000);
+                                break;
+
+                                case 54:
+                                if(pInstance->GetData(PHASE_5)==DONE)
+                                {
+                                        DoScriptText(SAY_OUTRO_FACTION, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 55);
+                                        pInstance->SetData(SPECHIAL_TIMER, 25000);
+                                }
+                                break;
+
+                                case 57:
+                                        DoScriptText(SAY_INTRO_TWINS, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 58);
+                                        pInstance->SetData(SPECHIAL_TIMER, 25000);
+                                break;
+
+                                case 58:
+                                        DoScriptText(SAY_INTRO_BEGINN, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 59);
+                                        pInstance->SetData(SPECHIAL_TIMER, 25000);
+                                break;
+                        }
+        }
+                else
+                {
+                        UpdateTimer -= diff;
+                        pInstance->SetData(SPECHIAL_TIMER, UpdateTimer);
+                }
     }
 };
 
-CreatureAI* GetAI_npc_fizzlebang_toc(Creature* pCreature)
+CreatureAI* GetAI_npc_tcrus_tirion(Creature* pCreature)
 {
-    return new npc_fizzlebang_tocAI(pCreature);
+    return new npc_tcrus_tirionAI(pCreature);
 }
 
-struct npc_tirion_tocAI : public ScriptedAI
+struct npc_GarroshAI : public ScriptedAI
 {
-    npc_tirion_tocAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_GarroshAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)me->GetInstanceData();
-        Reset();
     }
 
-    ScriptedInstance* pInstance;
-    uint32 UpdateTimer;
+    InstanceData* pInstance;
+        uint32 UpdateTimer;
 
     void Reset()
     {
     }
 
-    void AttackStart(Unit *who)
-    {
-        //ignore all attackstart commands
-        return;
-    }
-
     void UpdateAI(const uint32 diff)
     {
-        if (!pInstance) return;
-        if (pInstance->GetData(TYPE_EVENT_NPC) != NPC_TIRION) return;
+                if(!pInstance)
+                        return;
 
-        UpdateTimer = pInstance->GetData(TYPE_EVENT_TIMER);
+                ScriptedAI::UpdateAI(diff);
 
-        if (UpdateTimer <= diff)
+                UpdateTimer = pInstance->GetData(SPECHIAL_TIMER);
+
+        if(UpdateTimer <= diff)
         {
-        switch (pInstance->GetData(TYPE_EVENT))
-        {
-        case 110:
-               me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_TALK);
-               DoScriptText(-1713500, me);
-               UpdateTimer = 12000;
-               pInstance->SetData(TYPE_EVENT,120);
-               //pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_WEST_PORTCULLIS));
-               break;
-        case 140:
-               me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_TALK);
-               DoScriptText(-1713501, me);
-               UpdateTimer = 10000;
-               pInstance->SetData(TYPE_EVENT,150);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               break;
-        case 150:
-                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
-                if (pInstance->GetData(TYPE_BEASTS) != DONE && pInstance->GetData(TYPE_NORTHREND_BEASTS) != GORMOK_DONE) {
-                      me->SummonCreature(NPC_GORMOK, SpawnLoc[26].x, SpawnLoc[26].y, SpawnLoc[26].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                          if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_GORMOK))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                pTemp->SetInCombatWithZone();
-                                }
+                        switch(pInstance->GetData(PHASE_SPECHIAL))
+                        {
+                                case 5:
+                                        DoScriptText(SAY_INTRO_GOMROK_START_1, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 6);
+                                        pInstance->SetData(SPECHIAL_TIMER, 5000);
+                                        break;
+
+                                case 33:
+                                        if(pInstance->GetData(PHASE_4)==DONE)
+                                        {
+                                                DoScriptText(SAY_JARAXXUS_OUTRO_2, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 34);
+                                                pInstance->SetData(SPECHIAL_TIMER, 30500);
+                                        }
+                                break;
                         }
-                UpdateTimer = 10000;
-                pInstance->SetData(TYPE_EVENT,160);
-                pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-                pInstance->SetData(TYPE_STAGE,1);
-                pInstance->SetData(TYPE_BEASTS,IN_PROGRESS);
-                break;
-
-        case 200:
-               DoScriptText(-1713503, me);
-               UpdateTimer = 10000;
-               pInstance->SetData(TYPE_EVENT,205);
-               break;
-
-        case 205:
-               UpdateTimer = 8000;
-               pInstance->SetData(TYPE_EVENT,210);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               break;
-
-        case 210:
-                        if (pInstance->GetData(TYPE_BEASTS) != DONE && pInstance->GetData(TYPE_NORTHREND_BEASTS) != SNAKES_DONE){
-                        me->SummonCreature(NPC_DREADSCALE, SpawnLoc[3].x, SpawnLoc[3].y, SpawnLoc[3].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                        me->SummonCreature(NPC_ACIDMAW, SpawnLoc[4].x, SpawnLoc[4].y, SpawnLoc[4].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                          if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_DREADSCALE))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                pTemp->SetInCombatWithZone();
-                                }
-                          if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_ACIDMAW))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                pTemp->SetInCombatWithZone();
-                                }
-                        }
-               UpdateTimer = 10000;
-               pInstance->SetData(TYPE_EVENT,220);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               break;
-        case 300:
-               DoScriptText(-1713505, me);
-               UpdateTimer = 15000;
-               pInstance->SetData(TYPE_EVENT,305);
-               break;
-        case 305:
-               UpdateTimer = 8000;
-               pInstance->SetData(TYPE_EVENT,310);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               break;
-        case 310:
-                if (pInstance->GetData(TYPE_BEASTS) != DONE && pInstance->GetData(TYPE_NORTHREND_BEASTS) != ICEHOWL_DONE) {
-                        me->SummonCreature(NPC_ICEHOWL, SpawnLoc[26].x, SpawnLoc[26].y, SpawnLoc[26].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_ICEHOWL))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                pTemp->SetInCombatWithZone();
-                                }
-                        }
-               UpdateTimer = 10000;
-               pInstance->SetData(TYPE_EVENT,320);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               break;
-        case 400:
-               DoScriptText(-1713509, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,0);
-               //pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_WEST_PORTCULLIS));
-               break;
-
-        case 666:
-               DoScriptText(-1713709, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,0);
-               //pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_WEST_PORTCULLIS));
-               break;
-
-        case 1010:
-               DoScriptText(-1713510, me);
-               UpdateTimer = 5000;
-               me->SummonCreature(NPC_FIZZLEBANG, SpawnLoc[21].x, SpawnLoc[21].y, SpawnLoc[21].z, 2, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-               pInstance->SetData(TYPE_EVENT,1110);
-               break;
-
-        case 1180:
-               DoScriptText(-1713516, me);
-               UpdateTimer = 3000;
-               pInstance->SetData(TYPE_EVENT,0);
-               break;
-
-        case 2000:
-               DoScriptText(-1713526, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,2010);
-               break;
-        case 2030:
-               DoScriptText(-1713529, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,0);
-               break;
-        case 3000:
-               DoScriptText(-1713530, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,3050);
-               break;
-        case 3001:
-               DoScriptText(-1713530, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,3051);
-               break;
-        case 3060:
-               DoScriptText(-1713532, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,3070);
-               break;
-        case 3061:
-               DoScriptText(-1713532, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,3071);
-               break;
-//Summoning crusaders
-        case 3091:
-               pInstance->SetData(TYPE_STAGE,6);
-               if (pInstance->GetData(TYPE_DIFFICULTY) == RAID_DIFFICULTY_25MAN_NORMAL 
-                              ||  pInstance->GetData(TYPE_DIFFICULTY) == RAID_DIFFICULTY_25MAN_HEROIC)
-                              {
-                              pInstance->SetData(TYPE_CRUSADERS_COUNT,12);
-                              me->SummonCreature(NPC_CRUSADER_1_7, SpawnLoc[9].x, SpawnLoc[9].y, SpawnLoc[9].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_1_7))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           }
-                              me->SummonCreature(NPC_CRUSADER_1_8, SpawnLoc[10].x, SpawnLoc[10].y, SpawnLoc[10].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_1_8))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           }
-                              me->SummonCreature(NPC_CRUSADER_1_9, SpawnLoc[11].x, SpawnLoc[11].y, SpawnLoc[11].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_1_9))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           }
-                              me->SummonCreature(NPC_CRUSADER_1_10, SpawnLoc[12].x, SpawnLoc[12].y, SpawnLoc[12].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_1_10))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           }
-                              me->SummonCreature(NPC_CRUSADER_0_1, SpawnLoc[13].x, SpawnLoc[13].y, SpawnLoc[13].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_0_1))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           pTemp->SetRespawnDelay(DAY);
-                                           }
-                              me->SummonCreature(NPC_CRUSADER_0_2, SpawnLoc[14].x, SpawnLoc[14].y, SpawnLoc[14].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_0_2))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           pTemp->SetRespawnDelay(DAY);
-                                           }
-                              }
-                              else pInstance->SetData(TYPE_CRUSADERS_COUNT,6);
-               me->SummonCreature(NPC_CRUSADER_1_1, SpawnLoc[3].x, SpawnLoc[3].y, SpawnLoc[3].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-               if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_1_1))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-               me->SummonCreature(NPC_CRUSADER_1_2, SpawnLoc[4].x, SpawnLoc[4].y, SpawnLoc[4].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-               if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_1_2))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-               me->SummonCreature(NPC_CRUSADER_1_3, SpawnLoc[5].x, SpawnLoc[5].y, SpawnLoc[5].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-               if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_1_3))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-               me->SummonCreature(NPC_CRUSADER_1_4, SpawnLoc[6].x, SpawnLoc[6].y, SpawnLoc[6].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-               if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_1_4))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-               me->SummonCreature(NPC_CRUSADER_1_5, SpawnLoc[7].x, SpawnLoc[7].y, SpawnLoc[7].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-               if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_1_5))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-               me->SummonCreature(NPC_CRUSADER_1_6, SpawnLoc[8].x, SpawnLoc[8].y, SpawnLoc[8].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-               if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_1_6))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-               UpdateTimer = 3000;
-               pInstance->SetData(TYPE_EVENT,3095);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               pInstance->SetData(TYPE_CRUSADERS,IN_PROGRESS);
-               break;
-
-//summoning crusaders
-        case 3090:
-               pInstance->SetData(TYPE_STAGE,6);
-               if (pInstance->GetData(TYPE_DIFFICULTY) == RAID_DIFFICULTY_25MAN_NORMAL 
-                              ||  pInstance->GetData(TYPE_DIFFICULTY) == RAID_DIFFICULTY_25MAN_HEROIC)
-                              {
-                              pInstance->SetData(TYPE_CRUSADERS_COUNT,12);
-
-                              me->SummonCreature(NPC_CRUSADER_2_7, SpawnLoc[9].x, SpawnLoc[9].y, SpawnLoc[9].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_2_7))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           }
-                              me->SummonCreature(NPC_CRUSADER_2_8, SpawnLoc[10].x, SpawnLoc[10].y, SpawnLoc[10].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_2_8))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           }
-                              me->SummonCreature(NPC_CRUSADER_2_9, SpawnLoc[11].x, SpawnLoc[11].y, SpawnLoc[11].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_2_9))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           }
-                              me->SummonCreature(NPC_CRUSADER_2_10, SpawnLoc[12].x, SpawnLoc[12].y, SpawnLoc[12].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_2_10))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           }
-                              me->SummonCreature(NPC_CRUSADER_0_1, SpawnLoc[13].x, SpawnLoc[13].y, SpawnLoc[13].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_0_1))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           }
-                              me->SummonCreature(NPC_CRUSADER_0_2, SpawnLoc[14].x, SpawnLoc[14].y, SpawnLoc[14].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                              if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_0_2))) {
-                                           pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                           pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                           }
-                              }
-                              else pInstance->SetData(TYPE_CRUSADERS_COUNT,6);
-
-                me->SummonCreature(NPC_CRUSADER_2_1, SpawnLoc[3].x, SpawnLoc[3].y, SpawnLoc[3].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_2_1))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-                me->SummonCreature(NPC_CRUSADER_2_2, SpawnLoc[4].x, SpawnLoc[4].y, SpawnLoc[4].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_2_2))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-                me->SummonCreature(NPC_CRUSADER_2_3, SpawnLoc[5].x, SpawnLoc[5].y, SpawnLoc[5].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_2_3))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-                me->SummonCreature(NPC_CRUSADER_2_4, SpawnLoc[6].x, SpawnLoc[6].y, SpawnLoc[6].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_2_4))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-                me->SummonCreature(NPC_CRUSADER_2_5, SpawnLoc[7].x, SpawnLoc[7].y, SpawnLoc[7].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                          if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_2_5))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                }
-                me->SummonCreature(NPC_CRUSADER_2_6, SpawnLoc[8].x, SpawnLoc[8].y, SpawnLoc[8].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                          if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_CRUSADER_2_6))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                pTemp->SetInCombatWithZone();
-                                }
-               UpdateTimer = 3000;
-               pInstance->SetData(TYPE_EVENT,3095);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               pInstance->SetData(TYPE_CRUSADERS,IN_PROGRESS);
-               break;
-
-//Crusaders battle end
-        case 3100:
-               DoScriptText(-1713535, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,0);
-               break;
-
-        case 4000:
-               DoScriptText(-1713536, me);
-               UpdateTimer = 3000;
-               pInstance->SetData(TYPE_EVENT,4010);
-               break;
-        case 4010:
-               DoScriptText(-1713537, me);
-               UpdateTimer = 10000;
-               pInstance->SetData(TYPE_EVENT,4015);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               break;
-
-        case 4015:
-               pInstance->SetData(TYPE_STAGE,7);
-               pInstance->SetData(TYPE_VALKIRIES,IN_PROGRESS);
-                      me->SummonCreature(NPC_LIGHTBANE, SpawnLoc[3].x, SpawnLoc[3].y, SpawnLoc[3].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                      if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_LIGHTBANE))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                pTemp->SetInCombatWithZone();
-                                }
-                      me->SummonCreature(NPC_DARKBANE, SpawnLoc[4].x, SpawnLoc[4].y, SpawnLoc[4].z, 5, TEMPSUMMON_CORPSE_TIMED_DESPAWN, DESPAWN_TIME);
-                      if (Creature* pTemp = Unit::GetCreature((*me),pInstance->GetData64(NPC_DARKBANE))) {
-                                pTemp->GetMotionMaster()->MovePoint(0, SpawnLoc[1].x, SpawnLoc[1].y, SpawnLoc[1].z);
-                                pTemp->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                                pTemp->SetInCombatWithZone();
-                                }
-               UpdateTimer = 10000;
-               pInstance->SetData(TYPE_EVENT,4016);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               break;
-
-        case 4040:
-               UpdateTimer = 60000;
-               pInstance->SetData(TYPE_EVENT,5000);
-               break;
-
-        case 5000:
-               DoScriptText(-1713549, me);
-               UpdateTimer = 8000;
-               pInstance->SetData(TYPE_EVENT,5005);
-               break;
-        case 5005:
-               UpdateTimer = 8000;
-               pInstance->SetData(TYPE_EVENT,5010);
-               pInstance->SetData(TYPE_STAGE,8);
-                    me->SummonCreature(NPC_LICH_KING_1, SpawnLoc[2].x, SpawnLoc[2].y, SpawnLoc[2].z, 5, TEMPSUMMON_MANUAL_DESPAWN, 0);
-               break;
-        case 5020:
-               DoScriptText(-1713551, me);
-               UpdateTimer = 8000;
-               pInstance->SetData(TYPE_EVENT,5030);
-               break;
-        case 6000:
-               me->NearTeleportTo(SpawnLoc[19].x, SpawnLoc[19].y, SpawnLoc[19].z, 4.0f);
-               UpdateTimer = 20000;
-               pInstance->SetData(TYPE_EVENT,6005);
-               break;
-        case 6005:
-               DoScriptText(-1713565, me);
-               UpdateTimer = 20000;
-               pInstance->SetData(TYPE_EVENT,6010);
-               break;
-        case 6010:
-              if (pInstance->GetData(TYPE_DIFFICULTY) == RAID_DIFFICULTY_10MAN_HEROIC 
-                  ||  pInstance->GetData(TYPE_DIFFICULTY) == RAID_DIFFICULTY_25MAN_HEROIC)
-               DoScriptText(-1713566, me);
-               UpdateTimer = 60000;
-               pInstance->SetData(TYPE_EVENT,6020);
-               break;
-        case 6020:
-               pInstance->SetData(TYPE_STAGE,10);
-               me->ForcedDespawn();
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,6030);
-               break;
         }
-        } else UpdateTimer -= diff;
-       pInstance->SetData(TYPE_EVENT_TIMER, UpdateTimer);
-
+                else
+                {
+                        UpdateTimer -= diff;
+                        pInstance->SetData(SPECHIAL_TIMER, UpdateTimer);
+                }
     }
 };
 
-CreatureAI* GetAI_npc_tirion_toc(Creature* pCreature)
+CreatureAI* GetAI_npc_Garrosh(Creature* pCreature)
 {
-    return new npc_tirion_tocAI(pCreature);
+    return new npc_GarroshAI(pCreature);
 }
 
-struct npc_garrosh_tocAI : public ScriptedAI
+struct npc_tcrus_fizzlebangAI : public ScriptedAI
 {
-    npc_garrosh_tocAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_tcrus_fizzlebangAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)me->GetInstanceData();
-        Reset();
     }
 
-    ScriptedInstance* pInstance;
-    uint32 UpdateTimer;
+    InstanceData* pInstance;
+        uint32 UpdateTimer;
+
+        Creature* Jaraxxus;
+        Creature* WilfredPortal;
+
+        uint64 JaraxxusGUID;
+        uint64 WilfredPortalGUID;
 
     void Reset()
     {
-    }
-
-    void AttackStart(Unit *who)
-    {
-        //ignore all attackstart commands
-        return;
+                me->setFaction(14); // Jaraxxus Faction verhintert den Reset und Aggro Bug ;)
+                me->SetReactState(REACT_PASSIVE);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                me->SetSpeed(MOVE_WALK, 1.0f);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (!pInstance) return;
-        if (pInstance->GetData(TYPE_EVENT_NPC) != NPC_GARROSH) return;
+                if(!pInstance)
+                        return;
 
-        UpdateTimer = pInstance->GetData(TYPE_EVENT_TIMER);
+                ScriptedAI::UpdateAI(diff);
 
-        if (UpdateTimer <= diff)
+                UpdateTimer = pInstance->GetData(SPECHIAL_TIMER);
+
+        if(UpdateTimer <= diff)
         {
-        switch (pInstance->GetData(TYPE_EVENT))
-        {
-        case 120:
-               me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_TALK);
-               DoScriptText(-1713702, me);
-               UpdateTimer = 2000;
-               pInstance->SetData(TYPE_EVENT,122);
-               break;
-        case 122:
-               me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
-               UpdateTimer = 3000;
-               pInstance->SetData(TYPE_EVENT,130);
-               break;
-        case 2010:
-               DoScriptText(-1713527, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,2020);
-               break;
-        case 3050:
-               DoScriptText(-1713531, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,3060);
-               break;
-        case 3070:
-               DoScriptText(-1713533, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,3080);
-               break;
-        case 3081:
-               DoScriptText(-1713734, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,3091);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               break;
-        case 4030:
-               DoScriptText(-1713748, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,4040);
-               break;
+                        switch(pInstance->GetData(PHASE_SPECHIAL))
+                        {
+                                case 16:
+                                        pInstance->SetData(PHASE_SPECHIAL, 17);
+                                        pInstance->SetData(SPECHIAL_TIMER, 11000);
+                                break;
+
+                                case 17:
+                                        me->GetMotionMaster()->MovePoint(0, 563.296753,147.057114,394.149200);
+                                        pInstance->SetData(PHASE_SPECHIAL, 18);
+                                        pInstance->SetData(SPECHIAL_TIMER, 30000);
+                                break;
+
+                                case 18:
+                                        me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 1);
+                                        DoScriptText(SAY_JARAXXUS_INTRO_2, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 19);
+                                        pInstance->SetData(SPECHIAL_TIMER, 45000);
+                                break;
+
+                                case 19:
+                                        me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 27);
+                                        DoScriptText(SAY_JARAXXUS_INTRO_3, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 20);
+                                        pInstance->SetData(SPECHIAL_TIMER, 16000);
+                                break;
+
+                                case 20:
+                                        me->SummonGameObject(184006, 563.296753,147.057114,394.149200,4.709139, 0, 0, 0, 0, 150);
+                                        pInstance->SetData(PHASE_SPECHIAL, 21);
+                                        pInstance->SetData(SPECHIAL_TIMER, 16000);
+                                break;
+
+                                case 21:
+                                        //WilfredPortal = me->SummonCreature(CREATURE_JARAXXUS_PORTAL_TRIGGER, 563.830933, 127.890533, 393.918182,1.579980,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,180000);
+                                        pInstance->SetData(PHASE_SPECHIAL, 22);
+                                        pInstance->SetData(SPECHIAL_TIMER, 16000);
+                                break;
+
+                                case 22:
+                                        //me->CastSpell(WilfredPortal, SPELL_WILFRED_CAST_PORTAL, true);
+                                        pInstance->SetData(PHASE_SPECHIAL, 23);
+                                        pInstance->SetData(SPECHIAL_TIMER, 16000);
+                                break;
+
+                                case 23:
+                                        //me->CastSpell(WilfredPortal, SPELL_WILFRED_CAST_PORTAL, true);
+                                        pInstance->SetData(PHASE_SPECHIAL, 24);
+                                        pInstance->SetData(SPECHIAL_TIMER, 14000);
+                                break;
+
+                                case 24:
+                                        //WilfredPortal->CastSpell(WilfredPortal, SPELL_WILFRED_PORTAL, false);
+                                        pInstance->SetData(PHASE_SPECHIAL, 25);
+                                        pInstance->SetData(SPECHIAL_TIMER, 9000);
+                                break;
+
+                                case 25:
+                                        Jaraxxus = me->SummonCreature(NPC_LORD_JARAXXUS,563.830933, 127.890533, 393.918182,1.579980,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,180000);
+                                        Jaraxxus->RemoveAurasDueToSpell(SPELL_ROOTET_JARAXXUS);
+                                        Jaraxxus->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                        Jaraxxus->GetMotionMaster()->MovePoint(0, 563.780945, 132.052063, 393.918182);
+                                        Jaraxxus->SetReactState(REACT_PASSIVE);
+                                        pInstance->SetData(PHASE_SPECHIAL, 26);
+                                        pInstance->SetData(SPECHIAL_TIMER, 35000);
+                                break;
+
+                                case 26:
+                                        //WilfredPortal->ForcedDespawn();
+                                        me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 1);
+                                        DoScriptText(SAY_JARAXXUS_INTRO_4, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 27);
+                                        pInstance->SetData(SPECHIAL_TIMER, 45000);
+                                break;
+
+                                case 27:
+                                        DoScriptText(SAY_JARAXXUS_INTRO_5, Jaraxxus);
+                                        me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
+                                        pInstance->SetData(PHASE_SPECHIAL, 28);
+                                        pInstance->SetData(SPECHIAL_TIMER, 25000);
+                                break;
+
+                                case 28:
+                                        Jaraxxus->CastSpell(me, 67888, true);
+                                        Jaraxxus->Kill(me);
+                                        DoScriptText(SAY_JARAXXUS_INTRO_6, me);
+                                        pInstance->SetData(PHASE_SPECHIAL, 29);
+                                        pInstance->SetData(SPECHIAL_TIMER, 25000);
+                                break;
+                        }
         }
-        } else UpdateTimer -= diff;
-       pInstance->SetData(TYPE_EVENT_TIMER, UpdateTimer);
+                else
+                {
+                        UpdateTimer -= diff;
+                        pInstance->SetData(SPECHIAL_TIMER, UpdateTimer);
+                }
     }
 };
 
-CreatureAI* GetAI_npc_garrosh_toc(Creature* pCreature)
+CreatureAI* GetAI_npc_tcrus_fizzlebang(Creature* pCreature)
 {
-    return new npc_garrosh_tocAI(pCreature);
-};
+    return new npc_tcrus_fizzlebangAI(pCreature);
+}
 
-struct npc_rinn_tocAI : public ScriptedAI
+struct npc_KingVyrnAI : public ScriptedAI
 {
-    npc_rinn_tocAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_KingVyrnAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)me->GetInstanceData();
-        Reset();
     }
 
-    ScriptedInstance* pInstance;
-    uint32 UpdateTimer;
+    InstanceData* pInstance;
+        uint32 UpdateTimer;
+
 
     void Reset()
     {
-    }
 
-    void AttackStart(Unit *who)
-    {
-        //ignore all attackstart commands
-        return;
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (!pInstance) return;
-        if (pInstance->GetData(TYPE_EVENT_NPC) != NPC_RINN) return;
+                if(!pInstance)
+                        return;
 
-        UpdateTimer = pInstance->GetData(TYPE_EVENT_TIMER);
+                ScriptedAI::UpdateAI(diff);
 
-        if (UpdateTimer <= diff)
+                UpdateTimer = pInstance->GetData(SPECHIAL_TIMER);
+
+        if(UpdateTimer <= diff)
         {
-        switch (pInstance->GetData(TYPE_EVENT))
-        {
-        case 130:
-               me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_TALK);
-               DoScriptText(-1713502, me);
-               UpdateTimer = 2000;
-               pInstance->SetData(TYPE_EVENT,132);
-               break;
-        case 132:
-               me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
-               UpdateTimer = 3000;
-               pInstance->SetData(TYPE_EVENT,140);
-               break;
-        case 2020:
-               DoScriptText(-1713528, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,2030);
-               break;
-        case 3051:
-               DoScriptText(-1713731, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,3061);
-               break;
-        case 3071:
-               DoScriptText(-1713733, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,3081);
-               break;
-        case 3080:
-               DoScriptText(-1713534, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,3090);
-               pInstance->DoUseDoorOrButton(pInstance->GetData64(GO_MAIN_GATE_DOOR));
-               break;
-        case 4020:
-               DoScriptText(-1713548, me);
-               UpdateTimer = 5000;
-               pInstance->SetData(TYPE_EVENT,4030);
-               break;
+                        switch(pInstance->GetData(PHASE_SPECHIAL))
+                        {
+                                case 34:
+                                        if(pInstance->GetData(PHASE_4)==DONE)
+                                        {
+                                                DoScriptText(SAY_JARAXXUS_OUTRO_3, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 35);
+                                                pInstance->SetData(SPECHIAL_TIMER, 27500);
+                                        }
+                                break;
+
+                                case 51:
+                                        if(pInstance->GetData(PHASE_5)==IN_PROGRESS)
+                                        {
+                                                DoScriptText(SAY_INTRO_FACTION_HORDE_2, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 52);
+                                                pInstance->SetData(SPECHIAL_TIMER, 25000);
+                                        }
+                                break;
+
+                                case 53:
+                                                DoScriptText(SAY_INTRO_FACTION_HORDE_4, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 54);
+                                                pInstance->SetData(SPECHIAL_TIMER, 25000);
+                                break;
+                        }
         }
-        } else UpdateTimer -= diff;
-        pInstance->SetData(TYPE_EVENT_TIMER,UpdateTimer);
+                else
+                {
+                        UpdateTimer -= diff;
+                        pInstance->SetData(SPECHIAL_TIMER, UpdateTimer);
+                }
     }
 };
 
-CreatureAI* GetAI_npc_rinn_toc(Creature* pCreature)
+CreatureAI* GetAI_npc_KingVyrn(Creature* pCreature)
 {
-    return new npc_rinn_tocAI(pCreature);
+    return new npc_KingVyrnAI(pCreature);
+}
+
+struct npc_LichKingAI : public ScriptedAI
+{
+    npc_LichKingAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        pInstance = (ScriptedInstance*)me->GetInstanceData();
+    }
+
+    InstanceData* pInstance;
+        uint32 UpdateTimer;
+
+        Creature* Jaraxxus;
+
+        uint64 JaraxxusGUID;
+
+    void Reset()
+    {
+                me->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                me->SetSpeed(MOVE_WALK, 1.4f);
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+                if(!pInstance)
+                        return;
+
+                ScriptedAI::UpdateAI(diff);
+
+                UpdateTimer = pInstance->GetData(SPECHIAL_TIMER);
+
+        if(UpdateTimer <= diff)
+        {
+                        switch(pInstance->GetData(PHASE_SPECHIAL))
+                        {
+                                case 39:
+                                                DoScriptText(SAY_INTRO_LICHTKING_2, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 40);
+                                                pInstance->SetData(SPECHIAL_TIMER, 24500);
+                                break;
+
+                                case 41:
+                                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
+                                                pInstance->SetData(PHASE_SPECHIAL, 42);
+                                                pInstance->SetData(SPECHIAL_TIMER, 31500);
+                                break;
+
+                                case 42:
+                                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
+                                                DoScriptText(SAY_INTRO_LICHTKING_4, me);
+                                                pInstance->SetData(PHASE_SPECHIAL, 43);
+                                                pInstance->SetData(SPECHIAL_TIMER, 70000);
+                                break;
+
+                                case 43:
+                                                me->CastSpell(me,72262,false);
+                                                pInstance->SetData(PHASE_SPECHIAL, 44);
+                                                pInstance->SetData(SPECHIAL_TIMER, 12000);
+                                break;
+
+                                case 44:
+                                                pInstance->SetData(PHASE_SPECHIAL, 45);
+                                                pInstance->SetData(SPECHIAL_TIMER, 18000);
+                                break;
+
+                                case 45:
+                                                pInstance->HandleGameObject(pInstance->GetData64(20), true);
+                                                pInstance->SetData(PHASE_SPECHIAL, 46);
+                                                pInstance->SetData(SPECHIAL_TIMER, 2500);
+                                break;
+
+                                case 46:
+                                                DoScriptText(SAY_INTRO_LICHTKING_5, me);
+                                                me->ForcedDespawn();
+                                                pInstance->SetData(PHASE_SPECHIAL, 47);
+                                                pInstance->SetData(SPECHIAL_TIMER, 15500);
+                                break;
+                        }
+        }
+                else
+                {
+                        UpdateTimer -= diff;
+                        pInstance->SetData(SPECHIAL_TIMER, UpdateTimer);
+                }
+    }
 };
 
-void AddSC_trial_of_the_crusader()
+CreatureAI* GetAI_npc_LichKing(Creature* pCreature)
+{
+    return new npc_LichKingAI(pCreature);
+}
+
+void AddSC_trial_of_the_crussader()
 {
     Script* NewScript;
 
     NewScript = new Script;
-    NewScript->Name = "npc_toc_announcer";
-    NewScript->GetAI = &GetAI_npc_toc_announcer;
-    NewScript->pGossipHello = &GossipHello_npc_toc_announcer;
-    NewScript->pGossipSelect = &GossipSelect_npc_toc_announcer;
+    NewScript->Name = "npc_tcrus_announcer";
+        NewScript->GetAI = &GetAI_npc_tcrus_announcer;
+    NewScript->pGossipHello = &GossipHello_npc_tcrus_announcer;
+    NewScript->pGossipSelect = &GossipSelect_npc_tcrus_announcer;
     NewScript->RegisterSelf();
 
     NewScript = new Script;
-    NewScript->Name = "boss_lich_king_toc";
-    NewScript->GetAI = &GetAI_boss_lich_king_toc;
+    NewScript->Name = "npc_tcrus_tirion";
+        NewScript->GetAI = &GetAI_npc_tcrus_tirion;
     NewScript->RegisterSelf();
 
     NewScript = new Script;
-    NewScript->Name = "npc_fizzlebang_toc";
-    NewScript->GetAI = &GetAI_npc_fizzlebang_toc;
+    NewScript->Name = "npc_tcrus_fizzlebang";
+        NewScript->GetAI = &GetAI_npc_tcrus_fizzlebang;
     NewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_tirion_toc";
-    NewScript->GetAI = &GetAI_npc_tirion_toc;
+        NewScript = new Script;
+    NewScript->Name = "npc_Garrosh";
+        NewScript->GetAI = &GetAI_npc_Garrosh;
     NewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_garrosh_toc";
-    NewScript->GetAI = &GetAI_npc_garrosh_toc;
+        NewScript = new Script;
+    NewScript->Name = "npc_LichKing";
+        NewScript->GetAI = &GetAI_npc_LichKing;
     NewScript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_rinn_toc";
-    NewScript->GetAI = &GetAI_npc_rinn_toc;
+        NewScript = new Script;
+    NewScript->Name = "npc_KingVyrn";
+        NewScript->GetAI = &GetAI_npc_KingVyrn;
     NewScript->RegisterSelf();
 }

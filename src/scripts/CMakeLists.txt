@@ -340,7 +340,8 @@ SET(scripts_STAT_SRCS
    northrend/crusaders_coliseum/trial_of_the_champion/trial_of_the_champion.cpp
    northrend/crusaders_coliseum/trial_of_the_champion/trial_of_the_champion.h
    northrend/crusaders_coliseum/trial_of_the_crusader/boss_anubarak_trial.cpp
-   northrend/crusaders_coliseum/trial_of_the_crusader/boss_faction_champions.cpp
+   northrend/crusaders_coliseum/trial_of_the_crusader/alliance_champions.cpp
+   northrend/crusaders_coliseum/trial_of_the_crusader/horde_champions.cpp
    northrend/crusaders_coliseum/trial_of_the_crusader/boss_jaraxxus.cpp
    northrend/crusaders_coliseum/trial_of_the_crusader/boss_northrend_beasts.cpp
    northrend/crusaders_coliseum/trial_of_the_crusader/boss_twin_valkyr.cpp
