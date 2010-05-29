@@ -2445,19 +2445,19 @@ bool GossipSelect_npc_experience(Player* pPlayer, Creature* /*pCreature*/, uint3
 ######*/
 
 #define GOSSIP_TEXT_MARKS_TRADER    101
-#define GOSSIP_ITEM_ARENA_TO_HONOR  "Exchange 50 Arena to 1000 Honor"
-#define GOSSIP_ITEM_HONOR_TO_ARENA  "Exchange 1000 Honor to 50 Arena"
-#define GOSSIP_AV_MARKS             "I have Alterac Valley Marks to trade."
-#define GOSSIP_AB_MARKS             "I have Arathi Basin Marks to trade."
-#define GOSSIP_ES_MARKS             "I have Eye of the Storm Marks to trade."
-#define GOSSIP_SA_MARKS             "I have Stand of the Ancients Marks to trade."
-#define GOSSIP_WSG_MARKS            "I have Warsong Gulch Marks to trade."
+#define GOSSIP_ITEM_ARENA_TO_HONOR  "Exchange 1000 Arena to 100000 Honor"
+#define GOSSIP_ITEM_HONOR_TO_ARENA  "Exchange 100000 Honor to 1000 Arena"
+#define GOSSIP_AV_MARKS             "You have Alterac Valley Marks to trade?"
+#define GOSSIP_AB_MARKS             "You have Arathi Basin Marks to trade?"
+#define GOSSIP_ES_MARKS             "You have Eye of the Storm Marks to trade?"
+#define GOSSIP_SA_MARKS             "You have Stand of the Ancients Marks to trade?"
+#define GOSSIP_WSG_MARKS            "You have Warsong Gulch Marks to trade?"
 #define AV_MARK                     20560
 #define AB_MARK                     20559
 #define ES_MARK                     29024
 #define SA_MARK                     42425
 #define WSG_MARK                    20558
-#define HONOR_VALUE                 165
+#define HONOR_VALUE                 185
 
 bool GossipHello_npc_marks_trader(Player* pPlayer, Creature* pCreature)
 {
@@ -2523,16 +2523,16 @@ bool GossipSelect_npc_marks_trader(Player* pPlayer, Creature* /*pCreature*/, uin
         }
         case GOSSIP_ACTION_INFO_DEF + 6:
         {
-		if (pPlayer->GetHonorPoints() >= 1000){
-                pPlayer->ModifyHonorPoints(-1000); 
-                pPlayer->ModifyArenaPoints(+50);
+		if (pPlayer->GetHonorPoints() >= 100000){
+                pPlayer->ModifyHonorPoints(-100000); 
+                pPlayer->ModifyArenaPoints(+1000);
         }
 		else
         case GOSSIP_ACTION_INFO_DEF + 7:
-        if (pPlayer->GetArenaPoints() >= 50 && pPlayer->GetHonorPoints() <= 74000){
+        if (pPlayer->GetArenaPoints() >= 1000 && pPlayer->GetHonorPoints() <= 1000000){
         {
-            pPlayer->ModifyArenaPoints(-50); 
-            pPlayer->ModifyHonorPoints(+1000);
+            pPlayer->ModifyArenaPoints(-1000); 
+            pPlayer->ModifyHonorPoints(+100000);
         }
     }}}
 
