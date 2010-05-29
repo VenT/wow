@@ -3820,7 +3820,7 @@ void SpellMgr::LoadSpellCustomAttr()
 					break;
 				}
 				break;
-        /*case 18755:
+        case 18755:
             spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_FLAT_MODIFIER;
             spellInfo->EffectBasePoints[0] = -1.5*IN_MILISECONDS*0.44;           //  reduce cast time of seduction by 44%
             spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
@@ -3831,7 +3831,7 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->EffectBasePoints[0] = -1.5*IN_MILISECONDS*0.66;           //  reduce cast time of seduction by 66%
             spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
             count++;
-            break;*/
+            break;
         // Master Shapeshifter: missing stance data for forms other than bear - bear version has correct data
         // To prevent aura staying on target after talent unlearned
         case 48420:
