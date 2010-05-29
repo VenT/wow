@@ -2445,27 +2445,27 @@ bool GossipSelect_npc_experience(Player* pPlayer, Creature* /*pCreature*/, uint3
 ######*/
 
 #define GOSSIP_TEXT_MARKS_TRADER    101
-#define GOSSIP_ITEM_ARENA_TO_HONOR  "Exchange 1000 Arena to 100000 Honor"
-#define GOSSIP_ITEM_HONOR_TO_ARENA  "Exchange 100000 Honor to 1000 Arena"
-#define GOSSIP_AV_MARKS             "You have Alterac Valley Marks to trade?"
-#define GOSSIP_AB_MARKS             "You have Arathi Basin Marks to trade?"
-#define GOSSIP_ES_MARKS             "You have Eye of the Storm Marks to trade?"
-#define GOSSIP_SA_MARKS             "You have Stand of the Ancients Marks to trade?"
-#define GOSSIP_WSG_MARKS            "You have Warsong Gulch Marks to trade?"
-#define AV_MARK                     20560
-#define AB_MARK                     20559
-#define ES_MARK                     29024
-#define SA_MARK                     42425
-#define WSG_MARK                    20558
+#define GOSSIP_ITEM_ARENA_TO_HONOR  "Exchange 750 Arena to 75000 Honor"
+#define GOSSIP_ITEM_HONOR_TO_ARENA  "Exchange 75000 Honor to 750 Arena"
+#define GOSSIP_EOF             "Do you want to trade honor for Emblem of Frost?"
+#define GOSSIP_EOC             "Do you want to trade honor for Emblem of Conquest?"
+#define GOSSIP_EOT             "Do you want to trade honor for Emblem of Triumph?"
+#define GOSSIP_EOV             "Do you want to trade honor for Emblem of Valor?"
+#define GOSSIP_EOH             "Do you want to trade honor for Emblem of Heorism?"
+#define EOF                     49426
+#define EOC                     45624
+#define EOT                     47241
+#define EOV                     40753
+#define EOH                     40752
 #define HONOR_VALUE                 185
 
 bool GossipHello_npc_marks_trader(Player* pPlayer, Creature* pCreature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_AV_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_AB_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ES_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SA_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WSG_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_EOF, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_EOC, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_EOT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_EOV, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_EOH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_HONOR_TO_ARENA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARENA_TO_HONOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
     pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_MARKS_TRADER, pCreature->GetGUID());
@@ -2478,61 +2478,61 @@ bool GossipSelect_npc_marks_trader(Player* pPlayer, Creature* /*pCreature*/, uin
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
         {
-            if (pPlayer->HasItemCount(AV_MARK, 1)) {
+            if (pPlayer->HasItemCount(EOF, 1)) {
                 pPlayer->ModifyHonorPoints(HONOR_VALUE);
-                pPlayer->DestroyItemCount(AV_MARK, 1, true);
+                pPlayer->DestroyItemCount(EOF, 1, true);
             }
             else 
                 pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
         }
         case GOSSIP_ACTION_INFO_DEF + 2:
         {
-            if (pPlayer->HasItemCount(AB_MARK, 1)) {
+            if (pPlayer->HasItemCount(EOC, 1)) {
                 pPlayer->ModifyHonorPoints(HONOR_VALUE);
-                pPlayer->DestroyItemCount(AB_MARK, 1, true);
+                pPlayer->DestroyItemCount(EOC, 1, true);
             }
             else 
                 pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
         }
         case GOSSIP_ACTION_INFO_DEF + 3:
         {
-            if (pPlayer->HasItemCount(ES_MARK, 1)) {
+            if (pPlayer->HasItemCount(EOT, 1)) {
                 pPlayer->ModifyHonorPoints(HONOR_VALUE);
-                pPlayer->DestroyItemCount(ES_MARK, 1, true);
+                pPlayer->DestroyItemCount(EOT, 1, true);
             }
             else 
                 pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
         }
         case GOSSIP_ACTION_INFO_DEF + 4:
         {
-            if (pPlayer->HasItemCount(SA_MARK, 1)) {
+            if (pPlayer->HasItemCount(EOV, 1)) {
                 pPlayer->ModifyHonorPoints(HONOR_VALUE);
-                pPlayer->DestroyItemCount(SA_MARK, 1, true);
+                pPlayer->DestroyItemCount(EOV, 1, true);
             }
             else 
                 pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
         }
         case GOSSIP_ACTION_INFO_DEF + 5:
         {
-            if (pPlayer->HasItemCount(WSG_MARK, 1)) {
+            if (pPlayer->HasItemCount(EOH, 1)) {
                 pPlayer->ModifyHonorPoints(HONOR_VALUE);
-                pPlayer->DestroyItemCount(WSG_MARK, 1, true);
+                pPlayer->DestroyItemCount(EOH, 1, true);
             }
             else 
                 pPlayer->SendSellError(SELL_ERR_YOU_DONT_OWN_THAT_ITEM, 0, 0, 0);
         }
         case GOSSIP_ACTION_INFO_DEF + 6:
         {
-		if (pPlayer->GetHonorPoints() >= 100000){
-                pPlayer->ModifyHonorPoints(-100000); 
-                pPlayer->ModifyArenaPoints(+1000);
+		if (pPlayer->GetHonorPoints() >= 75000){
+                pPlayer->ModifyHonorPoints(-75000); 
+                pPlayer->ModifyArenaPoints(+750);
         }
 		else
         case GOSSIP_ACTION_INFO_DEF + 7:
-        if (pPlayer->GetArenaPoints() >= 1000 && pPlayer->GetHonorPoints() <= 1000000){
+        if (pPlayer->GetArenaPoints() >= 750 && pPlayer->GetHonorPoints() <= 100000){
         {
-            pPlayer->ModifyArenaPoints(-1000); 
-            pPlayer->ModifyHonorPoints(+100000);
+            pPlayer->ModifyArenaPoints(-750); 
+            pPlayer->ModifyHonorPoints(+75000);
         }
     }}}
 

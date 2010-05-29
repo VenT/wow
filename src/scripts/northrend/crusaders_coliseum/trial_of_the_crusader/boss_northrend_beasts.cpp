@@ -146,7 +146,7 @@ struct boss_gormok_impalerAI : public ScriptedAI
                 me->SetSpeed(MOVE_RUN, 1.5f);
 
                 m_uiStaggeringStompTimer = urand(13*IN_MILISECONDS,15*IN_MILISECONDS);
-                m_uiImpaleTimer = urand(40*IN_MILISECONDS,50*IN_MILISECONDS);
+                m_uiImpaleTimer = urand(30*IN_MILISECONDS,35*IN_MILISECONDS);
                 m_uiFireBombTimer = urand(30*IN_MILISECONDS,40*IN_MILISECONDS);
                 m_uiFireBombTriggerTimer = urand(10*IN_MILISECONDS,18*IN_MILISECONDS);
                 m_uiMaxSnobolds = RAID_MODE(4,5,4,5);
@@ -212,7 +212,7 @@ struct boss_gormok_impalerAI : public ScriptedAI
                 if (m_uiImpaleTimer <= uiDiff)
                 {
                         DoCast(me->getVictim(), SPELL_IMPALE);
-                        m_uiImpaleTimer = urand(40*IN_MILISECONDS,50*IN_MILISECONDS);
+                        m_uiImpaleTimer = urand(30*IN_MILISECONDS,35*IN_MILISECONDS);
                 }
                 else m_uiImpaleTimer -= uiDiff;
 
