@@ -370,22 +370,23 @@ SET(scripts_STAT_SRCS
    northrend/frozen_halls/pit_of_saron/instance_pit_of_saron.cpp
    northrend/frozen_halls/pit_of_saron/pit_of_saron.cpp
    northrend/frozen_halls/pit_of_saron/pit_of_saron.h
-   northrend/icecrown_citadel/instance_icecrown_citadel.cpp
-   northrend/icecrown_citadel/icecrown_citadel.h
-   northrend/icecrown_citadel/icecrown_teleport.cpp
-   northrend/icecrown_citadel/blood_prince_council.cpp
-   northrend/icecrown_citadel/boss_blood_queen_lanathel.cpp
-   northrend/icecrown_citadel/boss_deathbringer_saurfang.cpp
-   northrend/icecrown_citadel/boss_festergut.cpp
-   northrend/icecrown_citadel/gunship_battle.cpp
-   northrend/icecrown_citadel/boss_lady_deathwhisper.cpp
-   northrend/icecrown_citadel/boss_lord_marrowgar.cpp
-   northrend/icecrown_citadel/boss_proffesor_putricide.cpp
-   northrend/icecrown_citadel/boss_rotface.cpp
-   northrend/icecrown_citadel/boss_sindragosa.cpp
-   northrend/icecrown_citadel/boss_the_lich_king.cpp
-   northrend/icecrown_citadel/boss_valithria_dreamwalker.cpp
-   northrend/icecrown_citadel/lower_spire_trash.cpp
+   northrend/frozen_halls/icecrown_citadel/instance_icecrown_citadel.cpp
+   northrend/frozen_halls/icecrown_citadel/icecrown_citadel.h
+   northrend/frozen_halls/icecrown_citadel/def_spire.h
+   northrend/frozen_halls/icecrown_citadel/icecrown_teleport.cpp
+   northrend/frozen_halls/icecrown_citadel/blood_prince_council.cpp
+   northrend/frozen_halls/icecrown_citadel/boss_blood_queen_lanathel.cpp
+   northrend/frozen_halls/icecrown_citadel/boss_deathbringer_saurfang.cpp
+   northrend/frozen_halls/icecrown_citadel/boss_festergut.cpp
+   northrend/frozen_halls/icecrown_citadel/gunship_battle.cpp
+   northrend/frozen_halls/icecrown_citadel/boss_lady_deathwhisper.cpp
+   northrend/frozen_halls/icecrown_citadel/boss_lord_marrowgar.cpp
+   northrend/frozen_halls/icecrown_citadel/boss_proffesor_putricide.cpp
+   northrend/frozen_halls/icecrown_citadel/boss_rotface.cpp
+   northrend/frozen_halls/icecrown_citadel/boss_sindragosa.cpp
+   northrend/frozen_halls/icecrown_citadel/boss_the_lich_king.cpp
+   northrend/frozen_halls/icecrown_citadel/boss_valithria_dreamwalker.cpp
+   northrend/frozen_halls/icecrown_citadel/lower_spire_trash.cpp
    northrend/gundrak/instance_gundrak.cpp
    northrend/gundrak/boss_slad_ran.cpp
    northrend/gundrak/boss_moorabi.cpp
