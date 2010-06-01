@@ -678,10 +678,6 @@ void WorldSession::HandleBattlemasterJoinArena(WorldPacket & recv_data)
             return;
     }
 
-    //check if any arena enabled
-    if (!sBattleGroundMgr.isAnyArenaEnabled())
-        return;
-
     //check existance
     BattleGround* bg = sBattleGroundMgr.GetBattleGroundTemplate(BATTLEGROUND_AA);
     if (!bg)
