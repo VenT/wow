@@ -968,7 +968,7 @@ void AddScripts()
     AddSC_boss_lichking();
     AddSC_icecrown_teleporter();
     AddSC_LowerSpireTrash();
-    AddSC_boss_blood_queen_lanathel()
+    AddSC_boss_blood_queen_lanathel();
 
     AddSC_dalaran();
     AddSC_borean_tundra();
