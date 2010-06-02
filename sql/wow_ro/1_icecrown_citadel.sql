@@ -301,8 +301,8 @@ INSERT INTO script_texts (entry,content_default,content_loc1,content_loc2,conten
 (-1810030, 'Watch as the world around you collapses!',null,null,null,null,null,null,null,null,17370,1,0,0,''),
 (-1810031, 'You gnats actually hurt me! Perhaps I\'ve toyed with you long enough, now taste the vengeance of the grave!',null,null,null,null,null,null,null,null,17359,1,0,0,'');
 
-UPDATE `creature_template` SET `ScriptName`='npc_Blood_Queen_Lanathel' WHERE (`entry`='37955');
-UPDATE `creature_template` SET `ScriptName`='mob_swarming_shadows' WHERE (`entry`='38163');
+UPDATE `creature_template` SET `ScriptName`='boss_blood_queen_lanathel' WHERE (`entry`='37955');
+UPDATE `creature_template` SET `ScriptName`='npc_swarming_shadows' WHERE (`entry`='38163');
 UPDATE `creature_template` SET `ScriptName`='boss_saurfang' WHERE (`entry`='37813');
 UPDATE `creature_template` set `health_mod`='11.7255' where entry in (14915,38508,14914,14916);
 UPDATE `creature_template` SET `ScriptName`='npc_bloodbeast' WHERE (`entry`='38508');
