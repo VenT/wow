@@ -24,16 +24,16 @@ const Position LandPosition = { 4407.439453, 2484.90541,  203.374374, 3.166791};
 
 enum Yells
 {
-	SAY_AGGRO		= -1666070,
-	SAY_UNCHAIND_MAGIC	= -1666071,
-	SAY_BLISTERING_COLD	= -1666072,
-	SAY_BREATH		= -1666073,
-	SAY_AIR_PHASE		= -1666074,
-	SAY_PHASE_3		= -1666075,
-	SAY_KILL_1		= -1666076,
-	SAY_KILL_2		= -1666077,
-	SAY_BERSERK		= -1666078,
-	SAY_DEATH		= -1666079,
+	SAY_AGGRO				=	-1666070,
+	SAY_UNCHAIND_MAGIC		=	-1666071,
+	SAY_BLISTERING_COLD		=	-1666072,
+	SAY_BREATH				=	-1666073,
+	SAY_AIR_PHASE			=	-1666074,
+	SAY_PHASE_3				=	-1666075,
+	SAY_KILL_1				=	-1666076,
+	SAY_KILL_2				=	-1666077,
+	SAY_BERSERK				=	-1666078,
+	SAY_DEATH				=	-1666079,
 };
 
 enum Spells
@@ -272,7 +272,7 @@ void AddSC_Boss_Sindragosa()
 }
 
 
-		/* F?r Sp?ter f?r die Mana spells
+		/* Für Später für die Mana spells
 		 std::vector<Unit*> unitList;
                         std::list<HostilReference*> *threatList = &me->getThreatManager().getThreatList();
                         for (std::list<HostilReference*>::const_iterator itr = threatList->begin(); itr != threatList->end(); ++itr)

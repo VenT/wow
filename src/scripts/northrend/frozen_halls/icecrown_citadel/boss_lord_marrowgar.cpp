@@ -138,8 +138,8 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
 
     void Reset()
     {
-                m_uiBoneSpikeGraveyardTimer     = 18000; // alle 15 Sek 10 Version 1 25 Version 3 Player
-                m_uiColdFlameTimer                      = 9000;
+                m_uiBoneSpikeGraveyardTimer     = 15000; // alle 15 Sek 10 Version 1 25 Version 3 Player
+                m_uiColdFlameTimer                      = 7000;
                 m_uiBoneStormChannelTimer       = 50000; // 1:30
                 m_uiColdFlameTimer2                     = 5000;
                 m_uiBoneStormDamageTimer = urand(2000,3000);
@@ -194,7 +194,7 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
                 {
                         DoScriptText(SAY_ENRAGE, me);
                         DoCast(me, SPELL_BERSERK);
-                        m_uiBerserkTimer = 720000;
+                        m_uiBerserkTimer = 600000;
                 }
                 else m_uiBerserkTimer -= uiDiff;
 
@@ -212,7 +212,7 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
                         if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
                         {
                                 DoCast(pTarget, SPELL_COLD_FLAME_SPAWN);
-                                m_uiColdFlameTimer = 60000;
+                                m_uiColdFlameTimer = 7000;
                         }
                 }
                 else m_uiColdFlameTimer -= uiDiff;
@@ -245,7 +245,7 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
                                                         Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
                                                 }
                                 }
-                                m_uiBoneSpikeGraveyardTimer = 18000;
+                                m_uiBoneSpikeGraveyardTimer = 15000;
             }
             else m_uiBoneSpikeGraveyardTimer -= uiDiff;
 
@@ -288,7 +288,7 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
                                                 Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
                                         }
                                 }
-                                m_uiBoneSpikeGraveyardTimer = 18000;
+                                m_uiBoneSpikeGraveyardTimer = 15000;
             }
             else m_uiBoneSpikeGraveyardTimer -= uiDiff;
 
@@ -324,7 +324,7 @@ struct Cold_FlameAI : public ScriptedAI
                 DoCast(me, RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
                 me->SetReactState(REACT_PASSIVE);
                 me->SetSpeed(MOVE_WALK, 1.5f, true);
-                m_uiColdFlameTimer = 8000;
+                m_uiColdFlameTimer = 1000;
     }
 
         void UpdateAI(const uint32 uiDiff)
@@ -332,7 +332,7 @@ struct Cold_FlameAI : public ScriptedAI
                 if(m_uiColdFlameTimer <= uiDiff)
                 {
                         DoCast(me, RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
-                        m_uiColdFlameTimer = 8000;
+                        m_uiColdFlameTimer = 1000;
                 }
                 else m_uiColdFlameTimer -= uiDiff;
 
