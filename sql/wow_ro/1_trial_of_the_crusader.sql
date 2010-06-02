@@ -61,7 +61,7 @@ UPDATE `creature_template` SET `ScriptName`='Mob_FireTrigger' WHERE `entry`=3478
 UPDATE `creature_template` SET `ScriptName`='Mob_Netherportal' WHERE `entry`=34825;
 UPDATE `creature_template` SET `scale`='2' WHERE `entry`=34825;
 UPDATE `creature_template` SET `ScriptName`='Mob_MistressOfPain' WHERE `entry`=34826;
-INSERT INTO `creature_template` VALUES ('41000', '0', '0', '0', '0', '0', '169', '11686', '169', '0', 'Wilfred Portal Trigger', '', '', '0', '1', '1', '0', '14', '14', '0', '1', '1', '0', '1', '2', '0', '0', '1', '2000', '2000', '1', '0', '0', '0', '0', '0', '0', '0', '1', '2', '0', '10', '1049600', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '0.0238095', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '2', '', '11159');
+INSERT INTO `creature_template` VALUES ('41000', '0', '0', '0', '0', '0', '169', '11686', '169', '0', 'Wilfred Portal Trigger', '', '', '0', '1', '1', '0', '14', '14', '0', '1', '1', '0', '1', '2', '0', '0', '1', '2000', '2000', '1', '0', '0', '0', '0', '0', '0', '0', '1', '2', '0', '10', '1049600', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '0.0238095', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '2', '', '', '11159');
 
 -- Gormok
 UPDATE `creature_template` SET `ScriptName`='boss_gormok_impaler' WHERE (`entry`='34796');
