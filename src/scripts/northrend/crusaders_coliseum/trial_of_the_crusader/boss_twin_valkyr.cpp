@@ -283,7 +283,7 @@ struct boss_fjolaAI : public ScriptedAI
         if(EnrageTimer < uiDiff)
         {
             DoCast(me, SP_ENRAGE);
-            EnrageTimer = 30000;
+            EnrageTimer = 50000;
         }
         else
             EnrageTimer -= uiDiff;
@@ -322,7 +322,7 @@ struct boss_eydisAI : public ScriptedAI
     void Reset()
     {
         OrbTimer = 5000;
-        EnrageTimer = 360000; //6 minutes
+        EnrageTimer = 420000; //7 minutes
         SpecialAbilityTimer = 30000;
         SpikeTimer = 15000;
         mLightbaneGUID = 0;
