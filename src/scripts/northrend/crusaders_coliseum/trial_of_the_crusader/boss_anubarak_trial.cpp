@@ -100,8 +100,8 @@ Boss_Raid_AnubarakAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
                 m_uiPhase =     1;
                 m_uiSwarmTickTimer = 2000;
-                m_uiNerubianTriggerTimer = 1000;
-                m_uiNerubianSummonTimer = 10000;
+                m_uiNerubianTriggerTimer = 3000;
+                m_uiNerubianSummonTimer = 30000;
 
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
         me->RemoveAura(SPELL_SUBMERGE);
@@ -176,7 +176,7 @@ Boss_Raid_AnubarakAI(Creature *pCreature) : ScriptedAI(pCreature)
                         if (m_uiNerubianSummonTimer <= uiDiff)
                         {
                                 NerubianSummon();
-                                m_uiNerubianSummonTimer = 30000;
+                                m_uiNerubianSummonTimer = 70000;
                         }
                         else m_uiNerubianSummonTimer -= uiDiff;
                 }
@@ -203,7 +203,7 @@ Boss_Raid_AnubarakAI(Creature *pCreature) : ScriptedAI(pCreature)
                         if (m_uiNerubianSummonTimer <= uiDiff)
                         {
                                 NerubianSummon();
-                                m_uiNerubianSummonTimer = 30000;
+                                m_uiNerubianSummonTimer = 70000;
                         }
                         else m_uiNerubianSummonTimer -= uiDiff;
                 }
