@@ -310,6 +310,7 @@ UPDATE `creature_template` SET `ScriptName`='Boss_Fauldarm' WHERE (`entry`='3662
 UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202235,202242,202244,202243,202245,202246);
 -- UPDATE `gameobject_template` SET `flags` = 0 WHERE `entry` = 202223;
 UPDATE `creature_template` SET `ScriptName`='Boss_Lady_Deathwisper' WHERE (`entry`='36855');
+UPDATE `creature_template` SET `ScriptName` = 'npc_shade' WHERE `entry` = 38222;
 UPDATE `creature_template` set `mechanic_immune_mask`='634339327' where entry in (36855,13103,13104,13105);
 UPDATE `creature_template` SET `minlevel`='80',`maxlevel`='80',`faction_A`='16',`faction_H`='16',`ScriptName`='Cold_Flame' WHERE (`entry`='36672');
 UPDATE `creature_template` SET `minlevel`='83',`maxlevel`='83',`faction_A`='16',`faction_H`='16',`ScriptName`='Boss_Lord_Marrowgar' WHERE (`entry`='36612');

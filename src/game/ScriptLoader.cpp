@@ -437,7 +437,7 @@ void AddSC_boss_saurfang();
 void AddSC_Boss_Fauldarm();
 void AddSC_boss_Rotface();
 void AddSC_boss_Deahtwisper();
-void AddSC_boss_Marrowgar();
+void AddSC_boss_marrowgar();
 void AddSC_Boss_ProfessorPutricide();
 void AddSC_Boss_Sindragosa();
 void AddSC_boss_lichking();
@@ -960,7 +960,7 @@ void AddScripts()
     AddSC_boss_saurfang();
     AddSC_Boss_Fauldarm();
     AddSC_boss_Deahtwisper();
-    AddSC_boss_Marrowgar();
+    AddSC_boss_marrowgar();
     AddSC_boss_Rotface();
     AddSC_boss_valithria_dreamwalker();
     AddSC_Boss_ProfessorPutricide();
