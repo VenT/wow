@@ -1846,7 +1846,7 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
             !isGameMaster() &&                  // While not a gamemaster,
             !HasSpell(50977) &&                 // If not using a Death Gate,
             !HasSpell(54725) &&                 // If not using Teleport to Hall of Command  (first floor),
-            !HasSpell(54699) &&                 // If not using Teleport to Heart of Acherus (second floor),
+            !HasSpell(54699)                 // If not using Teleport to Heart of Acherus (second floor),
             )
             return false;                       // Do not allow the player to teleport!
 
