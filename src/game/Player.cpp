@@ -1841,8 +1841,14 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
     }
     else
     {
-        if (getClass() == CLASS_DEATH_KNIGHT && GetMapId() == 609 && !isGameMaster() && !HasSpell(50977))
-            return false;
+            if (getClass() == CLASS_DEATH_KNIGHT && // Class must be Death knight,
+            GetMapId() == 609 &&                // The player is teleporting to The Scarlet Enclave,
+            !isGameMaster() &&                  // While not a gamemaster,
+            !HasSpell(50977) &&                 // If not using a Death Gate,
+            !HasSpell(54725) &&                 // If not using Teleport to Hall of Command  (first floor),
+            !HasSpell(54699) &&                 // If not using Teleport to Heart of Acherus (second floor),
+            )
+            return false;                       // Do not allow the player to teleport!
 
         // far teleport to another map
         Map* oldmap = IsInWorld() ? GetMap() : NULL;
