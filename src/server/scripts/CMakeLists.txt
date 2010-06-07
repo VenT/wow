@@ -336,6 +336,15 @@ SET(scripts_STAT_SRCS
    Northrend/crusaders_coliseum/trial_of_the_champion/instance_trial_of_the_champion.cpp
    Northrend/crusaders_coliseum/trial_of_the_champion/trial_of_the_champion.cpp
    Northrend/crusaders_coliseum/trial_of_the_champion/trial_of_the_champion.h
+   northrend/CrusadersColiseum/TrialOfTheCrusader/boss_anubarak_trial.cpp
+   northrend/CrusadersColiseum/TrialOfTheCrusader/alliance_champions.cpp
+   northrend/CrusadersColiseum/TrialOfTheCrusader/horde_champions.cpp
+   northrend/CrusadersColiseum/TrialOfTheCrusader/boss_jaraxxus.cpp
+   northrend/CrusadersColiseum/TrialOfTheCrusader/boss_northrend_beasts.cpp
+   northrend/CrusadersColiseum/TrialOfTheCrusader/boss_twin_valkyr.cpp
+   northrend/CrusadersColiseum/TrialOfTheCrusader/instance_trial_of_the_crusader.cpp
+   northrend/CrusadersColiseum/TrialOfTheCrusader/trial_of_the_crusader.cpp
+   northrend/CrusadersColiseum/TrialOfTheCrusader/trial_of_the_crusader.h
    Northrend/draktharon_keep/instance_drak_tharon_keep.cpp
    Northrend/draktharon_keep/boss_trollgore.cpp
    Northrend/draktharon_keep/boss_novos.cpp
