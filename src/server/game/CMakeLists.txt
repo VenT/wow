@@ -250,6 +250,8 @@ SET(game_STAT_SRCS
    Scripting/ScriptMgr.h
    Scripting/ScriptSystem.cpp
    Scripting/ScriptSystem.h
+   Scripting/sc_boss_spell_worker.cpp
+   Scripting/sc_boss_spell_worker.h
    Server/Protocol/Handlers/AddonHandler.cpp
    Server/Protocol/Handlers/AddonHandler.h
    Server/Protocol/Handlers/ArenaTeamHandler.cpp

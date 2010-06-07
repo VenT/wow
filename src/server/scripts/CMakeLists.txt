@@ -18,6 +18,8 @@ SET(scripts_STAT_SRCS
    ../game/AI/ScriptedAI/ScriptedInstance.h
    ../game/AI/ScriptedAI/ScriptedSimpleAI.cpp
    ../game/AI/ScriptedAI/ScriptedSimpleAI.h
+   ../game/Scripting/sc_boss_spell_worker.cpp
+   ../game/Scripting/sc_boss_spell_worker.h
    Custom/on_events.cpp
    EasternKingdoms/AlteracValley/alterac_valley.cpp
    EasternKingdoms/AlteracValley/boss_balinda.cpp
