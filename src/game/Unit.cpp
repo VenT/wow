@@ -15086,7 +15086,10 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
                 if (m->IsRaidOrHeroicDungeon())
                 {
                     if (creature->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_INSTANCE_BIND)
+					{
+                        creditedPlayer->WriteWowArmoryDatabaseLog(3, creature->GetCreatureInfo()->Entry);
                         ((InstanceMap *)m)->PermBindAllPlayers(creditedPlayer);
+                    }
                 }
                 else
                 {

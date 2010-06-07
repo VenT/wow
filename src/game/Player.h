@@ -2167,6 +2167,9 @@ class Player : public Unit, public GridObject<Player>
         float m_homebindZ;
 
         WorldLocation GetStartPosition() const;
+		
+        /* WoWArmory Feed Log */
+        void WriteWowArmoryDatabaseLog(uint32 type, uint32 data);
 
         // currently visible objects at player client
         typedef std::set<uint64> ClientGUIDs;
