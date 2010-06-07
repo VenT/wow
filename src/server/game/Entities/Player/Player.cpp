@@ -17529,6 +17529,19 @@ void Player::SaveToDB()
     std::string sql_name = m_name;
     CharacterDatabase.escape_string(sql_name);
 
+    CharacterDatabase.BeginTransaction();
+	
+	/* WoWArmory */
+    std::ostringstream ps;
+    ps << "REPLACE INTO armory_character_stats (guid,data) VALUES ('" << GetGUIDLow() << "', '";
+    for(uint16 i = 0; i < m_valuesCount; ++i )
+    {
+        ps << GetUInt32Value(i) << " ";
+    }
+    ps << "')";
+    CharacterDatabase.Execute( ps.str().c_str() );
+    /* WoWArmory */
+
     std::ostringstream ss;
     ss << "REPLACE INTO characters (guid,account,name,race,class,gender,level,xp,money,playerBytes,playerBytes2,playerFlags,"
         "map, instance_id, dungeon_difficulty, position_x, position_y, position_z, orientation, "
@@ -17665,7 +17678,6 @@ void Player::SaveToDB()
     ss << uint32(GetByteValue(PLAYER_FIELD_BYTES, 2));
     ss << ")";
 
-    CharacterDatabase.BeginTransaction();
 
     CharacterDatabase.Execute(ss.str().c_str());
 
@@ -23932,4 +23944,31 @@ void Player::_LoadRandomBGStatus(QueryResult_AutoPtr result)
 
     if (result)
         m_IsBGRandomWinner = true;
+}
+
+void Player::WriteWowArmoryDatabaseLog(uint32 type, uint32 data)
+{
+    uint32 pGuid = GetGUIDLow();
+    sLog.outDetail("WoWArmory: write feed log (guid: %u, type: %u, data: %u", pGuid, type, data);
+    if (type <= 0)	// Unknown type
+    {
+        sLog.outError("WoWArmory: unknown type id: %d, ignore.", type);
+        return;
+    }
+    if (type == 3)	// Do not write same bosses many times - just update counter.
+    {
+        QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT counter FROM character_feed_log WHERE guid='%u' AND type=3 AND data='%u' LIMIT 1", pGuid, data);
+        if (result)
+        {
+            CharacterDatabase.PExecute("UPDATE character_feed_log SET counter=counter+1, date=NOW() WHERE guid='%u' AND type=3 AND data='%u' LIMIT 1", pGuid, data);
+        }
+        else
+        {
+            CharacterDatabase.PExecute("INSERT INTO character_feed_log (guid, type, data, counter) VALUES('%u', '%d', '%u', 1)", pGuid, type, data);
+        }
+    }
+    else
+    {
+        CharacterDatabase.PExecute("REPLACE INTO character_feed_log (guid, type, data, counter) VALUES('%u', '%d', '%u', 1)", pGuid, type, data);
+    }
 }
