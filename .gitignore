@@ -18,6 +18,7 @@ src/bindings/scripts/VC90/*/
 src/mangosd/
 src/realmd/
 *.*-*
+*.patch
 
 # use regexp syntax.
 syntax: regexp
