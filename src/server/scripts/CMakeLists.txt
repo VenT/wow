@@ -358,6 +358,23 @@ SET(scripts_STAT_SRCS
    Northrend/frozen_halls/pit_of_saron/instance_pit_of_saron.cpp
    Northrend/frozen_halls/pit_of_saron/pit_of_saron.cpp
    Northrend/frozen_halls/pit_of_saron/pit_of_saron.h
+   Northrend/IcecrownCitadel/instance_icecrown_citadel.cpp
+   Northrend/IcecrownCitadel/icecrown_citadel.h
+   Northrend/IcecrownCitadel/def_spire.h
+   Northrend/IcecrownCitadel/icecrown_teleport.cpp
+   Northrend/IcecrownCitadel/blood_prince_council.cpp
+   Northrend/IcecrownCitadel/boss_blood_queen_lanathel.cpp
+   Northrend/IcecrownCitadel/boss_deathbringer_saurfang.cpp
+   Northrend/IcecrownCitadel/boss_festergut.cpp
+   Northrend/IcecrownCitadel/gunship_battle.cpp
+   Northrend/IcecrownCitadel/boss_lady_deathwhisper.cpp
+   Northrend/IcecrownCitadel/boss_lord_marrowgar.cpp
+   Northrend/IcecrownCitadel/boss_proffesor_putricide.cpp
+   Northrend/IcecrownCitadel/boss_rotface.cpp
+   Northrend/IcecrownCitadel/boss_sindragosa.cpp
+   Northrend/IcecrownCitadel/boss_the_lich_king.cpp
+   Northrend/IcecrownCitadel/boss_valithria_dreamwalker.cpp
+   Northrend/IcecrownCitadel/lower_spire_trash.cpp
    Northrend/gundrak/instance_gundrak.cpp
    Northrend/gundrak/boss_slad_ran.cpp
    Northrend/gundrak/boss_moorabi.cpp
