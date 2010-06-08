@@ -28,7 +28,7 @@ Visual Effect for discs - Nexus Lord, Scion of Eternity does not flying on this 
 Rewrite count of Nexus Lord, Scion of Eternity to blizzlike values.
 */
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "eye_of_eternity.h"
 #include "WorldPacket.h"
 #include "ObjectAccessor.h"
