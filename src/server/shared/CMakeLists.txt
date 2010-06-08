@@ -6,6 +6,7 @@ SET(shared_STAT_SRCS
    Logging/Log.h
    Packets/ByteBuffer.h
    Packets/WorldPacket.h
+   Policies/ObjectLifeTime.cpp
    Threading/DelayExecutor.cpp
    Threading/DelayExecutor.h
    Threading/Threading.cpp
@@ -14,7 +15,9 @@ SET(shared_STAT_SRCS
    Utilities/SignalHandler.h
    Utilities/Timer.h
    Utilities/Util.cpp
-   Utilities/Util.h
+   Utilities/Util.h  
+   Utilities/EventProcessor.cpp
+   Utilities/EventProcessor.h
    Common.cpp
    Common.h
    SystemConfig.h

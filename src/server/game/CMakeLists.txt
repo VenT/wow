@@ -34,6 +34,8 @@ SET(game_STAT_SRCS
    AI/CreatureAIRegistry.h
    AI/CreatureAISelector.cpp
    AI/CreatureAISelector.h
+   AI/CreatureAI.cpp
+   AI/CreatureAI.h
    AuctionHouse/AuctionHouseMgr.cpp
    AuctionHouse/AuctionHouseMgr.h
    AuctionHouse/AuctionHouseBot/AuctionHouseBot.cpp
@@ -406,6 +408,8 @@ include_directories(
 
 if(NOT DO_SCRIPTS)
    SET(game_STAT_SRCS ${game_STAT_SRCS}
+      PrecompiledHeaders/ScriptPCH.cpp
+      PrecompiledHeaders/ScriptPCH.h
       AI/ScriptedAI/ScriptedEscortAI.cpp
       AI/ScriptedAI/ScriptedEscortAI.h
       AI/ScriptedAI/ScriptedCreature.cpp
@@ -418,8 +422,6 @@ if(NOT DO_SCRIPTS)
       AI/ScriptedAI/ScriptedInstance.h
       AI/ScriptedAI/ScriptedSimpleAI.cpp
       AI/ScriptedAI/ScriptedSimpleAI.h
-      PrecompiledHeaders/ScriptPCH.cpp
-      PrecompiledHeaders/ScriptPCH.h
    )
    message("-- Added Script Engine to GAME lib")
 endif(NOT DO_SCRIPTS)
