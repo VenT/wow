@@ -3,7 +3,7 @@ syntax: glob
 
 CMakeFiles/
 build/
-src/shared/revision.h
+src/server/shared/revision.h
 build/
 bin/
 .directory
