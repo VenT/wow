@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 
 const Position FlyPosition = { 4523.889160, 2486.907227, 280.249878, 3.155010};

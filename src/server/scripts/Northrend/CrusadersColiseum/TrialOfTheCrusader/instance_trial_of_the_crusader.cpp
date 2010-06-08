@@ -21,7 +21,7 @@ SDComment: by /dev/rsa
 SDCategory: Trial of the Crusader
 EndScriptData */
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "trial_of_the_crusader.h"
 
 struct instance_trial_of_the_crussader : public ScriptedInstance

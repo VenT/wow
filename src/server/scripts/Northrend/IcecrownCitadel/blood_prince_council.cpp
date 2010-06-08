@@ -21,7 +21,7 @@ SDComment: by /dev/rsa
 SDCategory: Icecrown Citadel
 EndScriptData */
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "def_spire.h"
 
 enum BossSpells

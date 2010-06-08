@@ -19,7 +19,7 @@
 /*Comment:
 Script created by Goga (TrinDev Team special for trinity-core.ru and wowjp.net) Please if you use this script contact copiryght*/
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 #include "ScriptedEscortAI.h"
 

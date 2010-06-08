@@ -31,7 +31,7 @@ INSERT INTO npc_spellclick_spells VALUES (34567, 65684, 0, 0, 0, 1, 0, 0, 0), (3
 INSERT INTO spell_script_target values (65875, 1, 34497), (65876, 1, 34496);
 SQL End */
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "trial_of_the_crusader.h"
 
 #define ROOM_CENTER_X   559.26f

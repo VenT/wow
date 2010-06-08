@@ -18,7 +18,7 @@
 
 // Todo: Frostmourne Room / Cleanup / Frost Throne Support.
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 
 #define GOSSIP_START_EVENT "We are ready Fordring!"

@@ -22,7 +22,7 @@ Created by Lordronn
 */
 
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 
 #define LIGHTS_HAMMER 70781

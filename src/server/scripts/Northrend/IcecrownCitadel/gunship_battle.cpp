@@ -21,4 +21,4 @@ SDComment:
 SDCategory: Icecrown Citadel
 EndScriptData */
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"

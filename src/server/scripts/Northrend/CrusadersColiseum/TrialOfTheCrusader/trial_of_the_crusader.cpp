@@ -21,7 +21,7 @@ SDComment: event script by /dev/rsa
 SDCategory: trial_of_the_crusader
 EndScriptData */
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "trial_of_the_crusader.h"
 
 #define GOSSIP_START_EVENT1     "Are you ready?"
