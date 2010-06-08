@@ -1,4 +1,4 @@
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "eye_of_eternity.h"
 #include "WorldPacket.h"
  
