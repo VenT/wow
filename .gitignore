@@ -1,6 +1,8 @@
 # use glob syntax.
 syntax: glob
 
+CMakeFiles/
+build/
 src/shared/revision.h
 build/
 bin/
