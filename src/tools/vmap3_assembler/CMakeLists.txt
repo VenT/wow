@@ -1,5 +1,5 @@
 # Copyright (C) 2005-2009 MaNGOS project <http://getmangos.com/>
-# Copyright (C) 2005-2009 Trinity <http://www.trinitycore.org/>
+# Copyright (C) 2005-2010 Trinity <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -17,7 +17,7 @@ include_directories(
   ${ACE_INCLUDE_DIR}
 )
 
-add_executable(trinity-collision_assembler VMapAssembler.cpp)
-target_link_libraries(trinity-collision_assembler collision g3dlib)
+add_executable(collision_assembler VMapAssembler.cpp)
+target_link_libraries(collision_assembler collision g3dlib)
 
 

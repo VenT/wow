@@ -1,6 +1,16 @@
-########### next target ###############
+# Copyright (C) 2005-2010 Trinity <http://www.trinitycore.org/>
+#
+# This file is free software; as a special exception the author gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-SET(trinity-realm_SRCS
+########### authserver ###############
+
+SET(authserver_SRCS
 Authentication/AuthCodes.cpp
 Authentication/AuthCodes.h
 Realms/RealmList.cpp
@@ -30,24 +40,24 @@ include_directories(
   ${MYSQL_INCLUDE_DIR}
 )
 
-SET(trinity-realm_LINK_FLAGS "")
+SET(authserver_LINK_FLAGS "")
 
-add_executable(trinity-realm ${trinity-realm_SRCS})
+add_executable(authserver ${authserver_SRCS})
 add_definitions(
--D_TRINITY_REALM_CONFIG='"${CONF_DIR}/trinityrealm.conf"'
+-D_TRINITY_REALM_CONFIG='"${CONF_DIR}/authserver.conf"'
 )
 IF (DO_MYSQL)
-   SET(trinity-realm_LINK_FLAGS "-pthread ${trinity-realm_LINK_FLAGS}")
+   SET(trinity-realm_LINK_FLAGS "-pthread ${authserver_LINK_FLAGS}")
 ENDIF(DO_MYSQL)
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-   SET(trinity-realm_LINK_FLAGS "-framework Carbon ${trinity-realm_LINK_FLAGS}")
+   SET(authserver_LINK_FLAGS "-framework Carbon ${authserver_LINK_FLAGS}")
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
-SET_TARGET_PROPERTIES(trinity-realm PROPERTIES LINK_FLAGS "${trinity-realm_LINK_FLAGS}")
+SET_TARGET_PROPERTIES(authserver PROPERTIES LINK_FLAGS "${authserver_LINK_FLAGS}")
 
 target_link_libraries(
-trinity-realm
+authserver
 shared
 trinitydatabase
 trinityauth
@@ -57,9 +67,9 @@ ${MYSQL_LIBRARIES}
 ${OSX_LIBS}
 )
 
-install(TARGETS trinity-realm DESTINATION bin)
+install(TARGETS authserver DESTINATION bin)
 
 
 ########### install files ###############
 
-install(FILES  trinityrealm.conf.dist DESTINATION etc)
+install(FILES  authserver.conf.dist DESTINATION etc)

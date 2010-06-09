@@ -1,7 +1,16 @@
+# Copyright (C) 2005-2010 Trinity <http://www.trinitycore.org/>
+#
+# This file is free software; as a special exception the author gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-########### next target ###############
+########### worldserver ###############
 
-SET(trinity-core_SRCS
+SET(worldserver_SRCS
 CommandLine/CliRunnable.cpp
 CommandLine/CliRunnable.h
 RemoteAccess/RASocket.cpp
@@ -109,22 +118,22 @@ include_directories(
   ${MYSQL_INCLUDE_DIR}
 )
 
-SET(trinity-core_LINK_FLAGS "")
+SET(worldserver_LINK_FLAGS "")
 
-add_executable(trinity-core ${trinity-core_SRCS})
+add_executable(worldserver ${worldserver_SRCS})
 add_definitions(
--D_TRINITY_CORE_CONFIG='"${CONF_DIR}/trinitycore.conf"'
+-D_TRINITY_CORE_CONFIG='"${CONF_DIR}/worldserver.conf"'
 )
 IF (DO_MYSQL)
-    SET(trinity-core_LINK_FLAGS "-pthread ${trinity-core_LINK_FLAGS}")
+    SET(worldserver_LINK_FLAGS "-pthread ${worldserver_LINK_FLAGS}")
 ENDIF(DO_MYSQL)
 
 IF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-    SET(trinity-core_LINK_FLAGS "-framework Carbon ${trinity-core_LINK_FLAGS}")
+    SET(worldserver_LINK_FLAGS "-framework Carbon ${worldserver_LINK_FLAGS}")
     SET(SCRIPT_LIB "")
 ENDIF (CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
-SET_TARGET_PROPERTIES(trinity-core PROPERTIES LINK_FLAGS "${trinity-core_LINK_FLAGS}")
+SET_TARGET_PROPERTIES(worldserver PROPERTIES LINK_FLAGS "${worldserver_LINK_FLAGS}")
 
 if(DO_SCRIPTS)
     SET(SCRIPT_LIB "scripts")
@@ -133,7 +142,7 @@ else(DO_SCRIPTS)
 endif(DO_SCRIPTS)
 
 target_link_libraries(
-trinity-core
+worldserver
 game
 shared
 zlib
@@ -154,10 +163,10 @@ ${ZLIB}
 ${OSX_LIBS}
 )
 
-install(TARGETS trinity-core DESTINATION bin)
+install(TARGETS worldserver DESTINATION bin)
 
 
 ########### install files ###############
 
-install(FILES  trinitycore.conf.dist DESTINATION etc)
+install(FILES  worldserver.conf.dist DESTINATION etc)
 
