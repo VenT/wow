@@ -30,6 +30,8 @@ SET(scripts_STAT_SRCS
    ../game/AI/ScriptedAI/ScriptedInstance.h
    ../game/AI/ScriptedAI/ScriptedSimpleAI.cpp
    ../game/AI/ScriptedAI/ScriptedSimpleAI.h
+   ../game/Scripting/sc_boss_spell_worker.cpp
+   ../game/Scripting/sc_boss_spell_worker.h
    Custom/on_events.cpp
    EasternKingdoms/AlteracValley/alterac_valley.cpp
    EasternKingdoms/AlteracValley/boss_balinda.cpp
@@ -348,6 +350,15 @@ SET(scripts_STAT_SRCS
    Northrend/CrusadersColiseum/TrialOfTheChampion/instance_trial_of_the_champion.cpp
    Northrend/CrusadersColiseum/TrialOfTheChampion/trial_of_the_champion.cpp
    Northrend/CrusadersColiseum/TrialOfTheChampion/trial_of_the_champion.h
+   Northrend/CrusadersColiseum/TrialOfTheCrusader/alliance_champions.cpp
+   Northrend/CrusadersColiseum/TrialOfTheCrusader/boss_anubarak_trial.cpp
+   Northrend/CrusadersColiseum/TrialOfTheCrusader/boss_jaraxxus.cpp
+   Northrend/CrusadersColiseum/TrialOfTheCrusader/boss_northrend_beasts.cpp
+   Northrend/CrusadersColiseum/TrialOfTheCrusader/boss_twin_valkyr.cpp
+   Northrend/CrusadersColiseum/TrialOfTheCrusader/horde_champions.cpp
+   Northrend/CrusadersColiseum/TrialOfTheCrusader/instance_trial_of_the_crusader.cpp
+   Northrend/CrusadersColiseum/TrialOfTheCrusader/trial_of_the_crusader.cpp
+   Northrend/CrusadersColiseum/TrialOfTheCrusader/trial_of_the_crusader.h
    Northrend/DraktharonKeep/instance_drak_tharon_keep.cpp
    Northrend/DraktharonKeep/boss_trollgore.cpp
    Northrend/DraktharonKeep/boss_novos.cpp
@@ -370,6 +381,23 @@ SET(scripts_STAT_SRCS
    Northrend/FrozenHalls/PitOfSaron/instance_pit_of_saron.cpp
    Northrend/FrozenHalls/PitOfSaron/pit_of_saron.cpp
    Northrend/FrozenHalls/PitOfSaron/pit_of_saron.h
+   Northrend/IcecrownCitadel/blood_prince_council.cpp
+   Northrend/IcecrownCitadel/boss_blood_queen_lanathel.cpp
+   Northrend/IcecrownCitadel/boss_deathbringer_saurfang.cpp
+   Northrend/IcecrownCitadel/boss_festergut.cpp
+   Northrend/IcecrownCitadel/boss_lady_deathwhisper.cpp
+   Northrend/IcecrownCitadel/boss_lord_marrowgar.cpp
+   Northrend/IcecrownCitadel/boss_proffesor_putricide.cpp
+   Northrend/IcecrownCitadel/boss_rotface.cpp
+   Northrend/IcecrownCitadel/boss_sindragosa.cpp
+   Northrend/IcecrownCitadel/boss_the_lich_king.cpp
+   Northrend/IcecrownCitadel/boss_valithria_dreamwalker.cpp
+   Northrend/IcecrownCitadel/def_spire.h
+   Northrend/IcecrownCitadel/gunship_battle.cpp
+   Northrend/IcecrownCitadel/icecrown_citadel.h
+   Northrend/IcecrownCitadel/icecrown_teleport.cpp
+   Northrend/IcecrownCitadel/instance_icecrown_citadel.cpp
+   Northrend/IcecrownCitadel/lower_spire_trash.cpp
    Northrend/Gundrak/instance_gundrak.cpp
    Northrend/Gundrak/boss_slad_ran.cpp
    Northrend/Gundrak/boss_moorabi.cpp

@@ -9,7 +9,7 @@
 #include "Player.h"
 #include "SpellAuras.h"
 #include "Unit.h"
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "Database/DatabaseEnv.h"
 #include "ScriptMgr.h"
 

@@ -4,7 +4,7 @@
  * Please see the included DOCS/LICENSE.TXT for more information */
 
 #include "sc_boss_spell_worker.h"
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 
 #ifdef DEF_BOSS_SPELL_WORKER_H
 

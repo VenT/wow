@@ -135,7 +135,7 @@ struct Boss_FauldarmAI : public ScriptedAI
         if (m_uiVileGasTimer < uiDiff)
         {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(target, N_10_SPELL_VILE_GAS);
+                //DoCast(target, N_10_SPELL_VILE_GAS);
                 m_uiVileGasTimer = 30000;
         }
         else m_uiVileGasTimer -= uiDiff;

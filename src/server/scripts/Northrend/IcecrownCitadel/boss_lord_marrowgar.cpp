@@ -134,12 +134,12 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
     void Reset()
     {
 		m_uiSaberSlashTimer = 6000;
-		m_uiBoneSpikeGraveyardTimer	= 15000;
+		m_uiBoneSpikeGraveyardTimer	= 18000;
 		m_uiColdFlameTimer	= 15000;
 		m_uiBoneStormChanelTimer = 30000;
 		m_uiBoneStormTimer = 1500;
 		m_uiBoneStormRemoveTimer = 20000;
-		m_uiBerserkTimer = 600000;
+		m_uiBerserkTimer = 700000;
 
 		me->SetSpeed(MOVE_RUN, 2.5f, true);
 		me->SetSpeed(MOVE_WALK, 1.8f, true);
@@ -213,7 +213,7 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
 							                        Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
 						                        }
 				                            }
-				                            m_uiBoneSpikeGraveyardTimer = 15000;
+				                            m_uiBoneSpikeGraveyardTimer = 18000;
 							     } else m_uiBoneSpikeGraveyardTimer -= uiDiff;
 
 			if (m_uiColdFlameTimer <= uiDiff)
@@ -222,7 +222,7 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
 						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 8000);
 						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 8000);
 						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 8000);
-						m_uiColdFlameTimer = 15000;
+						m_uiColdFlameTimer = 45000;
 				} 
 				else m_uiColdFlameTimer -= uiDiff;
 					}
@@ -244,7 +244,7 @@ struct Boss_Lord_MarrowgarAI : public ScriptedAI
 						Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
 					}
 				}
-				m_uiBoneSpikeGraveyardTimer = 15000;
+				m_uiBoneSpikeGraveyardTimer = 18000;
             } else m_uiBoneSpikeGraveyardTimer -= uiDiff;
 				}
 
@@ -308,14 +308,14 @@ struct Cold_FlameAI : public ScriptedAI
 		DoCast(me, RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
 		me->SetReactState(REACT_PASSIVE);
 		me->SetSpeed(MOVE_WALK, 1.5f, true);
-		m_uiColdFlameTimer = 1000;
+		m_uiColdFlameTimer = 10000;
     }
 	void UpdateAI(const uint32 uiDiff)
     {
 		if(m_uiColdFlameTimer <= uiDiff)
 		{
 			DoCast(me, RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
-			m_uiColdFlameTimer = 1000;
+			m_uiColdFlameTimer = 10000;
 		} 
 		else m_uiColdFlameTimer -= uiDiff;
 		

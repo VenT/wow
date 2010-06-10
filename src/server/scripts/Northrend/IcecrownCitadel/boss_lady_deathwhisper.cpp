@@ -137,7 +137,7 @@ struct Boss_Lady_DeathwisperAI : public ScriptedAI
     void Reset()
     {
 		m_uiPhase = 1;
-		m_uiSummonWaveTimer	= 60000;
+		m_uiSummonWaveTimer	= 120000;
 		m_uiDeathandDecayTimer = 10000;
 		m_uiIntroText = 0;
         m_uiIntroTextTimer = 15000;
@@ -319,7 +319,7 @@ struct Boss_Lady_DeathwisperAI : public ScriptedAI
             me->SummonCreature(NPC_CULT_FANATIC,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
             me->SummonCreature(NPC_CULT_ADHERENT,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
             me->SummonCreature(NPC_CULT_FANATIC,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
-			m_uiSummonWaveTimer = 60000;
+			m_uiSummonWaveTimer = 100000;
         } 
 		else m_uiSummonWaveTimer -= uiDiff;
 	}
@@ -336,7 +336,7 @@ struct Boss_Lady_DeathwisperAI : public ScriptedAI
             me->SummonCreature(NPC_CULT_FANATIC,ADD_5X,ADD_5Y,ADD_5Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
             me->SummonCreature(NPC_CULT_ADHERENT,ADD_6X,ADD_6Y,ADD_6Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
 			me->SummonCreature(RAND(NPC_CULT_FANATIC, NPC_CULT_ADHERENT), ADD_7X,ADD_7Y,ADD_7Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
-			m_uiSummonWaveTimer = 60000;
+			m_uiSummonWaveTimer = 100000;
         } 
 		else m_uiSummonWaveTimer -= uiDiff;
 	}
@@ -399,7 +399,7 @@ struct Boss_Lady_DeathwisperAI : public ScriptedAI
             me->SummonCreature(NPC_CULT_FANATIC,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
             me->SummonCreature(NPC_CULT_ADHERENT,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
             me->SummonCreature(NPC_CULT_FANATIC,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
-			m_uiSummonWaveTimer = 60000;
+			m_uiSummonWaveTimer = 100000;
         } 
 		else m_uiSummonWaveTimer -= uiDiff;
 	}
@@ -410,7 +410,7 @@ struct Boss_Lady_DeathwisperAI : public ScriptedAI
         {
             Unit* pSummoned= NULL;
 			me->SummonCreature(RAND(NPC_CULT_FANATIC, NPC_CULT_ADHERENT), ADD_7X,ADD_7Y,ADD_7Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
-			m_uiSummonWaveTimer = 60000;
+			m_uiSummonWaveTimer = 100000;
         } 
 		else m_uiSummonWaveTimer -= uiDiff;
 	}

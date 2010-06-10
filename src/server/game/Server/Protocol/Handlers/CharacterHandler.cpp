@@ -1271,7 +1271,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 			CharacterDatabase.PExecute("INSERT INTO `character_homebind` VALUES ('%u','1', '1637', '1633.33', '-4439.11', '15.7588')",GUID_LOPART(guid));
 
 		// Achievement conversion
-		if(QueryResult *result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_achievements"))
+		if(QueryResult_AutoPtr result2 = WorldDatabase.Query("SELECT alliance_id, horde_id FROM player_factionchange_achievements"))
 		{
 			do
 			{
