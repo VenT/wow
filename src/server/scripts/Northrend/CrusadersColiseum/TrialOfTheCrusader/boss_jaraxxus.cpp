@@ -23,7 +23,7 @@ SDComment: by /dev/rsa
 SDCategory: Crusader Coliseum
 EndScriptData */
 
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "trial_of_the_crusader.h"
 
 enum Says
