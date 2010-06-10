@@ -247,6 +247,8 @@ SET(game_STAT_SRCS
    OutdoorPvP/Zones/OutdoorPvPTF.h
    OutdoorPvP/Zones/OutdoorPvPZM.cpp
    OutdoorPvP/Zones/OutdoorPvPZM.h
+   OutdoorPvP/Zones/OutdoorPvPWG.cpp
+   OutdoorPvP/Zones/OutdoorPvPWG.h
    OutdoorPvP/OutdoorPvP.cpp
    OutdoorPvP/OutdoorPvP.h
    OutdoorPvP/OutdoorPvPImpl.h

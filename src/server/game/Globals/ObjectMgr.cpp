@@ -2454,7 +2454,6 @@ void ObjectMgr::LoadPetLevelInfo()
                 sLog.outErrorDb("Wrong creature id %u in `pet_levelstats` table, ignoring.",creature_id);
                 continue;
             }
-
             uint32 current_level = fields[1].GetUInt32();
             if (current_level > sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
             {

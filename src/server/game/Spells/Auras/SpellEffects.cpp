@@ -50,6 +50,7 @@
 #include "BattleGroundEY.h"
 #include "BattleGroundWS.h"
 #include "OutdoorPvPMgr.h"
+#include "OutdoorPvPWG.h"
 #include "Language.h"
 #include "SocialMgr.h"
 #include "Util.h"
@@ -3340,7 +3341,34 @@ void Spell::SendLoot(uint64 guid, LootType loottype)
                 return;
 
             case GAMEOBJECT_TYPE_GOOBER:
-                gameObjTarget->Use(m_caster);
+                // goober_scripts can be triggered if the player don't have the quest
+                if (gameObjTarget->GetGOInfo()->goober.eventId)
+                {
+                    sLog.outDebug("Goober ScriptStart id %u for GO %u", gameObjTarget->GetGOInfo()->goober.eventId,gameObjTarget->GetDBTableGUIDLow());
+                    player->GetMap()->ScriptsStart(sEventScripts, gameObjTarget->GetGOInfo()->goober.eventId, player, gameObjTarget);
+                    gameObjTarget->EventInform(gameObjTarget->GetGOInfo()->goober.eventId);
+                }
+
+                // cast goober spell
+                if (gameObjTarget->GetGOInfo()->goober.questId)
+                    ///Quest require to be active for GO using
+                    if(player->GetQuestStatus(gameObjTarget->GetGOInfo()->goober.questId) != QUEST_STATUS_INCOMPLETE)
+                        return;
+
+               gameObjTarget->GetMap()->ScriptsStart(sGameObjectScripts, gameObjTarget->GetDBTableGUIDLow(), player, gameObjTarget);
+
+                gameObjTarget->AddUniqueUse(player);
+                gameObjTarget->SetLootState(GO_JUST_DEACTIVATED);
+
+                //TODO? Objective counting called without spell check but with quest objective check
+                // if send spell id then this line will duplicate to spell casting call (double counting)
+                // So we or have this line and not required in quest_template have reqSpellIdN
+                // or must remove this line and required in DB have data in quest_template have reqSpellIdN for all quest using cases.
+                player->CastedCreatureOrGO(gameObjTarget->GetEntry(), gameObjTarget->GetGUID(), 0);
+
+                // triggering linked GO
+                if(uint32 trapEntry = gameObjTarget->GetGOInfo()->goober.linkedTrapId)
+                    gameObjTarget->TriggeringLinkedGameObject(trapEntry,m_caster);
                 return;
 
             case GAMEOBJECT_TYPE_CHEST:
@@ -7867,13 +7895,28 @@ void Spell::EffectPlayerNotification(uint32 /*eff_idx*/)
     if (!unitTarget || unitTarget->GetTypeId() != TYPEID_PLAYER)
         return;
 
+    OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr.GetOutdoorPvPToZoneId(4197);
+
     switch(m_spellInfo->Id)
     {
         case 58730: // Restricted Flight Area
-        case 58600: // Restricted Flight Area
-            unitTarget->ToPlayer()->GetSession()->SendNotification(LANG_ZONE_NOFLYZONE);
-            break;
-    }
+        {
+             if (pvpWG->isWarTime())
+			 {
+             unitTarget->ToPlayer()->GetSession()->SendNotification(LANG_ZONE_NOFLYZONE);
+            unitTarget->PlayDirectSound(9417); // Fel Reaver sound
+             ChatHandler((Player*)unitTarget).PSendSysMessage("The air is too thin in Wintergrasp for normal flight. You will be ejected in 9 sec.");
+             break;
+			 } else break;
+			}
+         case 58600: // Restricted Flight Area
+			{
+             unitTarget->ToPlayer()->GetSession()->SendNotification(LANG_ZONE_NOFLYZONE);
+             unitTarget->PlayDirectSound(9417); // Fel Reaver sound
+             ChatHandler((Player*)unitTarget).PSendSysMessage("The air over Dalaran is protected. You will be ejected in 9 sec.");
+             break;
+			}
+     }
 }
 
 void Spell::EffectCastButtons(uint32 i)
