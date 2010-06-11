@@ -970,6 +970,7 @@ bool Guardian::UpdateStats(Stats stat)
                     mod += mod * (sProto->EffectBasePoints[0] / 100.0f);
                 }
             }
+            if (!this->ToCreature()->IsOnlyNoneOrAndSummonOrAndMinionOrAndGuardian())
             value += float(owner->GetStat(stat)) * mod;
         }
     }
