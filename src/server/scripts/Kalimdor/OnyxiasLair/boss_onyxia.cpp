@@ -459,10 +459,10 @@ struct boss_onyxiaAI : public ScriptedAI
                 if (m_uiSummonLairGuardCount >= RAID_MODE(1,2))
                 {
                     m_uiSummonLairGuardCount = 0;
-                    m_uiLairGuardTimer = 30000;
+                    m_uiLairGuardTimer = 60000;
                 }
                 else
-                    m_uiLairGuardTimer = 2000;
+                    m_uiLairGuardTimer = 20000;
             }
             else
                 m_uiLairGuardTimer -= uiDiff;
@@ -474,10 +474,10 @@ struct boss_onyxiaAI : public ScriptedAI
                 if (m_uiSummonWhelpCount >= RAID_MODE(20,40))
                 {
                     m_uiSummonWhelpCount = 0;
-                    m_uiWhelpTimer = 90000;    
+                    m_uiWhelpTimer = 120000;    
                 } 
                 else
-                    m_uiWhelpTimer = 500;
+                    m_uiWhelpTimer = 50000;
             }
             else
                 m_uiWhelpTimer -= uiDiff;
