@@ -5641,7 +5641,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 // Glyph of Life Tap
                 case 63320:
                 {
-                    triggered_spell_id = 63321; // Life Tap
+                    triggered_spell_id = 63941; // Life Tap
                     break;
                 }
                 case 71519: // Deathbringer's Will Normal
