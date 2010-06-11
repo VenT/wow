@@ -63,6 +63,7 @@
 #include "Formulas.h"
 #include "Vehicle.h"
 #include "ScriptMgr.h"
+#include "Chat.h"
 
 pEffect SpellEffects[TOTAL_SPELL_EFFECTS]=
 {

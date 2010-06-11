@@ -15,7 +15,7 @@
  */
 
 #include "ScriptPCH.h"
-#include "OutdoorPvPWG.h"
+#include "../../game/OutdoorPvP/Zones/OutdoorPvPWG.h"
 
 #define GOSSIP_HELLO_DEMO1  "Build catapult."
 #define GOSSIP_HELLO_DEMO2  "Build demolisher."
