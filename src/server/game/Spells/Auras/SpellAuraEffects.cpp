@@ -2428,7 +2428,8 @@ void AuraEffect::HandleShapeshiftBoosts(Unit * target, bool apply) const
             spellId2 = 27795;                               // must be second, this important at aura remove to prevent to early iterator invalidation.
             break;
         case FORM_SHADOW:
-            spellId = 49868;
+            spellId  = 49868;
+            spellId2 = 71167;
             break;
         case FORM_GHOSTWOLF:
             spellId = 67116;
