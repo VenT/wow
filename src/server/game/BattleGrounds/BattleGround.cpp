@@ -202,6 +202,7 @@ BattleGround::BattleGround()
     m_StartMessageIds[BG_STARTING_EVENT_SECOND] = LANG_BG_WS_START_ONE_MINUTE;
     m_StartMessageIds[BG_STARTING_EVENT_THIRD]  = LANG_BG_WS_START_HALF_MINUTE;
     m_StartMessageIds[BG_STARTING_EVENT_FOURTH] = LANG_BG_WS_HAS_BEGUN;
+    honor_mod = 1;
 }
 
 BattleGround::~BattleGround()
@@ -1309,6 +1310,7 @@ void BattleGround::UpdatePlayerScore(Player *Source, uint32 type, uint32 value, 
             // do not add honor in arenas
             if (isBattleGround())
             {
+                value = value * honor_mod;
                 // reward honor instantly
                 if (doAddHonor)
                 {

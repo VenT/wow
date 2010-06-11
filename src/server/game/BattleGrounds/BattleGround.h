@@ -374,6 +374,7 @@ class BattleGround
 
         // Set methods:
         void SetName(char const* Name)      { m_Name = Name; }
+        void SetHonorMod(float mod)            { honor_mod = mod; }
         void SetTypeID(BattleGroundTypeId TypeID) { m_TypeID = TypeID; }
         void SetRandomTypeID(BattleGroundTypeId TypeID) { m_RandomTypeID = TypeID; }
         //here we can count minlevel and maxlevel for players
@@ -659,6 +660,7 @@ class BattleGround
         float m_TeamStartLocY[BG_TEAMS_COUNT];
         float m_TeamStartLocZ[BG_TEAMS_COUNT];
         float m_TeamStartLocO[BG_TEAMS_COUNT];
+        float honor_mod;
 };
 #endif
 
