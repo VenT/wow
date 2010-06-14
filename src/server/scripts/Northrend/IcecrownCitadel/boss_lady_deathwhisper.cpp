@@ -462,7 +462,7 @@ struct npc_shadeAI : public ScriptedAI //Dont work
         if (!me->IsWithinDistInMap(who,3.0f))
         {
             Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM,0); 
-			DoCast(pTarget, RAID_MODE(SPELL_BLAST_10_NORMAL,SPELL_BLAST_25_NORMAL,SPELL_BLAST_10_HEROIC,SPELL_BLAST_25_HEROIC));
+			//DoCast(pTarget, RAID_MODE(SPELL_BLAST_10_NORMAL,SPELL_BLAST_25_NORMAL,SPELL_BLAST_10_HEROIC,SPELL_BLAST_25_HEROIC));
 			return;
         }
 
