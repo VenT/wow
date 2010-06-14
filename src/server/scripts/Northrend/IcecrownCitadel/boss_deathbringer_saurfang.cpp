@@ -135,7 +135,7 @@ struct boss_saurfangAI : public ScriptedAI
             case 0: DoScriptText(SAY_KILL1, me); break;
             case 1: DoScriptText(SAY_KILL2, me); break;
         }
-                me->ModifyHealth(me->GetMaxHealth() * 0.02);
+               // me->ModifyHealth(me->GetMaxHealth() * 0.02);
     }
 
         void JustSummoned(Creature *summon)
