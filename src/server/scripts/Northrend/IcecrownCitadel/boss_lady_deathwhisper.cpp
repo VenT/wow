@@ -438,11 +438,6 @@ struct npc_shadeAI : public ScriptedAI //Dont work
 	}
 };
 
-CreatureAI* GetAI_Boss_Lady_Deathwisper(Creature* pCreature)
-{
-    return new Boss_Lady_DeathwisperAI(pCreature);
-}
-
 CreatureAI* GetAI_npc_shade(Creature* pCreature)
 {
     return new npc_shadeAI(pCreature);
