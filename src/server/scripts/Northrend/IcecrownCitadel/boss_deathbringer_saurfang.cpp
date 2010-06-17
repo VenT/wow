@@ -207,7 +207,7 @@ struct boss_saurfangAI : public ScriptedAI
                         DoScriptText(SAY_FALLENCHAMPION, me);
                         if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                        // DoCast(target, N_10_SPELL_FALLEN_CHAMPION);
-                        me->ModifyHealth(me->GetMaxHealth() * 0.01);
+                       // me->ModifyHealth(me->GetMaxHealth() * 0.01);
                         m_uiFallenChampionTimer = RAID_MODE(90000,60000,90000,60000);
                 }
                 else m_uiFallenChampionTimer -= uiDiff;
@@ -216,7 +216,7 @@ struct boss_saurfangAI : public ScriptedAI
                 {
                         if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         DoCast(target, N_SPELL_RUNE_OF_BLOOD);
-                        me->ModifyHealth(me->GetMaxHealth() * 0.01);
+                        me->ModifyHealth(me->GetMaxHealth() * 0.005);
                         m_uiRuneOfBloodTimer = 64000;
                 }
                 else m_uiRuneOfBloodTimer -= uiDiff;
@@ -254,7 +254,7 @@ struct boss_bloodbeastAI : public ScriptedAI
     {
                 if (Creature* Saurfang = me->GetCreature(*me, m_pInstance->GetData64(DATA_SAURFANG)))
         {
-                        Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.02);
+                        Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.01);
                 }
     }
 
