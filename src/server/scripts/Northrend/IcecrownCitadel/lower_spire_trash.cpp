@@ -690,7 +690,7 @@ struct  npc_CultAdherentAI: public ScriptedAI
                     events.RescheduleEvent(EVENT_DEATHCHILLBLAST, 8000);
                     return;
 				case EVENT_SHROUDOFTHEOCCULT:
-					DoCast(me, SPELL_SHROUDOFTHEOCCULT);
+					//DoCast(me, SPELL_SHROUDOFTHEOCCULT);
 					events.RescheduleEvent(EVENT_SHROUDOFTHEOCCULT, 8000);
 					return;
             }
