@@ -195,7 +195,7 @@ struct boss_saurfangAI : public ScriptedAI
                                 DoCast(me, SPELL_SUMMON_BLOOD_BEAST);
                                 me->SummonCreature(CREATURE_BLOOD_BEAST, BloodBeastSpawnLocation[i][0],BloodBeastSpawnLocation[i][1],BloodBeastSpawnLocation[i][2],BloodBeastSpawnLocation[i][3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
                                 DoScriptText(SAY_BLOODBEASTS, me);
-                                me->ModifyHealth(me->GetMaxHealth() * 0.02);
+ //                               me->ModifyHealth(me->GetMaxHealth() * 0.02);
                                 me->ModifyPower(me->getPowerType(), +10);
                                 m_uiSummonBloodBeastTimer = 40000;
                         }
@@ -254,7 +254,7 @@ struct boss_bloodbeastAI : public ScriptedAI
     {
                 if (Creature* Saurfang = me->GetCreature(*me, m_pInstance->GetData64(DATA_SAURFANG)))
         {
-                        Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.03);
+                        Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.02);
                 }
     }
 
