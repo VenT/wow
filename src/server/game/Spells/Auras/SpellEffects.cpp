@@ -3148,7 +3148,9 @@ void Spell::EffectCreateItem2(uint32 i)
 
             // create some random items
             player->AutoStoreLoot(m_spellInfo->Id, LootTemplates_Spell);
-         }
+        }
+        else
+            player->AutoStoreLoot(m_spellInfo->Id, LootTemplates_Spell);    // create some random items
     }
 }
 
