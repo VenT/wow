@@ -24,7 +24,6 @@ Script Data End */
 
 #include "ScriptPCH.h"
 #include "violet_hold.h"
-#include "ScriptedEscortAI.h"
 
 enum Spells
 {
@@ -42,11 +41,6 @@ enum Spells
 enum IchoronCreatures
 {
     NPC_ICHOR_GLOBULE                           = 29321,
-};
-
-enum DisplayIDs
-{
-         ICHOR_GLOBULE                          = 5492
 };
 
 enum Yells
@@ -197,7 +191,6 @@ struct boss_ichoronAI : public ScriptedAI
             DoCast(me, SPELL_PROTECTIVE_BUBBLE, true);
         }
 
-        me->SetReactState(REACT_AGGRESSIVE);
         me->SetVisibility(VISIBILITY_ON);
         me->GetMotionMaster()->MoveChase(me->getVictim());
     }
@@ -230,13 +223,11 @@ struct boss_ichoronAI : public ScriptedAI
                         DoCast(me, SPELL_DRAINED);
                         bIsExploded = true;
                         me->AttackStop();
-                        me->SetReactState(REACT_PASSIVE);
                         me->SetVisibility(VISIBILITY_OFF);
                         for (uint8 i = 0; i < 10; i++)
                         {
                             int tmp = urand(0, MAX_SPAWN_LOC-1);
-                            Creature *IchorGlobule = me->SummonCreature(NPC_ICHOR_GLOBULE, SpawnLoc[tmp], TEMPSUMMON_CORPSE_DESPAWN);
-                            IchorGlobule->setFaction(me->getFaction());
+                            me->SummonCreature(NPC_ICHOR_GLOBULE, SpawnLoc[tmp], TEMPSUMMON_CORPSE_DESPAWN);
                         }
                     }
                 }
@@ -310,7 +301,6 @@ struct boss_ichoronAI : public ScriptedAI
         pSummoned->SetSpeed(MOVE_RUN, 0.3f);
         pSummoned->GetMotionMaster()->MoveFollow(me, 0, 0);
         m_waterElements.push_back(pSummoned->GetGUID());
-        pSummoned->SetDisplayId(ICHOR_GLOBULE);
     }
 
 

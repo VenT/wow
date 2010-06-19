@@ -14,8 +14,7 @@ enum Creatures
     CREATURE_EREKEM_GUARD                           = 29395,
     CREATURE_MORAGG                                 = 29316,
     CREATURE_CYANIGOSA                              = 31134,
-    CREATURE_SINCLARI                               = 30658,
-    NPC_VIOLET_HOLD_GUARD                           = 30659
+    CREATURE_SINCLARI                               = 30658
 };
 
 enum Data
@@ -24,12 +23,7 @@ enum Data
     DATA_2ND_BOSS_EVENT,
     DATA_CYANIGOSA_EVENT,
     DATA_WAVE_COUNT,
-    DATA_REMOVE_NPC,
-    DATA_PORTAL_LOCATION,
-    DATA_DOOR_INTEGRITY,
-    DATA_NPC_PRESENCE_AT_DOOR,
-    DATA_NPC_PRESENCE_AT_DOOR_ADD,
-    DATA_NPC_PRESENCE_AT_DOOR_REMOVE
+    DATA_REMOVE_NPC
 };
 
 enum Data64
@@ -52,8 +46,7 @@ enum Data64
     DATA_XEVOZZ_CELL,
     DATA_ZURAMAT_CELL,
     DATA_MAIN_DOOR,
-    DATA_SINCLARI,
-    DATA_TELEPORTATION_PORTAL
+    DATA_SINCLARI
 };
 
 enum Bosses
