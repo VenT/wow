@@ -2923,6 +2923,10 @@ void Spell::SpellDamageHeal(uint32 /*i*/)
         else
             addhealth = caster->SpellHealingBonus(unitTarget, m_spellInfo, addhealth, HEAL);
 
+        // Remove Grievious bite if fully healed
+        if (unitTarget->HasAura(48920) && (unitTarget->GetHealth() + addhealth >= unitTarget->GetMaxHealth()))
+            unitTarget->RemoveAura(48920);
+
         m_damage -= addhealth;
     }
 }
