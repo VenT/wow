@@ -1218,6 +1218,7 @@
 					<File
 						RelativePath="..\..\src\server\scripts\EasternKingdoms\MoltenCore\boss_lucifron.cpp"
 						>
+
 					</File>
 					<File
 						RelativePath="..\..\src\server\scripts\EasternKingdoms\MoltenCore\boss_magmadar.cpp"
@@ -4578,6 +4579,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\server\game\Spells\Auras\SpellEffects.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\server\game\Spells\SpellMgr.cpp"
 				>
 			</File>
@@ -4606,10 +4611,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\server\game\Spells\Auras\SpellAuras.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\server\game\Spells\Auras\SpellEffects.cpp"
 					>
 				</File>
 			</Filter>
