@@ -6883,6 +6883,13 @@ void Spell::EffectResurrect(uint32 /*effIndex*/)
                 return;
             }
             break;
+        // Defibrillate ( Gnomish Army Knife) have 67% chance on success_list
+        case 54732:
+            if (roll_chance_i(33))
+            {
+                return;
+            }
+            break;
         default:
             break;
     }
