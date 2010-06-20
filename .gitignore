@@ -15,14 +15,13 @@ bin/
 win/VC90/*/
 *.ncb
 *.suo
-dep/lib/win32*
-src/bindings/scripts/VC90/*/
-src/mangosd/
-src/realmd/
+src/tools/map_extractor/VC90/*/
+src/tools/vmap3_assembler/VC90/*/
+src/tools/vmap3_extractor/VC90/*/
 *.*-*
 *.patch
 
 # use regexp syntax.
 syntax: regexp
 
-^src/shared/revision\.h
+^src/shared/server/shared/revision\.h
