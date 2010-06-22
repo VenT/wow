@@ -85,7 +85,7 @@ struct boss_valanar_iccAI : public ScriptedAI
         if(!m_pInstance || intro) return;
         if (pWho->GetTypeId() != TYPEID_PLAYER) return;
         m_pInstance->SetData(TYPE_EVENT, 800);
-        debug_log("EventMGR: creature %u send signal %u ",me->GetEntry(),m_pInstance->GetData(TYPE_EVENT));
+        sLog.outDebug("EventMGR: creature %u send signal %u ",me->GetEntry(),m_pInstance->GetData(TYPE_EVENT));
         intro = true;
     }
 

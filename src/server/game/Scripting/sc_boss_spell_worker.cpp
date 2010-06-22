@@ -19,14 +19,14 @@ BossSpellWorker::BossSpellWorker(ScriptedAI* bossAI)
      if (pMap = boss->GetMap())
               currentDifficulty = ((InstanceMap*)pMap)->GetDifficulty();
         else currentDifficulty = RAID_DIFFICULTY_10MAN_NORMAL;
-     sLog.outError("BSW: Initializing BossSpellWorker object for boss %u difficulty %u",bossID,currentDifficulty);
+     sLog.outDebug("BSW: Initializing BossSpellWorker object for boss %u difficulty %u",bossID,currentDifficulty);
      LoadSpellTable();
      Reset((uint8)currentDifficulty);
 };
 
 BossSpellWorker::~BossSpellWorker()
 {
-     sLog.outError("BSW: Removing BossSpellWorker object for boss %u",bossID);
+     sLog.outDebug("BSW: Removing BossSpellWorker object for boss %u",bossID);
 };
 
 void BossSpellWorker::Reset(uint8 _Difficulty)
@@ -48,7 +48,7 @@ void BossSpellWorker::_resetTimer(uint8 m_uiSpellIdx)
 
 void BossSpellWorker::LoadSpellTable()
 {
-    sLog.outError("BSW: Loading table of spells boss  %u difficulty %u", bossID , currentDifficulty);
+    sLog.outDebug("BSW: Loading table of spells boss  %u difficulty %u", bossID , currentDifficulty);
 
       char query[MAX_QUERY_LEN];
 
@@ -106,7 +106,7 @@ void BossSpellWorker::LoadSpellTable()
 
         _fillEmptyDataField();
 
-        sLog.outError("BSW: Loaded %u boss spell data records for boss %u", uiCount, bossID);
+        sLog.outDebug("BSW: Loaded %u boss spell data records for boss %u", uiCount, bossID);
     }
     else
     {
@@ -250,7 +250,7 @@ CanCastResult BossSpellWorker::_BSWCastOnTarget(Unit* pTarget, uint8 m_uiSpellId
     if (!pTarget)            return CAST_FAIL_OTHER;
     SpellTable* pSpell = &m_BossSpell[m_uiSpellIdx];
 
-    sLog.outError("BSW: Casting (on target) spell number %u type %u",pSpell->m_uiSpellEntry[currentDifficulty], pSpell->m_CastTarget);
+    sLog.outDebug("BSW: Casting (on target) spell number %u type %u",pSpell->m_uiSpellEntry[currentDifficulty], pSpell->m_CastTarget);
 
        if (pTarget && !pSpell->m_IsBugged) return _DoCastSpellIfCan(pTarget, pSpell->m_uiSpellEntry[currentDifficulty]);
        if (pTarget && pSpell->m_IsBugged) return _BSWDoCast(m_uiSpellIdx, pTarget);
@@ -338,7 +338,7 @@ CanCastResult BossSpellWorker::_BSWDoCast(uint8 m_uiSpellIdx, Unit* pTarget)
     if (!pTarget) return CAST_FAIL_OTHER;
     if (!pTarget->isAlive()) return CAST_FAIL_OTHER;
     SpellTable* pSpell = &m_BossSpell[m_uiSpellIdx];
-    sLog.outError("BSW: Casting bugged spell number %u type %u",pSpell->m_uiSpellEntry[currentDifficulty], pSpell->m_CastTarget);
+    sLog.outDebug("BSW: Casting bugged spell number %u type %u",pSpell->m_uiSpellEntry[currentDifficulty], pSpell->m_CastTarget);
     pTarget->InterruptNonMeleeSpells(false);
     pTarget->CastSpell(pTarget, pSpell->m_uiSpellEntry[currentDifficulty], false);
          return CAST_OK;
@@ -367,7 +367,7 @@ Unit* BossSpellWorker::_doSummon(uint8 m_uiSpellIdx, TempSummonType summontype, 
 {
     SpellTable* pSpell = &m_BossSpell[m_uiSpellIdx];
 
-    sLog.outError("BSW: Summoning creature number %u type %u despawn delay %u",pSpell->m_uiSpellEntry[currentDifficulty], pSpell->m_CastTarget, delay);
+    sLog.outDebug("BSW: Summoning creature number %u type %u despawn delay %u",pSpell->m_uiSpellEntry[currentDifficulty], pSpell->m_CastTarget, delay);
 
     if (pSpell->LocData.z <= 1.0f) {
     const Position pos = {boss->GetPositionX(), boss->GetPositionY(), boss->GetPositionZ()};
@@ -381,7 +381,7 @@ Unit* BossSpellWorker::_doSummonAtPosition(uint8 m_uiSpellIdx, TempSummonType su
 {
     SpellTable* pSpell = &m_BossSpell[m_uiSpellIdx];
 
-    sLog.outError("BSW: Summoning creature number %u type %u despawn delay %u at position %f %f %f",pSpell->m_uiSpellEntry[currentDifficulty], pSpell->m_CastTarget, delay, fPosX, fPosY, fPosZ);
+    sLog.outDebug("BSW: Summoning creature number %u type %u despawn delay %u at position %f %f %f",pSpell->m_uiSpellEntry[currentDifficulty], pSpell->m_CastTarget, delay, fPosX, fPosY, fPosZ);
     return boss->SummonCreature(pSpell->m_uiSpellEntry[currentDifficulty], fPosX, fPosY, fPosZ, 0, summontype, delay);
 };
 
@@ -389,7 +389,7 @@ bool BossSpellWorker::_doRemove(uint8 m_uiSpellIdx, Unit* pTarget, SpellEffectIn
 {
     SpellTable* pSpell = &m_BossSpell[m_uiSpellIdx];
 
-        sLog.outError("BSW: Removing effect of spell %u type %u",pSpell->m_uiSpellEntry[currentDifficulty], pSpell->m_CastTarget);
+        sLog.outDebug("BSW: Removing effect of spell %u type %u",pSpell->m_uiSpellEntry[currentDifficulty], pSpell->m_CastTarget);
 
         switch (pSpell->m_CastTarget) {
                 case DO_NOTHING: 
@@ -618,7 +618,7 @@ Unit* BossSpellWorker::_doSelect(uint32 SpellID, bool spellsearchtype, float ran
                      }
                  }
            }
-    sLog.outError("BSW: search result for random player, count = %u ",_count);
+    sLog.outDebug("BSW: search result for random player, count = %u ",_count);
     if (_count == 0) return NULL;
     else return _list[urand(0,_count)];
 };
