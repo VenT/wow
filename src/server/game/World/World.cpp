@@ -1707,9 +1707,6 @@ void World::SetInitialWorldSettings()
     sLog.outString("Loading Transports...");
     MapManager::Instance().LoadTransports();
 
-    sLog.outString("Loading Transports Events...");
-    objmgr.LoadTransportEvents();
-
     sLog.outString("Deleting expired bans...");
     LoginDatabase.Execute("DELETE FROM ip_banned WHERE unbandate <= UNIX_TIMESTAMP() AND unbandate<>bandate");
 
