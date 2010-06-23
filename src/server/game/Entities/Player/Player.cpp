@@ -1133,6 +1133,21 @@ void Player::Update(uint32 p_time)
     if (!IsInWorld())
         return;
 
+       if(GetAreaId() == 4281)  
+       {
+       if(FindNearestCreature(438700,1) && GetPositionZ() >= 410)
+                       TeleportTo(0, 2401.41, -5633.91, 377.02, 3.664271);
+               if(FindNearestCreature(438700,1) && GetPositionZ() <= 390)
+                       TeleportTo(0, 2401.41, -5633.91, 420.67, 3.664271);
+       } 
+       if(GetAreaId() == 4342)
+       {
+               if(FindNearestCreature(438700,1) && GetPositionZ() >= 410)
+                       TeleportTo(609, 2401.41, -5633.91, 377.02, 3.664271);
+               if(FindNearestCreature(438700,1) && GetPositionZ() <= 390)
+                       TeleportTo(609, 2401.41, -5633.91, 420.67, 3.664271);
+       }
+
     // undelivered mail
     if (m_nextMailDelivereTime && m_nextMailDelivereTime <= time(NULL))
     {
