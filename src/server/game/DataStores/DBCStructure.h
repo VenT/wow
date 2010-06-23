@@ -518,7 +518,7 @@ struct AreaTableEntry
     // helpers
     bool IsSanctuary() const
     {
-        if (mapid == 609)
+        if (mapid == 609 || ID == 4522 || ID == 4395)
             return true;
         return (flags & AREA_FLAG_SANCTUARY);
     }
