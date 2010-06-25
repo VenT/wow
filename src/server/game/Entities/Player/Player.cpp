@@ -12179,7 +12179,7 @@ void Player::SplitItem(uint16 src, uint16 dst, uint32 count)
         BankItem(dest, pNewItem, true);
         if (isRefundable)
         {
-            AddRefundReference(pNewItem->GetGUID());
+            AddRefundReference(pNewItem->GetGUIDLow());
             pNewItem->SetPaidExtendedCost(pSrcItem->GetPaidExtendedCost());
             pNewItem->SetPaidMoney(pSrcItem->GetPaidMoney());
             pNewItem->SetRefundRecipient(GetGUIDLow());
@@ -16661,7 +16661,7 @@ void Player::_LoadInventory(QueryResult_AutoPtr result, uint32 timediff)
                         item->SetRefundRecipient(fields[0].GetUInt32());
                         item->SetPaidMoney(fields[1].GetUInt32());
                         item->SetPaidExtendedCost(fields[2].GetUInt32());
-                        AddRefundReference(item->GetGUID());
+                        AddRefundReference(item->GetGUIDLow());
                     }
                 }
             }
@@ -17834,14 +17834,14 @@ void Player::_SaveInventory()
     // the client auto counts down in real time after having received the initial played time on the first
     // SMSG_ITEM_REFUND_INFO_RESPONSE packet.
     // Item::UpdatePlayedTime is only called when needed, which is in DB saves, and item refund info requests.
-    std::set<uint64>::iterator i_next;
-    for (std::set<uint64>::iterator itr = m_refundableItems.begin(); itr!= m_refundableItems.end(); itr = i_next)
+    std::set<uint32>::iterator i_next;
+    for (std::set<uint32>::iterator itr = m_refundableItems.begin(); itr!= m_refundableItems.end(); itr = i_next)
     {
         // use copy iterator because itr may be invalid after operations in this loop
         i_next = itr;
         ++i_next;
 
-        Item* iPtr = GetItemByGuid(*itr);
+        Item* iPtr = GetItemByGuid(MAKE_NEW_GUID(*itr, 0, HIGHGUID_ITEM));
         if (iPtr)
         {
             iPtr->UpdatePlayedTime(this);
@@ -17849,7 +17849,7 @@ void Player::_SaveInventory()
         }
         else
         {
-            sLog.outError("Can't find item guid " UI64FMTD " but is in refundable storage for player %u ! Removing.", *itr, GetGUIDLow());
+            sLog.outError("Can't find item guid %u but is in refundable storage for player %u ! Removing.", *itr, GetGUIDLow());
             m_refundableItems.erase(itr);
         }
     }
@@ -19710,7 +19710,7 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
                 it->SetPaidMoney(price);
                 it->SetPaidExtendedCost(crItem->GetExtendedCostId());
                 it->SaveRefundDataToDB();
-                AddRefundReference(it->GetGUID());
+                AddRefundReference(it->GetGUIDLow());
             }
         }
     }
@@ -19768,7 +19768,7 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
                 it->SetPaidMoney(price);
                 it->SetPaidExtendedCost(crItem->GetExtendedCostId());
                 it->SaveRefundDataToDB();
-                AddRefundReference(it->GetGUID());
+                AddRefundReference(it->GetGUIDLow());
             }
         }
     }
@@ -23792,14 +23792,14 @@ void Player::SendDuelCountdown(uint32 counter)
     GetSession()->SendPacket(&data);
 }
 
-void Player::AddRefundReference(uint64 it)
+void Player::AddRefundReference(uint32 it)
 {
     m_refundableItems.insert(it);
 }
 
-void Player::DeleteRefundReference(uint64 it)
+void Player::DeleteRefundReference(uint32 it)
 {
-    std::set<uint64>::iterator itr = m_refundableItems.find(it);
+    std::set<uint32>::iterator itr = m_refundableItems.find(it);
     if (itr != m_refundableItems.end())
     {
         m_refundableItems.erase(itr);
