@@ -6959,7 +6959,7 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
     }
 
     pvpInfo.inNoPvPArea = false;
-    if (zone->IsSanctuary() || (GetAreaId() == 4522) || (GetAreaId() == 4658) || (GetAreaId() == 4395))       // in sanctuary
+    if (zone->IsSanctuary() || (GetAreaId() == 4522) || (GetAreaId() == 4658) || (GetAreaId() == 4395) || (GetAreaId() == 4553)) // in sanctuary
     {
         SetByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_SANCTUARY);
         pvpInfo.inNoPvPArea = true;
