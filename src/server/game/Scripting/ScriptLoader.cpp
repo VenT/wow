@@ -436,7 +436,7 @@ void AddSC_boss_valithria_dreamwalker();
 void AddSC_boss_saurfang();
 void AddSC_boss_festergut();
 void AddSC_boss_Rotface();
-void AddSC_boss_Deahtwisper();
+void AddSC_boss_deahtwisper();
 void AddSC_boss_marrowgar();
 void AddSC_Boss_ProfessorPutricide();
 void AddSC_Boss_Sindragosa();
@@ -959,7 +959,7 @@ void AddScripts()
     AddSC_blood_prince_council();
     AddSC_boss_saurfang();
     AddSC_boss_festergut();
-    AddSC_boss_Deahtwisper();
+    AddSC_boss_deahtwisper();
     AddSC_boss_marrowgar();
     AddSC_boss_Rotface();
     AddSC_boss_valithria_dreamwalker();
