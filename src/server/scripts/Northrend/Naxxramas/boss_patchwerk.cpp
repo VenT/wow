@@ -44,10 +44,8 @@ enum Events
     EVENT_SLIME
 };
 
-enum
-{
-    ACHIEV_MAKE_QUICK_WERK_OF_HIM_STARTING_EVENT  = 10286,
-};
+#define ACHIEVEMENT_MAKE_QUICK_WERK_OF_HIM  RAID_MODE(1856, 1857)
+#define MAX_ENCOUNTER_TIME                    3 * 60 * 1000
 
 struct boss_patchwerkAI : public BossAI
 {
@@ -55,36 +53,43 @@ struct boss_patchwerkAI : public BossAI
 
     bool Enraged;
 
-    void Reset()
-    {
-        _Reset();
+    uint32 EncounterTime;
 
-        if (instance)
-            instance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_MAKE_QUICK_WERK_OF_HIM_STARTING_EVENT);
-    }
-
-    void KilledUnit(Unit* /*Victim*/)
+    void KilledUnit(Unit* Victim)
     {
         if (!(rand()%5))
             DoScriptText(SAY_SLAY, me);
     }
 
-    void JustDied(Unit* /*Killer*/)
+    void JustDied(Unit* Killer)
     {
         _JustDied();
         DoScriptText(SAY_DEATH, me);
+
+        if (EncounterTime <= MAX_ENCOUNTER_TIME)
+        {
+            AchievementEntry const *AchievMakeQuickWerkOfHim = GetAchievementStore()->LookupEntry(ACHIEVEMENT_MAKE_QUICK_WERK_OF_HIM);
+            if (AchievMakeQuickWerkOfHim)
+            {
+                Map *pMap = me->GetMap();
+                if (pMap && pMap->IsDungeon())
+                {
+                    Map::PlayerList const &players = pMap->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                        itr->getSource()->CompletedAchievement(AchievMakeQuickWerkOfHim);
+                }
+            }
+        }
     }
 
-    void EnterCombat(Unit * /*who*/)
+    void EnterCombat(Unit *who)
     {
         _EnterCombat();
         Enraged = false;
+        EncounterTime = 0;
         DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2), me);
         events.ScheduleEvent(EVENT_HATEFUL, 1200);
         events.ScheduleEvent(EVENT_BERSERK, 360000);
-
-        if (instance)
-            instance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_MAKE_QUICK_WERK_OF_HIM_STARTING_EVENT);
     }
 
     void UpdateAI(const uint32 diff)
@@ -93,6 +98,8 @@ struct boss_patchwerkAI : public BossAI
             return;
 
         events.Update(diff);
+
+        EncounterTime += diff;
 
         while (uint32 eventId = events.ExecuteEvent())
         {

@@ -104,21 +104,19 @@ inline uint32 GetEruptionSection(float x, float y)
 struct instance_naxxramas : public InstanceData
 {
     instance_naxxramas(Map* pMap) : InstanceData(pMap)
+        , Sapphiron(NULL), pGothikGate(NULL), HorsemenChest(NULL), HorsemenNum(0)
     {
         SetBossNumber(MAX_BOSS_NUMBER);
         LoadDoorData(doorData);
         LoadMinionData(minionData);
     }
 
-    std::set<uint64> HeiganEruptionGUID[4];
-    uint64 GothikGateGUID;
-    uint64 HorsemenChestGUID;
-    uint64 SapphironGUID;
+    std::set<GameObject*> HeiganEruption[4];
+    GameObject* pGothikGate, *HorsemenChest;
+    Creature* Sapphiron;
+
+    uint32 HorsemenNum;
     uint64 uiFaerlina;
-    uint64 uiThane;
-    uint64 uiLady;
-    uint64 uiBaron;
-    uint64 uiSir;
 
     uint64 uiThaddius;
     uint64 uiFeugen;
@@ -126,23 +124,14 @@ struct instance_naxxramas : public InstanceData
 
     uint64 uiKelthuzad;
     uint64 uiKelthuzadTrigger;
-    uint64 uiPortals[4];
-
-    GOState gothikDoorState;
-
-    time_t minHorsemenDiedTime;
-    time_t maxHorsemenDiedTime;
+    uint64 uiPortals[4];    
 
     void OnCreatureCreate(Creature* pCreature, bool add)
     {
         switch(pCreature->GetEntry())
         {
-            case 15989: SapphironGUID = add ? pCreature->GetGUID() : 0; return;
+            case 15989: Sapphiron = add ? pCreature : NULL; return;
             case 15953: uiFaerlina = pCreature->GetGUID(); return;
-            case 16064: uiThane = pCreature->GetGUID(); return;
-            case 16065: uiLady = pCreature->GetGUID(); return;
-            case 30549: uiBaron = pCreature->GetGUID(); return;
-            case 16063: uiSir = pCreature->GetGUID(); return;
             case 15928: uiThaddius = pCreature->GetGUID(); return;
             case 15930: uiFeugen = pCreature->GetGUID(); return;
             case 15929: uiStalagg = pCreature->GetGUID(); return;
@@ -158,32 +147,23 @@ struct instance_naxxramas : public InstanceData
         {
             uint32 section = GetEruptionSection(pGo->GetPositionX(), pGo->GetPositionY());
             if (add)
-                HeiganEruptionGUID[section].insert(pGo->GetGUID());
+                HeiganEruption[section].insert(pGo);
             else
-                HeiganEruptionGUID[section].erase(pGo->GetGUID());
+                HeiganEruption[section].erase(pGo);
             return;
         }
 
         switch(pGo->GetEntry())
         {
-            case GO_BIRTH:
-            if (!add && SapphironGUID)
-            {
-                if (Creature *pSapphiron = instance->GetCreature(SapphironGUID))
-                    pSapphiron->AI()->DoAction(DATA_SAPPHIRON_BIRTH);
-                return;
-            }
-            case GO_GOTHIK_GATE:
-                GothikGateGUID = add ? pGo->GetGUID() : 0;
-                pGo->SetGoState(gothikDoorState);
-                break;
-            case GO_HORSEMEN_CHEST: HorsemenChestGUID = add ? pGo->GetGUID() : 0; break;
-            case GO_HORSEMEN_CHEST_HERO: HorsemenChestGUID = add ? pGo->GetGUID() : 0; break;
+            case GO_BIRTH: if (!add && Sapphiron) Sapphiron->AI()->DoAction(DATA_SAPPHIRON_BIRTH); return;
+            case GO_GOTHIK_GATE: pGothikGate = add ? pGo : NULL; break;
+            case GO_HORSEMEN_CHEST: HorsemenChest = add ? pGo : NULL; break;
+            case GO_HORSEMEN_CHEST_HERO: HorsemenChest = add ? pGo : NULL; break;
             case GO_KELTHUZAD_PORTAL01: uiPortals[0] = pGo->GetGUID(); break;
             case GO_KELTHUZAD_PORTAL02: uiPortals[1] = pGo->GetGUID(); break;
-            case GO_KELTHUZAD_PORTAL03: uiPortals[2] = pGo->GetGUID(); break;
-            case GO_KELTHUZAD_PORTAL04: uiPortals[3] = pGo->GetGUID(); break;
-            case GO_KELTHUZAD_TRIGGER: uiKelthuzadTrigger = pGo->GetGUID(); break;
+            case GO_KELTHUZAD_PORTAL03: uiPortals[2] = pGo->GetGUID(); break; 
+            case GO_KELTHUZAD_PORTAL04: uiPortals[3] = pGo->GetGUID(); break; 
+            case GO_KELTHUZAD_TRIGGER: uiKelthuzadTrigger = pGo->GetGUID(); break; 
         }
 
         AddDoor(pGo, add);
@@ -197,29 +177,8 @@ struct instance_naxxramas : public InstanceData
                 HeiganErupt(value);
                 break;
             case DATA_GOTHIK_GATE:
-                if (GameObject *pGothikGate = instance->GetGameObject(GothikGateGUID))
+                if (pGothikGate)
                     pGothikGate->SetGoState(GOState(value));
-                gothikDoorState = GOState(value);
-                break;
-
-            case DATA_HORSEMEN0:
-            case DATA_HORSEMEN1:
-            case DATA_HORSEMEN2:
-            case DATA_HORSEMEN3:
-                if (value == NOT_STARTED)
-                {
-                    minHorsemenDiedTime = 0;
-                    maxHorsemenDiedTime = 0;
-                }
-                else if (value == DONE)
-                {
-                    time_t now = time(NULL);
-
-                    if (minHorsemenDiedTime == 0)
-                        minHorsemenDiedTime = now;
-
-                    maxHorsemenDiedTime = now;
-                }
                 break;
         }
     }
@@ -230,14 +189,6 @@ struct instance_naxxramas : public InstanceData
         {
         case DATA_FAERLINA:
             return uiFaerlina;
-        case DATA_THANE:
-            return uiThane;
-        case DATA_LADY:
-            return uiLady;
-        case DATA_BARON:
-            return uiBaron;
-        case DATA_SIR:
-            return uiSir;
         case DATA_THADDIUS:
             return uiThaddius;
         case DATA_FEUGEN:
@@ -265,10 +216,10 @@ struct instance_naxxramas : public InstanceData
         if (!InstanceData::SetBossState(id, state))
             return false;
 
-        if (id == BOSS_HORSEMEN && state == DONE)
+        if (id == BOSS_HORSEMEN && state == DONE && HorsemenChest)
         {
-            if (GameObject *pHorsemenChest = instance->GetGameObject(HorsemenChestGUID))
-                pHorsemenChest->SetRespawnTime(pHorsemenChest->GetRespawnDelay());
+            HorsemenChest->SetRespawnTime(HorsemenChest->GetRespawnDelay());
+            DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 59450);
         }
 
         return true;
@@ -281,18 +232,15 @@ struct instance_naxxramas : public InstanceData
             if (i == section)
                 continue;
 
-            for (std::set<uint64>::const_iterator itr = HeiganEruptionGUID[i].begin(); itr != HeiganEruptionGUID[i].end(); ++itr)
+            for (std::set<GameObject*>::iterator itr = HeiganEruption[i].begin(); itr != HeiganEruption[i].end(); ++itr)
             {
-                if (GameObject *pHeiganEruption = instance->GetGameObject(*itr))
-                {
-                    pHeiganEruption->SendCustomAnim();
-                    pHeiganEruption->CastSpell(NULL, SPELL_ERUPTION);
-                }
+                (*itr)->SendCustomAnim();
+                (*itr)->CastSpell(NULL, SPELL_ERUPTION);
             }
         }
     }
 
-    bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target = NULL*/, uint32 /*miscvalue1 = 0*/)
+    /*bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* source, Unit const* target = NULL, uint32 miscvalue1 = 0)
     {
         switch(criteria_id)
         {
@@ -303,7 +251,7 @@ struct instance_naxxramas : public InstanceData
             case 7601:  // Criteria for achievement 2177: And They Would All Go Down Together 15sec of each other 25-man
                 if (Difficulty(instance->GetSpawnMode()) == RAID_DIFFICULTY_25MAN_NORMAL && (maxHorsemenDiedTime - minHorsemenDiedTime) < 15)
                     return true;
-                return false;
+                return false; 
             case 13233: // Criteria for achievement 2186: The Immortal (25-man)
                 // TODO.
                 break;
@@ -312,23 +260,22 @@ struct instance_naxxramas : public InstanceData
                 break;
         }
         return false;
-    }
-
-    std::string GetSaveData()
-    {
-        std::ostringstream saveStream;
-        saveStream << GetBossSaveData() << " " << gothikDoorState;
-        return saveStream.str();
-    }
-
-    void Load(const char * data)
-    {
-        std::istringstream loadStream(LoadBossState(data));
-        uint32 buff;
-        loadStream >> buff;
-        gothikDoorState = GOState(buff);
-    }
+    }*/
 };
+
+bool AreaTrigger_at_naxxramas_frostwyrm_wing(Player* pPlayer, const AreaTriggerEntry *at)
+{
+    if (pPlayer->isGameMaster())
+        return false;
+
+    InstanceData *data = pPlayer->GetInstanceData();
+    if (data)
+        for (uint32 i = BOSS_ANUBREKHAN; i < BOSS_SAPPHIRON; ++i)
+            if (data->GetBossState(i) != DONE)
+                return true;
+
+    return false;
+}
 
 InstanceData* GetInstanceData_instance_naxxramas(Map* pMap)
 {
@@ -341,5 +288,10 @@ void AddSC_instance_naxxramas()
     newscript = new Script;
     newscript->Name = "instance_naxxramas";
     newscript->GetInstanceData = &GetInstanceData_instance_naxxramas;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "at_naxxramas_frostwyrm_wing";
+    newscript->pAreaTrigger = &AreaTrigger_at_naxxramas_frostwyrm_wing;
     newscript->RegisterSelf();
 }
