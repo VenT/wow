@@ -1294,7 +1294,7 @@ void OutdoorPvPWG::UpdateClockDigit(uint32 &timer, uint32 digit, uint32 mod)
     {
         m_clock[digit] = value;
         SendUpdateWorldState(ClockWorldState[digit], (timer + time(NULL)));
-        sWorld.SetWintergrapsTimer(timer + time(NULL), digit);
+        sWorld.SetWintergraspTimer(timer + time(NULL), digit);
     }
 }
 
