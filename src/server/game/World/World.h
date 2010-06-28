@@ -663,16 +663,16 @@ class World
         static int32 GetVisibilityNotifyPeriodInInstances() { return m_visibility_notify_periodInInstances;  }
         static int32 GetVisibilityNotifyPeriodInBGArenas()  { return m_visibility_notify_periodInBGArenas;   }
 
-        void SetWintergrapsTimer(uint32 timer, uint32 state)
+        void SetWintergraspTimer(uint32 timer, uint32 state)
         {
-            m_WintergrapsTimer = timer;
+            m_WintergraspTimer = timer;
             m_WintergrapsState = state;
         }
 
-        uint32 GetWintergrapsTimer() { return m_WintergrapsTimer; }
+        uint32 GetWintergraspTimer() { return m_WintergraspTimer; }
         uint32 GetWintergrapsState() { return m_WintergrapsState; }
 
-        uint32 m_WintergrapsTimer;
+        uint32 m_WintergraspTimer;
         uint32 m_WintergrapsState;
 
         void ProcessCliCommands();
