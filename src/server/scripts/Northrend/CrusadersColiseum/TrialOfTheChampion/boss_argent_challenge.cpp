@@ -63,7 +63,7 @@ struct boss_eadricAI : public ScriptedAI
     {
         pInstance = pCreature->GetInstanceData();
         pCreature->SetReactState(REACT_PASSIVE);
-        pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+      //  pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
     }
 
     ScriptedInstance* pInstance;
@@ -164,7 +164,7 @@ struct boss_paletressAI : public ScriptedAI
 
         MemoryGUID = 0;
         pCreature->SetReactState(REACT_PASSIVE);
-        pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+      //  pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
         pCreature->RestoreFaction();
     }
 

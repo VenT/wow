@@ -306,7 +306,7 @@ struct boss_warrior_toc5AI : public ScriptedAI
 
         me->SetReactState(REACT_PASSIVE);
         // THIS IS A HACK, SHOULD BE REMOVED WHEN THE EVENT IS FULL SCRIPTED
-        me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
+       // me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
     ScriptedInstance* pInstance;
@@ -433,7 +433,7 @@ struct boss_mage_toc5AI : public ScriptedAI
 
         me->SetReactState(REACT_PASSIVE);
         // THIS IS A HACK, SHOULD BE REMOVED WHEN THE EVENT IS FULL SCRIPTED
-        me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
+       // me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
     ScriptedInstance* pInstance;
@@ -567,7 +567,7 @@ struct boss_shaman_toc5AI : public ScriptedAI
 
         me->SetReactState(REACT_PASSIVE);
         // THIS IS A HACK, SHOULD BE REMOVED WHEN THE EVENT IS FULL SCRIPTED
-        me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
+       // me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
     ScriptedInstance* pInstance;
@@ -708,7 +708,7 @@ struct boss_hunter_toc5AI : public ScriptedAI
 
         me->SetReactState(REACT_PASSIVE);
         // THIS IS A HACK, SHOULD BE REMOVED WHEN THE EVENT IS FULL SCRIPTED
-        me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
+       // me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
     ScriptedInstance* pInstance;
@@ -857,7 +857,7 @@ struct boss_rouge_toc5AI : public ScriptedAI
 
         me->SetReactState(REACT_PASSIVE);
         // THIS IS A HACK, SHOULD BE REMOVED WHEN THE EVENT IS FULL SCRIPTED
-        me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
+       // me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
     ScriptedInstance* pInstance;
