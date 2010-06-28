@@ -1559,7 +1559,7 @@ void OutdoorPvPWG::EndBattle()
         {
             Creature *veh = *m_vehicles[team].begin();
             m_vehicles[team].erase(m_vehicles[team].begin());
-            vehicle->RemoveAllPassengers();
+            //((Vehicle*)veh)->RemoveAllPassengers();
             veh->ForcedDespawn();
         }
 
