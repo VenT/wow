@@ -158,9 +158,9 @@ struct boss_rotfaceAI : public ScriptedAI
 //		{
 		{
 			DoCast(SPELL_SUMMON_LITTLE_OOZE);
-//			m_uiLittleOozeTimer = 17000;
+			m_uiLittleOozeTimer = 17000;
 		}
-	} else m_uiLittleOozeTimer -= diff;
+		 else m_uiLittleOozeTimer -= diff;
 
 	if (m_uiMutatedInfectionTimer <= diff)
 	{
