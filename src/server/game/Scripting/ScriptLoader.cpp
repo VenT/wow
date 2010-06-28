@@ -442,7 +442,7 @@ void AddSC_Boss_ProfessorPutricide();
 void AddSC_Boss_Sindragosa();
 void AddSC_boss_lichking();
 void AddSC_icecrown_teleporter();
-void AddSC_LowerSpireTrash();
+void AddSC_icecrown_citadel_trash();
 void AddSC_boss_blood_queen_lana_thel();
 
 void AddSC_dalaran();
@@ -967,7 +967,7 @@ void AddScripts()
     AddSC_Boss_Sindragosa();
     AddSC_boss_lichking();
     AddSC_icecrown_teleporter();
-    AddSC_LowerSpireTrash();
+    AddSC_icecrown_citadel_trash();
     AddSC_boss_blood_queen_lana_thel();
 
     AddSC_dalaran();
