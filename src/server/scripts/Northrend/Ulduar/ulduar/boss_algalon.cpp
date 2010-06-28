@@ -219,13 +219,13 @@ struct boss_algalonAI : public BossAI
                 {
                     switch(uiStep)
                     {
-                        case 1: DoScriptText(SAY_SUMMON1, m_creature); break; JumpToNextStep(3000);
-                        case 2: DoScriptText(SAY_SUMMON2, m_creature); break; JumpToNextStep(3000);
-                        case 3: DoScriptText(SAY_SUMMON3, m_creature); break; JumpToNextStep(3000);
-                        case 4: DoScriptText(SAY_ENGADED_FOR_FIRTS_TIME, m_creature); break; JumpToNextStep(3000);
-                        case 5: DoScriptText(SAY_AGGRO, m_creature); break;
-                        case 6: m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); break;
-                        case 7: m_creature->SetReactState(REACT_AGGRESSIVE); break;
+                        case 1: DoScriptText(SAY_SUMMON1, me); break; JumpToNextStep(3000);
+                        case 2: DoScriptText(SAY_SUMMON2, me); break; JumpToNextStep(3000);
+                        case 3: DoScriptText(SAY_SUMMON3, me); break; JumpToNextStep(3000);
+                        case 4: DoScriptText(SAY_ENGADED_FOR_FIRTS_TIME, me); break; JumpToNextStep(3000);
+                        case 5: DoScriptText(SAY_AGGRO, me); break;
+                        case 6: me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); break;
+                        case 7: me->SetReactState(REACT_AGGRESSIVE); break;
                     }
                 }else uiPhase_timer -= diff;
             }
