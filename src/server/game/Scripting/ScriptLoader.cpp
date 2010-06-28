@@ -439,7 +439,7 @@ void AddSC_boss_rotface();
 void AddSC_boss_deahtwisper();
 void AddSC_boss_marrowgar();
 void AddSC_boss_professor_putricide();
-void AddSC_Boss_Sindragosa();
+void AddSC_boss_sindragosa();
 void AddSC_boss_lichking();
 void AddSC_icecrown_teleporter();
 void AddSC_icecrown_citadel_trash();
@@ -964,7 +964,7 @@ void AddScripts()
     AddSC_boss_rotface();
     AddSC_boss_valithria_dreamwalker();
     AddSC_boss_professor_putricide();
-    AddSC_Boss_Sindragosa();
+    AddSC_boss_sindragosa();
     AddSC_boss_lichking();
     AddSC_icecrown_teleporter();
     AddSC_icecrown_citadel_trash();
