@@ -155,10 +155,10 @@ struct boss_rotfaceAI : public ScriptedAI
 		} else m_uiFloodTimer -= diff;
 
 		if (m_uiLittleOozeTimer <= diff)
-		{
+//		{
 		{
 			DoCast(SPELL_SUMMON_LITTLE_OOZE);
-			m_uiLittleOozeTimer = 17000;
+//			m_uiLittleOozeTimer = 17000;
 		}
 	} else m_uiLittleOozeTimer -= diff;
 
