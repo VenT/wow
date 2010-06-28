@@ -122,15 +122,13 @@ struct boss_professor_putricideAI : public ScriptedAI
             me->MonsterTextEmote(EMOTE_UNSTABLE_EXPERIMENT,NULL);
             m_uiUnstableExperimentTimer = 40000;
             m_uiAddSpawnTimer = 5000;
-        }
-        else m_uiUnstableExperimentTimer -= uiDiff;
+        } else m_uiUnstableExperimentTimer -= uiDiff;
 
         if (m_uiAddSpawnTimer < uiDiff)
         {
             me->SummonCreature(SUMMON_VOLATILE_OOZE, me->GetPositionX()+20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 9999999);
             m_uiAddSpawnTimer = 60000;
-        }
-        else m_uiAddSpawnTimer -= uiDiff;
+        } else m_uiAddSpawnTimer -= uiDiff;
 
         if (m_uiPhase == 1)
         {
@@ -187,8 +185,7 @@ struct npc_volatile_oozeAI : public ScriptedAI
                     OozeAdhesivTimer = 999999;
                     MovechaseTimer = 10000;
                 }
-            }
-            else OozeAdhesivTimer -= diff;
+            } else OozeAdhesivTimer -= diff;
         }
 
         if (MovechaseTimer < diff)
@@ -203,8 +200,7 @@ struct npc_volatile_oozeAI : public ScriptedAI
             if (me->IsWithinDistInMap(me, 3))
                 DoCast(me, SPELL_OOZE_ERUPTION);
             OozeAdhesivTimer = 10000;
-        }
-        else OozeAdhesivTimer -= diff;
+        } else OozeAdhesivTimer -= diff;
     }
 };
 
