@@ -1,20 +1,20 @@
 /*
- * Copyright (C) 2009 - 2010 TrinityCore <http://www.trinitycore.org/>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- */
+* Copyright (C) 2009 - 2010 TrinityCore <http://www.trinitycore.org/>
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
 
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
@@ -93,9 +93,9 @@ struct npc_bone_spikeAI : public Scripted_NoMovementAI
             }
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit *pVictim)
     {
-        if (victim->GetGUID() != me->GetGUID())
+        if (pVictim->GetGUID() != me->GetGUID())
 
             if (BoneSpikeGUID)
             {
@@ -199,8 +199,7 @@ struct boss_lord_marrowgarAI : public ScriptedAI
             DoScriptText(SAY_BERSERK, me);
             DoCast(SPELL_BERSERK);
             m_uiBerserkTimer = 600000;
-        } 
-        else m_uiBerserkTimer -= uiDiff;
+        } else m_uiBerserkTimer -= uiDiff;
 
         if (getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL || getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
         {
@@ -230,8 +229,7 @@ struct boss_lord_marrowgarAI : public ScriptedAI
                     me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 8000);
                     me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 8000);
                     m_uiColdFlameTimer = 15000;
-                } 
-                else m_uiColdFlameTimer -= uiDiff;
+                } else m_uiColdFlameTimer -= uiDiff;
             }
         }
 
@@ -262,16 +260,14 @@ struct boss_lord_marrowgarAI : public ScriptedAI
                 DoCast(SPELL_BONE_STORM_CHANNEL);
                 DoScriptText(SAY_BONE_STORM, me);
                 m_uiBoneStormChanelTimer = 45000;
-            }
-            else m_uiBoneStormChanelTimer -= uiDiff;
+            } else m_uiBoneStormChanelTimer -= uiDiff;
 
             if (m_uiSaberSlashTimer <= uiDiff)
             {
                 Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                DoCast(RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC));
+                DoCast(pTarget, RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC));
                 m_uiSaberSlashTimer = 6000;
-            } 
-            else m_uiSaberSlashTimer -= uiDiff;
+            } else m_uiSaberSlashTimer -= uiDiff;
 
         }
 
@@ -281,15 +277,13 @@ struct boss_lord_marrowgarAI : public ScriptedAI
             {
                 DoCastAOE(RAID_MODE(SPELL_BONE_STORM_10_NORMAL,SPELL_BONE_STORM_25_NORMAL,SPELL_BONE_STORM_10_HEROIC,SPELL_BONE_STORM_25_HEROIC));
                 m_uiBoneStormTimer = 1500;
-            }
-            else m_uiBoneStormTimer -= uiDiff;
+            } else m_uiBoneStormTimer -= uiDiff;
 
             if (m_uiBoneStormRemoveTimer <= uiDiff)
             {
                 me->RemoveAurasDueToSpell(SPELL_BONE_STORM_CHANNEL);
                 m_uiBoneStormRemoveTimer = 20000;
-            }
-            else m_uiBoneStormRemoveTimer -= uiDiff;
+            } else m_uiBoneStormRemoveTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
@@ -321,8 +315,7 @@ struct npc_cold_flameAI : public ScriptedAI
         {
             DoCast(me, RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
             m_uiColdFlameTimer = 1000;
-        } 
-        else m_uiColdFlameTimer -= uiDiff;
+        } else m_uiColdFlameTimer -= uiDiff;
 
     }
 };
