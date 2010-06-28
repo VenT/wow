@@ -122,7 +122,7 @@ struct boss_festergutAI : public ScriptedAI
         switch(TouchedType)
         {
         case SPELL_GAS_SPORES:
-            if (pTarget->HasAura(SPELL_BLIGHTED_SPORES))
+            if (pTarget && pTarget->HasAura(SPELL_BLIGHTED_SPORES))
             {
                 pTarget->CastSpell(pTarget, SPELL_INOCULATED, true);
             }
@@ -142,31 +142,27 @@ struct boss_festergutAI : public ScriptedAI
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
             DoCast(pTarget, SPELL_GASTRIC_BLOAT);
             m_uiGastricBloatTimer = 15000;
-        }
-        else m_uiGastricBloatTimer -= uiDiff;
+        } else m_uiGastricBloatTimer -= uiDiff;
 
         if(m_uiInhaleBlightTimer < uiDiff)
         {
             DoCast(me, SPELL_INHALE_BLIGHT);
             m_uiInhaleBlightTimer = 33000;
-        }
-        else m_uiInhaleBlightTimer -= uiDiff;
+        } else m_uiInhaleBlightTimer -= uiDiff;
 
         if (m_uiVileGasTimer < uiDiff)
         {
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             DoCast(pTarget, SPELL_VILE_GAS);
             m_uiVileGasTimer = 30000;
-        }
-        else m_uiVileGasTimer -= uiDiff;
+        } else m_uiVileGasTimer -= uiDiff;
 
         if (m_uiGasSporesTimer < uiDiff)
         {
             Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             DoCast(pTarget, SPELL_GAS_SPORES);
             m_uiGasSporesTimer = 35000;
-        }
-        else m_uiGasSporesTimer -= uiDiff;
+        } else m_uiGasSporesTimer -= uiDiff;
 
         if (m_uiPungentBlightTimer < uiDiff)
         {
@@ -174,8 +170,7 @@ struct boss_festergutAI : public ScriptedAI
             m_uiPungentBlightTimer = 120000;
             m_uiInhaleBlightTimer = 33000;
             me->RemoveAllAuras();
-        }
-        else m_uiPungentBlightTimer -= uiDiff;
+        } else m_uiPungentBlightTimer -= uiDiff;
 
         if(m_uiBerserkTimer < uiDiff)
         {

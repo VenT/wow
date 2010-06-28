@@ -318,7 +318,7 @@ struct npc_bloodbeastAI : public ScriptedAI
             if (!ScentOfBlood && (me->GetHealth()*100) / me->GetMaxHealth() < 20)
             {
                 if (urand(0,1))
-                    DoCast(me, SPELL_SCENT_OF_BLOOD);
+                DoCast(me, SPELL_SCENT_OF_BLOOD);
                 ScentOfBlood = true;
                 m_uiScentOfBloodTimer = 5000;
             }
