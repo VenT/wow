@@ -130,22 +130,18 @@ struct boss_rotfaceAI : public ScriptedAI
 
 		if (m_uiBigOozeTimer<= diff)  
 		{ 
-			if(Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-//			{
-				DoCast(pTarget, SPELL_SUMMON_BIG_OOZE);
-//			}
+			Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
+			DoCast(pTarget, SPELL_SUMMON_BIG_OOZE);
 			m_uiBigOozeTimer = 30000;
 		}  
 		else m_uiBigOozeTimer -= diff;
 
 		if (m_uiSlimeSprayTimer <= diff)
 		{
-			if(Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-			{
-				DoScriptText(SAY_SLIME_SPRAY, me);
-				DoCast(pTarget, SPELL_SLIME_SPRAY);
-				m_uiSlimeSprayTimer = 20000;
-			}
+			Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
+			DoScriptText(SAY_SLIME_SPRAY, me);
+			DoCast(pTarget, SPELL_SLIME_SPRAY);
+			m_uiSlimeSprayTimer = 20000;
 		} else m_uiSlimeSprayTimer -= diff;
 
 		if (m_uiFloodTimer <= diff)
@@ -155,23 +151,19 @@ struct boss_rotfaceAI : public ScriptedAI
 		} else m_uiFloodTimer -= diff;
 
 		if (m_uiLittleOozeTimer <= diff)
-//		{
 		{
 			DoCast(SPELL_SUMMON_LITTLE_OOZE);
-			m_uiLittleOozeTimer = 17000;
-		}
-		 else m_uiLittleOozeTimer -= diff;
+			m_uiLittleOozeTimer = 10000;
+	    } else m_uiLittleOozeTimer -= diff;
 
 	if (m_uiMutatedInfectionTimer <= diff)
 	{
-		if(Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-		{
-			if(!pTarget->HasAura(SPELL_MUTATED_INFECTION))
+		Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+			if(pTarget && !pTarget->HasAura(SPELL_MUTATED_INFECTION))
 			{
 				DoCast(pTarget, SPELL_MUTATED_INFECTION);
-				m_uiMutatedInfectionTimer = 20000;
 			}
-		}
+		m_uiMutatedInfectionTimer = 20000;
 	} else m_uiMutatedInfectionTimer -= diff;
 
 	if (m_uiBerserkTimer <= diff)
