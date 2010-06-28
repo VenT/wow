@@ -431,7 +431,7 @@ void AddSC_halls_of_reflection();
 void AddSC_boss_falric();
 void AddSC_boss_marwyn();
 void AddSC_instance_icecrown_citadel(); //Icecrown Citadel
-void AddSC_blood_prince_council();
+void AddSC_boss_rat_des_blutes();
 void AddSC_boss_valithria_dreamwalker();
 void AddSC_boss_saurfang();
 void AddSC_boss_festergut();
@@ -956,7 +956,7 @@ void AddScripts()
     AddSC_boss_falric();
     AddSC_boss_marwyn();
     AddSC_instance_icecrown_citadel(); //Icecrown Citadel
-    AddSC_blood_prince_council();
+    AddSC_boss_rat_des_blutes();
     AddSC_boss_saurfang();
     AddSC_boss_festergut();
     AddSC_boss_deahtwisper();
