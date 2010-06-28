@@ -135,7 +135,7 @@ struct boss_sindragosaAI : public ScriptedAI
     void MarkPlayer()
     { 
         Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
-        if (!pTarget->HasAura(SPELL_FROST_BEACON))
+        if (pTarget && !pTarget->HasAura(SPELL_FROST_BEACON))
         {
             DoCast(pTarget, SPELL_FROST_BEACON, true);
         }
@@ -145,7 +145,7 @@ struct boss_sindragosaAI : public ScriptedAI
     {
         Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-        if (pTarget->HasAura(SPELL_FROST_BEACON))
+        if (pTarget && pTarget->HasAura(SPELL_FROST_BEACON))
         {
             DoCast(pTarget, SPELL_ICE_TOMB_TRIGGER);
         }
@@ -182,29 +182,25 @@ struct boss_sindragosaAI : public ScriptedAI
             {
                 DoCast(me, RAID_MODE(SPELL_FROST_BREATH_10_NORMAL,SPELL_FROST_BREATH_25_NORMAL));
                 m_uiBreathTimer = 15000;
-            } 
-            else m_uiBreathTimer -= uiDiff;
+            } else m_uiBreathTimer -= uiDiff;
 
             if (m_uiCleaveTimer <= uiDiff)
             {
                 DoCast(me, SPELL_CLEAVE);
                 m_uiCleaveTimer = 10000;
-            } 
-            else m_uiCleaveTimer -= uiDiff;
+            } else m_uiCleaveTimer -= uiDiff;
 
             if (m_uiTailSmashTimer <= uiDiff)
             {
                 TakeOff();//DoCast(me, SPELL_TAIL_SMASH);
                 m_uiTailSmashTimer = 8000;
-            } 
-            else m_uiTailSmashTimer -= uiDiff;
+            } else m_uiTailSmashTimer -= uiDiff;
 
             if (m_uiBlisteringColdTimer <= uiDiff)
             {
                 BlisteringCold();
                 m_uiBlisteringColdTimer = 30000;
-            } 
-            else m_uiBlisteringColdTimer -= uiDiff;
+            } else m_uiBlisteringColdTimer -= uiDiff;
         }
 
         if(Phase == PHASE_LAND)
@@ -219,15 +215,13 @@ struct boss_sindragosaAI : public ScriptedAI
                 MarkPlayer();
                 m_uiMarkTimer = 20000;
                 m_uiIceBoltTriggerTimer = 5000;
-            }
-            else m_uiMarkTimer -= uiDiff;
+            } else m_uiMarkTimer -= uiDiff;
 
             if (m_uiIceBoltTriggerTimer < uiDiff)
             {
                 CastIceBlockTrigger();
                 m_uiIceBoltTriggerTimer = 31000;
-            }
-            else m_uiIceBoltTriggerTimer -= uiDiff;
+            } else m_uiIceBoltTriggerTimer -= uiDiff;
         }
 
         if(Phase == PHASE_ENRAGE)
