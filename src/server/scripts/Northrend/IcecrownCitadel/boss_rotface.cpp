@@ -130,7 +130,7 @@ struct boss_rotfaceAI : public ScriptedAI
 
 		if (m_uiBigOozeTimer<= diff)  
 		{ 
-//			if(Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+			if(Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
 //			{
 				DoCast(pTarget, SPELL_SUMMON_BIG_OOZE);
 //			}
