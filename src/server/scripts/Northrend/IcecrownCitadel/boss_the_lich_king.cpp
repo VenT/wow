@@ -158,12 +158,6 @@ struct boss_lich_kingAI : public ScriptedAI
 
     ScriptedInstance* m_pInstance;
 
-    bool m_bIsDeathPhase;
-    bool m_bIsTirionSpawned;
-    bool m_bIsTriggerSpawned;
-    bool m_bIsBerserk;
-    bool m_bIsSwitchPhase1;
-    bool m_bIsSwitchPhase2;
     uint32 m_uiEndingTimer;
     uint32 m_uiEndingPhase;
     uint32 m_uiPhase;
@@ -186,6 +180,13 @@ struct boss_lich_kingAI : public ScriptedAI
     uint32 m_uiIcePulsSummonTimer;
     uint32 m_uiSummonSpiritTimer;
     uint32 m_uiRandomSpeechTimer;
+
+    bool m_bIsDeathPhase;
+    bool m_bIsTirionSpawned;
+    bool m_bIsTriggerSpawned;
+    bool m_bIsBerserk;
+    bool m_bIsSwitchPhase1;
+    bool m_bIsSwitchPhase2;
 
     SummonList summons;
 
@@ -271,9 +272,9 @@ struct boss_lich_kingAI : public ScriptedAI
             DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2), me);
     }
 
-    void SummonedCreatureDespawn(Creature *summon) 
+    void SummonedCreatureDespawn(Creature *pSummoned) 
     {
-        summons.Despawn(summon);
+        summons.Despawn(pSummoned);
     }
 
     void JustSummoned(Creature *pSummoned) 
@@ -312,8 +313,7 @@ struct boss_lich_kingAI : public ScriptedAI
         {
             me->SummonCreature(CREATURE_TIRION_ICC, 528.552002, -2124.620117, 1040.859985, 3.183670, TEMPSUMMON_CORPSE_DESPAWN, 5000);
             m_bIsTirionSpawned = true;
-        }
-        else m_uiTirionSpawnTimer -= uiDiff;
+        } else m_uiTirionSpawnTimer -= uiDiff;
 
         if(!UpdateVictim())
             return;
@@ -324,8 +324,7 @@ struct boss_lich_kingAI : public ScriptedAI
             {
                 DoScriptText(RAND(SAY_RANDOM_1,SAY_RANDOM_2), me);
                 m_uiRandomSpeechTimer = 33000;
-            }
-            else m_uiRandomSpeechTimer -= uiDiff;
+            } else m_uiRandomSpeechTimer -= uiDiff;
         }
 
 
@@ -343,37 +342,32 @@ struct boss_lich_kingAI : public ScriptedAI
             {
                 DoCast(me, SPELL_INFEST);
                 m_uiInfestTimer = 30000;
-            }
-            else m_uiInfestTimer -= uiDiff;
+            } else m_uiInfestTimer -= uiDiff;
 
             if (m_uiPlagueSiphonTimer < uiDiff)
             {
                 DoCast(me, SPELL_PLAGUE_SIPHON);
                 m_uiPlagueSiphonTimer = 30000;
-            }
-            else m_uiPlagueSiphonTimer -= uiDiff;
+            } else m_uiPlagueSiphonTimer -= uiDiff;
 
             if (m_uiSummonDrudgeGhoulsTimer < uiDiff)
             {
                 DoCast(me, SPELL_SUMMON_DRUDGE_GHOULS);
                 m_uiSummonDrudgeGhoulsTimer = 20000;
-            }
-            else m_uiSummonDrudgeGhoulsTimer -= uiDiff;
+            } else m_uiSummonDrudgeGhoulsTimer -= uiDiff;
 
             if (m_uiSummonShamblingHorrorTimer < uiDiff)
             {
                 DoCast(me, SPELL_SUMMON_SHAMBLING_HORROR);
                 m_uiSummonShamblingHorrorTimer = 60000;
-            }
-            else m_uiSummonShamblingHorrorTimer -= uiDiff;
+            } else m_uiSummonShamblingHorrorTimer -= uiDiff;
 
             if (m_uiNecroticPlagueTimer < uiDiff)
             {
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                 DoCast(pTarget, SPELL_NECROTIC_PLAGUE);
                 m_uiNecroticPlagueTimer = 5000;
-            }
-            else m_uiNecroticPlagueTimer -= uiDiff;
+            } else m_uiNecroticPlagueTimer -= uiDiff;
         }
 
         if(m_uiPhase == 2)
@@ -383,31 +377,27 @@ struct boss_lich_kingAI : public ScriptedAI
                 DoScriptText(SAY_REMORSELESS_WINTER, me);
                 DoCast(me, SPELL_REMORSELES_WINTER);
                 m_uiRemorselesWinterTimer = 90000;
-            }
-            else m_uiRemorselesWinterTimer -= uiDiff;
+            } else m_uiRemorselesWinterTimer -= uiDiff;
 
             if (m_uiSummonSpiritTimer < uiDiff)
             {
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                 DoCast(pTarget, SPELL_SUMMON_RAGING_SPIRIT);
                 m_uiSummonSpiritTimer    = 16000;
-            }
-            else m_uiSummonSpiritTimer -= uiDiff;
+            } else m_uiSummonSpiritTimer -= uiDiff;
 
             if (m_uiIcePulsSummonTimer < uiDiff)
             {
                 DoCast(me, SPELL_SUMMON_ICE_SPEHERE);
                 m_uiIcePulsSummonTimer    = 15000;
-            }
-            else m_uiIcePulsSummonTimer -= uiDiff;
+            } else m_uiIcePulsSummonTimer -= uiDiff;
 
             if (m_uiPainandSufferingTimer < uiDiff)
             {
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 DoCast(pTarget, SPELL_PAIN_AND_SUFFERING);
                 m_uiPainandSufferingTimer = 2000;
-            }
-            else m_uiPainandSufferingTimer -= uiDiff;
+            } else m_uiPainandSufferingTimer -= uiDiff;
 
             if (m_uiQuakeTimer < uiDiff)
             {
@@ -418,8 +408,7 @@ struct boss_lich_kingAI : public ScriptedAI
                 me->GetMotionMaster()->MoveChase(me->getVictim());
                 m_uiPhase = 3;
 
-            }
-            else m_uiQuakeTimer -= uiDiff;
+            } else m_uiQuakeTimer -= uiDiff;
         }
 
         if(m_uiPhase == 3)
@@ -429,8 +418,7 @@ struct boss_lich_kingAI : public ScriptedAI
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                 DoCast(pTarget, SPELL_SPAWN_DEFILE);
                 m_uiDefileTimer = 20000;
-            }
-            else m_uiDefileTimer -= uiDiff;
+            } else m_uiDefileTimer -= uiDiff;
 
             if (m_uiSummonValkyrTimer < uiDiff)
             {
@@ -438,22 +426,19 @@ struct boss_lich_kingAI : public ScriptedAI
                 me->SummonCreature(CREATURE_VALKYR, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()+10, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 99999999);
                 //DoCast(me, SPELL_SUMMON_VALKYR);
                 m_uiSummonValkyrTimer = 20000;
-            }
-            else m_uiSummonValkyrTimer -= uiDiff;
+            } else m_uiSummonValkyrTimer -= uiDiff;
 
             if (m_uiSoulReaperTimer < uiDiff)
             {
                 DoCast(me->getVictim(), SPELL_SOUL_REAPER);
                 m_uiSoulReaperTimer = 20000;
-            }
-            else m_uiSoulReaperTimer -= uiDiff;
+            } else m_uiSoulReaperTimer -= uiDiff;
 
             if (m_uiInfestTimer < uiDiff)
             {
                 DoCast(me, SPELL_INFEST);
                 m_uiInfestTimer = 30000;
-            }
-            else m_uiInfestTimer -= uiDiff;
+            } else m_uiInfestTimer -= uiDiff;
         }
 
         if(m_uiPhase == 4)
@@ -463,31 +448,27 @@ struct boss_lich_kingAI : public ScriptedAI
                 DoScriptText(SAY_REMORSELESS_WINTER, me);
                 DoCast(me, SPELL_REMORSELES_WINTER);
                 m_uiRemorselesWinterTimer = 90000;
-            }
-            else m_uiRemorselesWinterTimer -= uiDiff;
+            } else m_uiRemorselesWinterTimer -= uiDiff;
 
             if (m_uiSummonSpiritTimer < uiDiff)
             {
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                 DoCast(pTarget, SPELL_SUMMON_RAGING_SPIRIT);
                 m_uiSummonSpiritTimer = 16000;
-            }
-            else m_uiSummonSpiritTimer -= uiDiff;
+            } else m_uiSummonSpiritTimer -= uiDiff;
 
             if (m_uiIcePulsSummonTimer < uiDiff)
             {
                 DoCast(me, SPELL_SUMMON_ICE_SPEHERE);
                 m_uiIcePulsSummonTimer    = 15000;
-            }
-            else m_uiIcePulsSummonTimer -= uiDiff;
+            } else m_uiIcePulsSummonTimer -= uiDiff;
 
             if (m_uiPainandSufferingTimer < uiDiff)
             {
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                 DoCast(pTarget, SPELL_PAIN_AND_SUFFERING);
                 m_uiPainandSufferingTimer = 3000;
-            }
-            else m_uiPainandSufferingTimer -= uiDiff;
+            } else m_uiPainandSufferingTimer -= uiDiff;
 
             if (m_uiQuakeTimer < uiDiff)
             {
@@ -497,8 +478,7 @@ struct boss_lich_kingAI : public ScriptedAI
                 me->GetMotionMaster()->Clear();
                 me->GetMotionMaster()->MoveChase(me->getVictim());
                 m_uiPhase = 5;
-            }
-            else m_uiQuakeTimer -= uiDiff;
+            } else m_uiQuakeTimer -= uiDiff;
         }
 
         if(m_uiPhase == 5)
@@ -507,8 +487,7 @@ struct boss_lich_kingAI : public ScriptedAI
             {
                 DoCast(me, SPELL_SUMMON_VILE_SPIRIT);
                 m_uiSummonVileSpiritTimer = 30000;
-            }
-            else m_uiSummonVileSpiritTimer -= uiDiff;
+            } else m_uiSummonVileSpiritTimer -= uiDiff;
 
             if (m_uiHarvestSoulTimer < uiDiff)
             {
@@ -516,8 +495,7 @@ struct boss_lich_kingAI : public ScriptedAI
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
                 DoCast(pTarget, SPELL_HARVEST_SOULS);
                 m_uiHarvestSoulTimer = 70000;
-            }
-            else m_uiHarvestSoulTimer -= uiDiff;
+            } else m_uiHarvestSoulTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
@@ -855,16 +833,14 @@ struct npc_ice_puls_iccAI : public ScriptedAI
         if (m_uiIcePulseTimer < uiDiff)
         {
             DoCast(me, SPELL_ICE_PULSE);
-        }
-        else m_uiIcePulseTimer -= uiDiff;
+        } else m_uiIcePulseTimer -= uiDiff;
 
         if (m_uiIceBurstCheckTimer < uiDiff)
         {
             if (me->IsWithinDistInMap(me->getVictim(), 3))
                 DoCast(me, SPELL_ICE_BURST);
             m_uiIceBurstCheckTimer = 2000;
-        }
-        else m_uiIceBurstCheckTimer -= uiDiff;
+        } else m_uiIceBurstCheckTimer -= uiDiff;
     }
 };
 
@@ -879,6 +855,9 @@ struct npc_valkyr_iccAI : public ScriptedAI
     uint32 m_uiMovementTimer;
     uint32 m_uiFallPlayerTimer;
 
+	bool InVehicle;
+	bool OutVehicle;
+
     Vehicle *vehicle;
 
     void Reset()
@@ -887,6 +866,9 @@ struct npc_valkyr_iccAI : public ScriptedAI
         m_uiGrabTimer = 2000;
         m_uiMovementTimer = 3000;
         m_uiFallPlayerTimer = 10000;
+
+		InVehicle = false;
+		OutVehicle = false;
     }
 
     void EnterCombat(Unit *who) 
@@ -901,25 +883,30 @@ struct npc_valkyr_iccAI : public ScriptedAI
 
         if (m_uiGrabTimer < uiDiff)
         {
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            pTarget->EnterVehicle(vehicle);
+			if(!InVehicle)
+			{
+                Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                pTarget->EnterVehicle(vehicle);
+			    InVehicle = true;
+			}
             m_uiGrabTimer = 120000;
-        } 
-        else m_uiGrabTimer -= uiDiff;
+        } else m_uiGrabTimer -= uiDiff;
 
         if (m_uiMovementTimer < uiDiff)
         {
             me->GetMotionMaster()->MovePoint(0, ValkyrMoveMent);
             m_uiMovementTimer = 120000;
-        } 
-        else m_uiMovementTimer -= uiDiff;
+        } else m_uiMovementTimer -= uiDiff;
 
         if (m_uiFallPlayerTimer < uiDiff)
         {
-            vehicle->RemoveAllPassengers();
+			if(!OutVehicle)
+			{
+                vehicle->RemoveAllPassengers();
+				OutVehicle = true;
+			}
             m_uiFallPlayerTimer = 120000;
-        } 
-        else m_uiFallPlayerTimer -= uiDiff;
+        } else m_uiFallPlayerTimer -= uiDiff;
     }
 };
 
@@ -957,15 +944,13 @@ struct npc_ghoul_iccAI : public ScriptedAI
         {
             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 449);
             m_bIsLife = true;
-        }
-        else m_uiLifeTimer -= uiDiff;
+        } else m_uiLifeTimer -= uiDiff;
 
         if (m_uiAggroTimer < uiDiff && !m_bIsAggroTimer)
         {
             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
             m_bIsAggroTimer = true;
-        }
-        else m_uiAggroTimer -= uiDiff;
+        } else m_uiAggroTimer -= uiDiff;
     }
 };
 
@@ -1028,16 +1013,14 @@ struct npc_defile_iccAI : public Scripted_NoMovementAI
         {
             DefileDamage();
             m_uiDefileDamageTimer = 1000;
-        }
-        else m_uiDefileDamageTimer -= uiDiff;
+        } else m_uiDefileDamageTimer -= uiDiff;
 
         if (m_uiDespawnTimer < uiDiff && !m_bIsDespawnd)
         {
             me->SetVisibility(VISIBILITY_OFF);
             me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE,SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             m_bIsDespawnd = true;
-        }
-        else m_uiDespawnTimer -= uiDiff;
+        } else m_uiDespawnTimer -= uiDiff;
     }
 };
 
