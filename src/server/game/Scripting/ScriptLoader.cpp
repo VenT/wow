@@ -443,7 +443,7 @@ void AddSC_Boss_Sindragosa();
 void AddSC_boss_lichking();
 void AddSC_icecrown_teleporter();
 void AddSC_LowerSpireTrash();
-void AddSC_boss_blood_queen_lanathel();
+void AddSC_boss_blood_queen_lana_thel();
 
 void AddSC_dalaran();
 void AddSC_borean_tundra();
@@ -968,7 +968,7 @@ void AddScripts()
     AddSC_boss_lichking();
     AddSC_icecrown_teleporter();
     AddSC_LowerSpireTrash();
-    AddSC_boss_blood_queen_lanathel();
+    AddSC_boss_blood_queen_lana_thel();
 
     AddSC_dalaran();
     AddSC_borean_tundra();
