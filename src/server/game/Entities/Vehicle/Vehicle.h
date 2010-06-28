@@ -29,7 +29,6 @@ enum PowerType
 {
     POWER_STEAM     = 61,
     POWER_PYRITE    = 41,
-    POWER_BLOOD_POWER = 141,
 };
 
 struct VehicleSeat
