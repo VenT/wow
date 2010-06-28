@@ -150,27 +150,21 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
                 m_uiPactofDarkfallenExplosionCount = 0;
                 m_uiPactofDarkfallenExplodeTimer = 2000;
                 m_uiPactofDarkfallenTimer = 25000;
-            } 
-            else
-                m_uiPactofDarkfallenTimer -= uiDiff;
+            } else m_uiPactofDarkfallenTimer -= uiDiff;
 
             if (m_uiSwarmingShadowsTimer < uiDiff)
             {
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 DoCast(pTarget, SPELL_SWARMING_SHADOWS);
                 m_uiSwarmingShadowsTimer = 30000;
-            }
-            else
-                m_uiSwarmingShadowsTimer -= uiDiff;
+            } else m_uiSwarmingShadowsTimer -= uiDiff;
 
             if (m_uiTwilightBloodboltTimer < uiDiff)
             {
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 DoCast(pTarget, SPELL_TWILIGHT_BLOODBOLT);
                 m_uiTwilightBloodboltTimer = 9000;
-            }
-            else
-                m_uiTwilightBloodboltTimer -= uiDiff;
+            } else m_uiTwilightBloodboltTimer -= uiDiff;
 
             if (m_uiVampBiteTimer < uiDiff)
             {
@@ -178,9 +172,7 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
                 DoCast(pTarget, SPELL_VAMPIRIC_BITE);
                 m_uiVampBiteTimer = 45000 + rand()%20000;
-            }
-            else
-                m_uiVampBiteTimer -= uiDiff;
+            } else m_uiVampBiteTimer -= uiDiff;
 
             if (m_uiPhaseTimer < uiDiff)
             {    
@@ -195,9 +187,7 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
                 m_uiBloodboldSplashTimer = 10000;
                 m_uiLandingTimer = 26000;
                 m_uiFlyingFalseTimer = 30000;
-            }
-            else
-                m_uiPhaseTimer -= uiDiff;
+            } else m_uiPhaseTimer -= uiDiff;
         }
 
         if (m_uiPhase == 2)
@@ -208,9 +198,7 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
                 me->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
                 me->SetFlying(true);
                 m_uiSetHoverTimer = 90000;
-            }
-            else
-                m_uiSetHoverTimer -= uiDiff;
+            } else m_uiSetHoverTimer -= uiDiff;
 
             if (m_uiBloodboldSplashTimer < uiDiff)
             {
@@ -219,9 +207,7 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
                 for (std::list<Unit*>::const_iterator i = pTargets.begin(); i != pTargets.end(); ++i)
                     DoCast(*i, RAID_MODE(SPELL_TWILIGHT_BLOODBOLT,SPELL_TWILIGHT_BLOODBOLT));
                 m_uiBloodboldSplashTimer = 2000;
-            }
-            else
-                m_uiBloodboldSplashTimer -= uiDiff;
+            } else m_uiBloodboldSplashTimer -= uiDiff;
 
             if (m_uiLandingTimer < uiDiff)
             {
@@ -229,9 +215,7 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
                 me->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
                 m_uiLandingTimer = 900000;
                 m_uiBloodboldSplashTimer = 900000;
-            }
-            else
-                m_uiLandingTimer -= uiDiff;
+            } else m_uiLandingTimer -= uiDiff;
 
             if (m_uiFlyingFalseTimer < uiDiff)
             {
@@ -241,9 +225,7 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
                 me->GetMotionMaster()->MoveChase(me->getVictim());
                 m_uiPhase = 1;
                 m_uiFlyingFalseTimer = 900000;
-            }
-            else
-                m_uiFlyingFalseTimer -= uiDiff;
+            } else m_uiFlyingFalseTimer -= uiDiff;
         }
 
         DoMeleeAttackIfReady();
@@ -276,9 +258,7 @@ struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
         {
             DoCast(me, RAID_MODE(SPELL_SWARMING_SHADOW_10_NORMAL, SPELL_SWARMING_SHADOW_25_NORMAL, SPELL_SWARMING_SHADOW_10_HEROIC, SPELL_SWARMING_SHADOW_25_HEROIC));
             m_uiSwarmingShadowTimer = 2000;
-        }
-        else
-            m_uiSwarmingShadowTimer -= uiDiff;
+        } else m_uiSwarmingShadowTimer -= uiDiff;
     }
 };
 
