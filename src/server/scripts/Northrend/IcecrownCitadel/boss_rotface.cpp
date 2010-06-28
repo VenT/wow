@@ -158,7 +158,7 @@ struct boss_rotfaceAI : public ScriptedAI
 
 	if (m_uiMutatedInfectionTimer <= diff)
 	{
-		Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+		Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
 			if(pTarget && !pTarget->HasAura(SPELL_MUTATED_INFECTION))
 			{
 				DoCast(pTarget, SPELL_MUTATED_INFECTION);
