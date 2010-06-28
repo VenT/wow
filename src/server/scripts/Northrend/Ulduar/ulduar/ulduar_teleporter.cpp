@@ -1,45 +1,44 @@
 #include "ScriptPCH.h"
 #include "ulduar.h"
 
-/*
-The teleporter appears to be active and stable.
-
-- Expedition Base Camp
-- Formation Grounds
-- Colossal Forge
-- Scrapyard
-- Antechamber of Ulduar
-- Shattered Walkway
-- Conservatory of Life
-*/
-
-#define BASE_CAMP    200
-#define GROUNDS      201
-#define FORGE        202
-#define SCRAPYARD    203
-#define ANTECHAMBER  204
-#define WALKWAY      205
-#define CONSERVATORY 206
-
-bool GoHello_ulduar_teleporter(Player *pPlayer, GameObject *pGO)
+enum Locations
 {
-    ScriptedInstance *pInstance = pGO->GetInstanceData();
-    if (!pInstance) return true;
+    BASE_CAMP                                   = 200,
+    GROUNDS                                     = 201,
+    FORGE                                       = 202,
+    SCRAPYARD                                   = 203,
+    ANTECHAMBER                                 = 204,
+    WALKWAY                                     = 205,
+    CONSERVATORY                                = 206,
+    SPARK_IMAGINATION                           = 207,
+    DESCENT_MADNESS                             = 208
+};
 
-    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Expedition Base Camp", GOSSIP_SENDER_MAIN, BASE_CAMP);
-    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Formation Grounds", GOSSIP_SENDER_MAIN, GROUNDS);
-    if (pInstance->GetData(TYPE_LEVIATHAN) == DONE)
+bool GoHello_ulduar_teleporter( Player *pPlayer, GameObject *pGO )
+{
+    InstanceData *data = pPlayer->GetInstanceData();
+    ScriptedInstance *pInstance = (ScriptedInstance *) pGO->GetInstanceData();
+    if(!pInstance | !data) return true;
+
+    pPlayer->ADD_GOSSIP_ITEM(0, "Expedition Base Camp", GOSSIP_SENDER_MAIN, BASE_CAMP);
+    pPlayer->ADD_GOSSIP_ITEM(0, "Formation Grounds", GOSSIP_SENDER_MAIN, GROUNDS);
+    if (data->GetBossState(BOSS_LEVIATHAN) == DONE)
     {
-        pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Colossal Forge", GOSSIP_SENDER_MAIN, FORGE);
-        if (pInstance->GetData(TYPE_XT002) == DONE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "Colossal Forge", GOSSIP_SENDER_MAIN, FORGE);
+        if (data->GetBossState(BOSS_XT002) == DONE)
         {
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Scrapyard", GOSSIP_SENDER_MAIN, SCRAPYARD);
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Antechamber of Ulduar", GOSSIP_SENDER_MAIN, ANTECHAMBER);
-            if (pInstance->GetData(TYPE_KOLOGARN) == DONE)
+            pPlayer->ADD_GOSSIP_ITEM(0, "Scrapyard", GOSSIP_SENDER_MAIN, SCRAPYARD);
+            pPlayer->ADD_GOSSIP_ITEM(0, "Antechamber of Ulduar", GOSSIP_SENDER_MAIN, ANTECHAMBER);
+            if (data->GetBossState(BOSS_KOLOGARN) == DONE)
             {
-                pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Shattered Walkway", GOSSIP_SENDER_MAIN, WALKWAY);
-                if (pInstance->GetData(TYPE_AURIAYA) == DONE)
-                    pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Conservatory of Life", GOSSIP_SENDER_MAIN, CONSERVATORY);
+                pPlayer->ADD_GOSSIP_ITEM(0, "Shattered Walkway", GOSSIP_SENDER_MAIN, WALKWAY);
+                if (data->GetBossState(BOSS_AURIAYA) == DONE)
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(0, "Conservatory of Life", GOSSIP_SENDER_MAIN, CONSERVATORY);
+                    pPlayer->ADD_GOSSIP_ITEM(0, "Spark of Imagination", GOSSIP_SENDER_MAIN, SPARK_IMAGINATION);
+                    if (data->GetBossState(BOSS_VEZAX) == DONE)
+                        pPlayer->ADD_GOSSIP_ITEM(0, "Descent into Madness", GOSSIP_SENDER_MAIN, DESCENT_MADNESS);
+                }
             }
         }
     }
@@ -48,10 +47,10 @@ bool GoHello_ulduar_teleporter(Player *pPlayer, GameObject *pGO)
     return true;
 }
 
-bool GOSelect_ulduar_teleporter(Player *pPlayer, GameObject * /*pGO*/, uint32 sender, uint32 action)
+bool GOSelect_ulduar_teleporter( Player *pPlayer, GameObject *pGO, uint32 sender, uint32 action )
 {
-    if (sender != GOSSIP_SENDER_MAIN) return true;
-    if (!pPlayer->getAttackers().empty()) return true;
+    if(sender != GOSSIP_SENDER_MAIN) return true;
+    if(!pPlayer->getAttackers().empty()) return true;
 
     switch(action)
     {
@@ -75,6 +74,12 @@ bool GOSelect_ulduar_teleporter(Player *pPlayer, GameObject * /*pGO*/, uint32 se
         pPlayer->CLOSE_GOSSIP_MENU(); break;
     case CONSERVATORY:
         pPlayer->TeleportTo(603, 2086.27, -24.3134, 421.239, 0);
+        pPlayer->CLOSE_GOSSIP_MENU(); break;
+    case SPARK_IMAGINATION:
+        pPlayer->TeleportTo(603, 2518.16, 2569.03, 412.299, 0);
+        pPlayer->CLOSE_GOSSIP_MENU(); break;
+    case DESCENT_MADNESS:
+        pPlayer->TeleportTo(603, 1854.82, -11.5608, 334.175, 0);
         pPlayer->CLOSE_GOSSIP_MENU(); break;
     }
 

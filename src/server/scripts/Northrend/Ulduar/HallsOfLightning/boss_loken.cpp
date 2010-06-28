@@ -24,32 +24,34 @@ EndScriptData */
 #include "ScriptPCH.h"
 #include "halls_of_lightning.h"
 
+#define MAX_ENCOUNTER_TIME  2 * 60 * 1000
+
 enum eEnums
 {
-    ACHIEV_TIMELY_DEATH_START_EVENT               = 20384,
+    ACHIEVEMENT_TIMELY_DEATH            = 1867,
 
-    SAY_AGGRO                                     = -1602018,
-    SAY_INTRO_1                                   = -1602019,
-    SAY_INTRO_2                                   = -1602020,
-    SAY_SLAY_1                                    = -1602021,
-    SAY_SLAY_2                                    = -1602022,
-    SAY_SLAY_3                                    = -1602023,
-    SAY_DEATH                                     = -1602024,
-    SAY_NOVA_1                                    = -1602025,
-    SAY_NOVA_2                                    = -1602026,
-    SAY_NOVA_3                                    = -1602027,
-    SAY_75HEALTH                                  = -1602028,
-    SAY_50HEALTH                                  = -1602029,
-    SAY_25HEALTH                                  = -1602030,
-    EMOTE_NOVA                                    = -1602031,
+    SAY_AGGRO                           = -1602018,
+    SAY_INTRO_1                         = -1602019,
+    SAY_INTRO_2                         = -1602020,
+    SAY_SLAY_1                          = -1602021,
+    SAY_SLAY_2                          = -1602022,
+    SAY_SLAY_3                          = -1602023,
+    SAY_DEATH                           = -1602024,
+    SAY_NOVA_1                          = -1602025,
+    SAY_NOVA_2                          = -1602026,
+    SAY_NOVA_3                          = -1602027,
+    SAY_75HEALTH                        = -1602028,
+    SAY_50HEALTH                        = -1602029,
+    SAY_25HEALTH                        = -1602030,
+    EMOTE_NOVA                          = -1602031,
 
-    SPELL_ARC_LIGHTNING                           = 52921,
-    SPELL_LIGHTNING_NOVA_N                        = 52960,
-    SPELL_LIGHTNING_NOVA_H                        = 59835,
+    SPELL_ARC_LIGHTNING                 = 52921,
+    SPELL_LIGHTNING_NOVA_N              = 52960,
+    SPELL_LIGHTNING_NOVA_H              = 59835,
 
-    SPELL_PULSING_SHOCKWAVE_N                     = 52961,
-    SPELL_PULSING_SHOCKWAVE_H                     = 59836,
-    SPELL_PULSING_SHOCKWAVE_AURA                  = 59414
+    SPELL_PULSING_SHOCKWAVE_N           = 52961,
+    SPELL_PULSING_SHOCKWAVE_H           = 59836,
+    SPELL_PULSING_SHOCKWAVE_AURA        = 59414
 };
 
 /*######
@@ -74,6 +76,8 @@ struct boss_lokenAI : public ScriptedAI
 
     uint32 m_uiHealthAmountModifier;
 
+    uint32 EncounterTime;
+
     void Reset()
     {
         m_bIsAura = false;
@@ -86,34 +90,45 @@ struct boss_lokenAI : public ScriptedAI
         m_uiHealthAmountModifier = 1;
 
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_LOKEN, NOT_STARTED);
-            m_pInstance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMELY_DEATH_START_EVENT);
-        }
     }
 
-    void EnterCombat(Unit* /*pWho*/)
+    void EnterCombat(Unit* pWho)
     {
-        DoScriptText(SAY_AGGRO, me);
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        EncounterTime = 0;
 
         if (m_pInstance)
-        {
             m_pInstance->SetData(TYPE_LOKEN, IN_PROGRESS);
-            m_pInstance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMELY_DEATH_START_EVENT);
-        }
     }
 
-    void JustDied(Unit* /*pKiller*/)
+    void JustDied(Unit* pKiller)
     {
-        DoScriptText(SAY_DEATH, me);
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (IsHeroic() && EncounterTime <= MAX_ENCOUNTER_TIME)
+        {
+            AchievementEntry const *AchievTimelyDeath = GetAchievementStore()->LookupEntry(ACHIEVEMENT_TIMELY_DEATH);
+            if (AchievTimelyDeath)
+            {
+                Map* pMap = m_creature->GetMap();
+                if (pMap && pMap->IsDungeon())
+                {
+                    Map::PlayerList const &players = pMap->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                        itr->getSource()->CompletedAchievement(AchievTimelyDeath);
+                }
+            }
+        }
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_LOKEN, DONE);
     }
 
-    void KilledUnit(Unit* /*pVictim*/)
+    void KilledUnit(Unit* pVictim)
     {
-        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
+        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), m_creature);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -122,12 +137,14 @@ struct boss_lokenAI : public ScriptedAI
         if (!UpdateVictim())
             return;
 
+        EncounterTime += uiDiff;
+
         if (m_bIsAura)
         {
             // workaround for PULSING_SHOCKWAVE
             if (m_uiPulsingShockwave_Timer <= uiDiff)
             {
-                Map* pMap = me->GetMap();
+                Map* pMap = m_creature->GetMap();
                 if (pMap->IsDungeon())
                 {
                     Map::PlayerList const &PlayerList = pMap->GetPlayers();
@@ -139,13 +156,13 @@ struct boss_lokenAI : public ScriptedAI
                         if (i->getSource() && i->getSource()->isAlive() && i->getSource()->isTargetableForAttack())
                         {
                             int32 dmg;
-                            float m_fDist = me->GetExactDist(i->getSource()->GetPositionX(), i->getSource()->GetPositionY(), i->getSource()->GetPositionZ());
+                            float m_fDist = m_creature->GetExactDist(i->getSource()->GetPositionX(), i->getSource()->GetPositionY(), i->getSource()->GetPositionZ());
 
                             dmg = DUNGEON_MODE(100, 150); // need to correct damage
                             if (m_fDist > 1.0f) // Further from 1 yard
                                 dmg *= m_fDist;
 
-                            me->CastCustomSpell(i->getSource(), DUNGEON_MODE(52942, 59837), &dmg, 0, 0, false);
+                            m_creature->CastCustomSpell(i->getSource(), DUNGEON_MODE(52942, 59837), &dmg, 0, 0, false);
                         }
                 }
                 m_uiPulsingShockwave_Timer = 2000;
@@ -156,9 +173,9 @@ struct boss_lokenAI : public ScriptedAI
             if (m_uiResumePulsingShockwave_Timer <= uiDiff)
             {
                 //breaks at movement, can we assume when it's time, this spell is casted and also must stop movement?
-                DoCast(me, SPELL_PULSING_SHOCKWAVE_AURA, true);
+                DoCast(m_creature, SPELL_PULSING_SHOCKWAVE_AURA, true);
 
-                DoCast(me, SPELL_PULSING_SHOCKWAVE_N); // need core support
+                DoCast(m_creature, SPELL_PULSING_SHOCKWAVE_N); // need core support
                 m_bIsAura = true;
                 m_uiResumePulsingShockwave_Timer = 0;
             }
@@ -178,9 +195,9 @@ struct boss_lokenAI : public ScriptedAI
 
         if (m_uiLightningNova_Timer <= uiDiff)
         {
-            DoScriptText(RAND(SAY_NOVA_1,SAY_NOVA_2,SAY_NOVA_3), me);
-            DoScriptText(EMOTE_NOVA, me);
-            DoCast(me, SPELL_LIGHTNING_NOVA_N);
+            DoScriptText(RAND(SAY_NOVA_1,SAY_NOVA_2,SAY_NOVA_3), m_creature);
+            DoScriptText(EMOTE_NOVA, m_creature);
+            DoCast(m_creature, SPELL_LIGHTNING_NOVA_N);
 
             m_bIsAura = false;
             m_uiResumePulsingShockwave_Timer = DUNGEON_MODE(5000, 4000); // Pause Pulsing Shockwave aura
@@ -190,13 +207,13 @@ struct boss_lokenAI : public ScriptedAI
             m_uiLightningNova_Timer -= uiDiff;
 
         // Health check
-        if ((me->GetHealth()*100 / me->GetMaxHealth()) < (100-(25*m_uiHealthAmountModifier)))
+        if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < (100-(25*m_uiHealthAmountModifier)))
         {
             switch(m_uiHealthAmountModifier)
             {
-                case 1: DoScriptText(SAY_75HEALTH, me); break;
-                case 2: DoScriptText(SAY_50HEALTH, me); break;
-                case 3: DoScriptText(SAY_25HEALTH, me); break;
+                case 1: DoScriptText(SAY_75HEALTH, m_creature); break;
+                case 2: DoScriptText(SAY_50HEALTH, m_creature); break;
+                case 3: DoScriptText(SAY_25HEALTH, m_creature); break;
             }
 
             ++m_uiHealthAmountModifier;

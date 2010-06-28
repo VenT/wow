@@ -135,7 +135,7 @@ struct boss_bjarngrimAI : public ScriptedAI
 
         for (uint8 i = 0; i < 2; ++i)
         {
-            if (Creature* pStormforgedLieutenant = (Unit::GetCreature((*me), m_auiStormforgedLieutenantGUID[i])))
+            if (Creature* pStormforgedLieutenant = (Unit::GetCreature((*m_creature), m_auiStormforgedLieutenantGUID[i])))
             {
                 if (!pStormforgedLieutenant->isAlive())
                     pStormforgedLieutenant->Respawn();
@@ -145,7 +145,7 @@ struct boss_bjarngrimAI : public ScriptedAI
         if (m_uiStance != STANCE_DEFENSIVE)
         {
             DoRemoveStanceAura(m_uiStance);
-            DoCast(me, SPELL_DEFENSIVE_STANCE);
+            DoCast(m_creature, SPELL_DEFENSIVE_STANCE);
             m_uiStance = STANCE_DEFENSIVE;
         }
 
@@ -155,25 +155,25 @@ struct boss_bjarngrimAI : public ScriptedAI
             m_pInstance->SetData(TYPE_BJARNGRIM, NOT_STARTED);
     }
 
-    void EnterCombat(Unit* /*pWho*/)
+    void EnterCombat(Unit* pWho)
     {
-        DoScriptText(SAY_AGGRO, me);
+        DoScriptText(SAY_AGGRO, m_creature);
 
         //must get both lieutenants here and make sure they are with him
-        me->CallForHelp(30.0f);
+        m_creature->CallForHelp(30.0f);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BJARNGRIM, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit* /*pVictim*/)
+    void KilledUnit(Unit* pVictim)
     {
-        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
+        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), m_creature);
     }
 
-    void JustDied(Unit* /*pKiller*/)
+    void JustDied(Unit* pKiller)
     {
-        DoScriptText(SAY_DEATH, me);
+        DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
             m_pInstance->SetData(TYPE_BJARNGRIM, DONE);
@@ -185,13 +185,13 @@ struct boss_bjarngrimAI : public ScriptedAI
         switch(uiStance)
         {
             case STANCE_DEFENSIVE:
-                me->RemoveAurasDueToSpell(SPELL_DEFENSIVE_STANCE);
+                m_creature->RemoveAurasDueToSpell(SPELL_DEFENSIVE_STANCE);
                 break;
             case STANCE_BERSERKER:
-                me->RemoveAurasDueToSpell(SPELL_BERSEKER_STANCE);
+                m_creature->RemoveAurasDueToSpell(SPELL_BERSEKER_STANCE);
                 break;
             case STANCE_BATTLE:
-                me->RemoveAurasDueToSpell(SPELL_BATTLE_STANCE);
+                m_creature->RemoveAurasDueToSpell(SPELL_BATTLE_STANCE);
                 break;
         }
     }
@@ -206,7 +206,7 @@ struct boss_bjarngrimAI : public ScriptedAI
         if (m_uiChangeStance_Timer <= uiDiff)
         {
             //wait for current spell to finish before change stance
-            if (me->IsNonMeleeSpellCasted(false))
+            if (m_creature->IsNonMeleeSpellCasted(false))
                 return;
 
             DoRemoveStanceAura(m_uiStance);
@@ -221,21 +221,21 @@ struct boss_bjarngrimAI : public ScriptedAI
             switch(m_uiStance)
             {
                 case STANCE_DEFENSIVE:
-                    DoScriptText(SAY_DEFENSIVE_STANCE, me);
-                    DoScriptText(EMOTE_DEFENSIVE_STANCE, me);
-                    DoCast(me, SPELL_DEFENSIVE_STANCE);
+                    DoScriptText(SAY_DEFENSIVE_STANCE, m_creature);
+                    DoScriptText(EMOTE_DEFENSIVE_STANCE, m_creature);
+                    DoCast(m_creature, SPELL_DEFENSIVE_STANCE);
                     SetEquipmentSlots(false, EQUIP_SWORD, EQUIP_SHIELD, EQUIP_NO_CHANGE);
                     break;
                 case STANCE_BERSERKER:
-                    DoScriptText(SAY_BERSEKER_STANCE, me);
-                    DoScriptText(EMOTE_BERSEKER_STANCE, me);
-                    DoCast(me, SPELL_BERSEKER_STANCE);
+                    DoScriptText(SAY_BERSEKER_STANCE, m_creature);
+                    DoScriptText(EMOTE_BERSEKER_STANCE, m_creature);
+                    DoCast(m_creature, SPELL_BERSEKER_STANCE);
                     SetEquipmentSlots(false, EQUIP_SWORD, EQUIP_SWORD, EQUIP_NO_CHANGE);
                     break;
                 case STANCE_BATTLE:
-                    DoScriptText(SAY_BATTLE_STANCE, me);
-                    DoScriptText(EMOTE_BATTLE_STANCE, me);
-                    DoCast(me, SPELL_BATTLE_STANCE);
+                    DoScriptText(SAY_BATTLE_STANCE, m_creature);
+                    DoScriptText(EMOTE_BATTLE_STANCE, m_creature);
+                    DoCast(m_creature, SPELL_BATTLE_STANCE);
                     SetEquipmentSlots(false, EQUIP_MACE, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
                     break;
             }
@@ -252,7 +252,7 @@ struct boss_bjarngrimAI : public ScriptedAI
             {
                 if (m_uiReflection_Timer <= uiDiff)
                 {
-                    DoCast(me, SPELL_SPELL_REFLECTION);
+                    DoCast(m_creature, SPELL_SPELL_REFLECTION);
                     m_uiReflection_Timer = 8000 + rand()%1000;
                 }
                 else
@@ -260,7 +260,7 @@ struct boss_bjarngrimAI : public ScriptedAI
 
                 if (m_uiKnockAway_Timer <= uiDiff)
                 {
-                    DoCast(me, SPELL_KNOCK_AWAY);
+                    DoCast(m_creature, SPELL_KNOCK_AWAY);
                     m_uiKnockAway_Timer = 20000 + rand()%1000;
                 }
                 else
@@ -268,7 +268,7 @@ struct boss_bjarngrimAI : public ScriptedAI
 
                 if (m_uiPummel_Timer <= uiDiff)
                 {
-                    DoCast(me->getVictim(), SPELL_PUMMEL);
+                    DoCast(m_creature->getVictim(), SPELL_PUMMEL);
                     m_uiPummel_Timer = 10000 + rand()%1000;
                 }
                 else
@@ -276,7 +276,7 @@ struct boss_bjarngrimAI : public ScriptedAI
 
                 if (m_uiIronform_Timer <= uiDiff)
                 {
-                    DoCast(me, SPELL_IRONFORM);
+                    DoCast(m_creature, SPELL_IRONFORM);
                     m_uiIronform_Timer = 25000 + rand()%1000;
                 }
                 else
@@ -289,7 +289,7 @@ struct boss_bjarngrimAI : public ScriptedAI
                 if (m_uiIntercept_Timer <= uiDiff)
                 {
                     //not much point is this, better random target and more often?
-                    DoCast(me->getVictim(), SPELL_INTERCEPT);
+                    DoCast(m_creature->getVictim(), SPELL_INTERCEPT);
                     m_uiIntercept_Timer = 45000 + rand()%1000;
                 }
                 else
@@ -297,7 +297,7 @@ struct boss_bjarngrimAI : public ScriptedAI
 
                 if (m_uiWhirlwind_Timer <= uiDiff)
                 {
-                    DoCast(me, SPELL_WHIRLWIND);
+                    DoCast(m_creature, SPELL_WHIRLWIND);
                     m_uiWhirlwind_Timer = 10000 + rand()%1000;
                 }
                 else
@@ -305,7 +305,7 @@ struct boss_bjarngrimAI : public ScriptedAI
 
                 if (m_uiCleave_Timer <= uiDiff)
                 {
-                    DoCast(me->getVictim(), SPELL_CLEAVE);
+                    DoCast(m_creature->getVictim(), SPELL_CLEAVE);
                     m_uiCleave_Timer = 8000 + rand()%1000;
                 }
                 else
@@ -317,7 +317,7 @@ struct boss_bjarngrimAI : public ScriptedAI
             {
                 if (m_uiMortalStrike_Timer <= uiDiff)
                 {
-                    DoCast(me->getVictim(), SPELL_MORTAL_STRIKE);
+                    DoCast(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
                     m_uiMortalStrike_Timer = 20000 + rand()%1000;
                 }
                 else
@@ -325,7 +325,7 @@ struct boss_bjarngrimAI : public ScriptedAI
 
                 if (m_uiSlam_Timer <= uiDiff)
                 {
-                    DoCast(me->getVictim(), SPELL_SLAM);
+                    DoCast(m_creature->getVictim(), SPELL_SLAM);
                     m_uiSlam_Timer = 15000 + rand()%1000;
                 }
                 else
@@ -381,7 +381,7 @@ struct mob_stormforged_lieutenantAI : public ScriptedAI
 
         if (m_uiArcWeld_Timer <= uiDiff)
         {
-            DoCast(me->getVictim(), SPELL_ARC_WELD);
+            DoCast(m_creature->getVictim(), SPELL_ARC_WELD);
             m_uiArcWeld_Timer = 20000 + rand()%1000;
         }
         else
