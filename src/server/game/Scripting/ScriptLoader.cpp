@@ -432,7 +432,7 @@ void AddSC_boss_falric();
 void AddSC_boss_marwyn();
 void AddSC_instance_icecrown_citadel(); //Icecrown Citadel
 void AddSC_boss_rat_des_blutes();
-void AddSC_boss_valithria_dreamwalker();
+void AddSC_boss_valithria();
 void AddSC_boss_saurfang();
 void AddSC_boss_festergut();
 void AddSC_boss_rotface();
@@ -962,7 +962,7 @@ void AddScripts()
     AddSC_boss_deahtwisper();
     AddSC_boss_marrowgar();
     AddSC_boss_rotface();
-    AddSC_boss_valithria_dreamwalker();
+    AddSC_boss_valithria();
     AddSC_boss_professor_putricide();
     AddSC_boss_sindragosa();
     AddSC_boss_lichking();
