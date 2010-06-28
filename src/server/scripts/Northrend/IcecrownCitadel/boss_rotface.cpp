@@ -158,6 +158,7 @@ struct boss_rotfaceAI : public ScriptedAI
 		{
 		{
 			DoCast(SPELL_SUMMON_LITTLE_OOZE);
+			m_uiLittleOozeTimer = 17000;
 		}
 	} else m_uiLittleOozeTimer -= diff;
 
@@ -168,7 +169,6 @@ struct boss_rotfaceAI : public ScriptedAI
 			if(!pTarget->HasAura(SPELL_MUTATED_INFECTION))
 			{
 				DoCast(pTarget, SPELL_MUTATED_INFECTION);
-				m_uiLittleOozeTimer = 10000;
 				m_uiMutatedInfectionTimer = 20000;
 			}
 		}
