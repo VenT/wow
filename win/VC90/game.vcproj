@@ -2260,7 +2260,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Icecrown Citadel"
+					Name="Frozen Halls"
 					>
 					<Filter
 						Name="Forge of Souls"
@@ -2579,10 +2579,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\server\scripts\Northrend\IcecrownCitadel\def_spire.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\server\scripts\Northrend\IcecrownCitadel\gunship_battle.cpp"
 						>
 					</File>
@@ -2599,7 +2595,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\server\scripts\Northrend\IcecrownCitadel\lower_spire_trash.cpp"
+						RelativePath="..\..\src\server\scripts\Northrend\IcecrownCitadel\icecrown_citadel.cpp"
 						>
 					</File>
 				</Filter>
