@@ -79,7 +79,7 @@ struct boss_gluthAI : public BossAI
                 triggers.push_back(trigger);
         if (triggers.size() < 3)
         {
-            error_log("Script Gluth: cannot summon triggers!");
+            sLog.outError("Script Gluth: cannot summon triggers!");
             EnterEvadeMode();
             return;
         }

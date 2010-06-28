@@ -72,6 +72,15 @@ struct boss_four_horsemenAI : public BossAI
     bool caster;
     bool Enrage;
 
+    void SelectNearestTarget(Unit *who) 	
+    {
+        if (me->getVictim() && me->GetDistanceOrder(who, me->getVictim()) && me->canAttack(who))
+        {
+            me->getThreatManager().modifyThreatPercent(me->getVictim(), -100);
+            me->AddThreat(who, 1000000.0f);
+        }
+    }
+
     void MoveInLineOfSight(Unit *who)
     {
         BossAI::MoveInLineOfSight(who);
