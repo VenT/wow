@@ -1068,21 +1068,6 @@ void AuraEffect::UpdatePeriodic(Unit * caster)
                         --m_amount;
                     break;
             }
-                // Lady Deathwhisper - Mana Barrier
-                case 70842:
-                {
-                    Unit * caster = GetBase()->GetUnitOwner();
-                    uint32 hp_to_restore = caster->GetMaxHealth() - caster->GetHealth();
-                    uint32 cur_mana = caster->GetPower(POWER_MANA);
-                    if (hp_to_restore && cur_mana)
-                    {
-                        if (cur_mana < hp_to_restore)
-                            hp_to_restore = cur_mana; 
-                        caster->SetHealth(caster->GetHealth() + hp_to_restore);
-                        caster->SetPower(POWER_MANA, caster->GetPower(POWER_MANA) - hp_to_restore);
-                    }
-                break;
-                                }
             break;
         case SPELL_AURA_PERIODIC_DUMMY:
             switch(GetSpellProto()->SpellFamilyName)
