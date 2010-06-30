@@ -5,11 +5,9 @@ UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (37813,38508,366
 UPDATE `gameobject_template` SET `ScriptName`='' WHERE `entry` IN (202235,202242,202244,202243,202245,202246,202182,202181);
 
 # GameObject
-UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202181,202182,202183,202223,202235,202242,202243,202244,202245,202246);
+UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
 UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202223;
-UPDATE `gameobject_template` SET `faction` = 0 WHERE `entry` IN (202181,202182,202183);
-UPDATE `gameobject_template` SET `type` = 11 WHERE `entry` = 201755;
-UPDATE `gameobject_template` SET `faction` = 1375, `flags` = 32 WHERE `entry` = 201378;
+UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202242;
 
 # Boss
 UPDATE `creature_template` SET `ScriptName`='boss_blood_queen_lanathel' WHERE (`entry`='37955');
