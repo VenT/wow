@@ -19,7 +19,7 @@
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 
-#define GOSSIP_START_EVENT "We are ready, Tirion!" //blizzlike
+#define GOSSIP_START_EVENT "We are ready, Tirion!"
 
 enum Yells
 {
