@@ -1587,7 +1587,7 @@ void GameObject::TakenDamage(uint32 damage, Unit *who)
         if (m_goValue->building.health <= m_goInfo->building.damagedNumHits)
         {
             if (!m_goInfo->building.destroyedDisplayId)
-                m_goValue->building.health = 0;
+                m_goValue->building.health = m_goInfo->building.damagedNumHits;
             else if (!m_goValue->building.health)
                 m_goValue->building.health = 1;
 

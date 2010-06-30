@@ -56,6 +56,16 @@ enum AzureSaboteurSpells
     SABOTEUR_SHIELD_EFFECT                          = 45775
 };
 
+enum CrystalSpells
+{
+    SPELL_ARCANE_LIGHTNING                          = 57912
+};
+
+enum Events
+{
+    EVENT_ACTIVATE_CRYSTAL                          = 20001
+};
+
 const Position PortalLocation[] =
 {
     {1877.51, 850.104, 44.6599, 4.7822 },     // WP 1
@@ -124,6 +134,7 @@ struct instance_violet_hold : public ScriptedInstance
 
     uint32 uiActivationTimer;
     uint32 uiCyanigosaEventTimer;
+    uint32 uiDoorSpellTimer;
 
     std::set<uint64> trashMobs; // to kill with crystal
 
@@ -132,15 +143,14 @@ struct instance_violet_hold : public ScriptedInstance
     uint8 uiFirstBoss;
     uint8 uiSecondBoss;
     uint8 uiRemoveNpc;
-    uint32 uiDoorSpellTimer;
-    
-    uint8 uiMainDoorState;
+
     uint8 uiDoorIntegrity;
 
     uint8 m_auiEncounter[MAX_ENCOUNTER];
     uint8 uiCountErekemGuards;
     uint8 uiCountActivationCrystals;
     uint8 uiCyanigosaEventPhase;
+    uint8 uiMainEventPhase; // SPECIAL: pre event animations, IN_PROGRESS: event itself
 
     bool bActive;
     bool bWiped;
@@ -178,7 +188,6 @@ struct instance_violet_hold : public ScriptedInstance
         
         uiRemoveNpc = 0;
 
-        uiMainDoorState = GO_STATE_ACTIVE;
         uiDoorIntegrity = 100;
 
         uiWaveCount = 0;
@@ -310,6 +319,7 @@ struct instance_violet_hold : public ScriptedInstance
                 if (data == DONE)
                 {
                     SaveToDB();
+                    uiMainEventPhase = DONE;
                     if (GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
                         pMainDoor->SetGoState(GO_STATE_ACTIVE);
                     if (!bCrystalActivated && uiDoorIntegrity == 100)
@@ -338,7 +348,7 @@ struct instance_violet_hold : public ScriptedInstance
                     NpcAtDoorCastingList.pop_back();
                 break;
             case DATA_MAIN_DOOR:
-                if(GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
+                if (GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
                 {
                     switch(data)
                     {
@@ -353,7 +363,6 @@ struct instance_violet_hold : public ScriptedInstance
                             break;
                     }
                 }
-                uiMainDoorState = data;
                 break;
             case DATA_START_BOSS_ENCOUNTER:
                 switch(uiWaveCount)
@@ -367,14 +376,19 @@ struct instance_violet_hold : public ScriptedInstance
                 }
                 break;
             case DATA_ACTIVATE_CRYSTAL:
-                // Kill all mobs registered with SetData64(ADD_TRASH_MOB)
-                // TODO: All visual, spells etc
-                for (std::set<uint64>::const_iterator itr = trashMobs.begin(); itr != trashMobs.end(); ++itr)
+                ActivateCrystal();
+                break;
+            case DATA_MAIN_EVENT_PHASE:
+                uiMainEventPhase = data;
+                if (data == IN_PROGRESS) // Start event
                 {
-                    Creature* pCreature = instance->GetCreature(*itr);
-                    if (pCreature && pCreature->isAlive())
-                        pCreature->Kill(pCreature);
+                    if (GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
+                        pMainDoor->SetGoState(GO_STATE_READY);
+                    uiWaveCount = 1;
+                    bActive = true;
+                    uiRemoveNpc = 0; // might not have been reset after a wipe on a boss.
                 }
+                break;
         }
     }
 
@@ -403,9 +417,9 @@ struct instance_violet_hold : public ScriptedInstance
             case DATA_PORTAL_LOCATION:          return uiLocation;
             case DATA_DOOR_INTEGRITY:           return uiDoorIntegrity;
             case DATA_NPC_PRESENCE_AT_DOOR:     return NpcAtDoorCastingList.size();
-            case DATA_MAIN_DOOR:                return uiMainDoorState;
             case DATA_FIRST_BOSS:               return uiFirstBoss;
             case DATA_SECOND_BOSS:              return uiSecondBoss;
+            case DATA_MAIN_EVENT_PHASE:         return uiMainEventPhase;
         }
 
         return 0;
@@ -658,7 +672,7 @@ struct instance_violet_hold : public ScriptedInstance
             return;
 
         // portals should spawn if other portal is dead and doors are closed
-        if (bActive && GetData(DATA_MAIN_DOOR) == GO_STATE_READY)
+        if (bActive && uiMainEventPhase == IN_PROGRESS)
         {
             if (uiActivationTimer < diff)
             {
@@ -668,8 +682,8 @@ struct instance_violet_hold : public ScriptedInstance
             } else uiActivationTimer -= diff;
         }
 
-        // if doors are closed (means event is in progres) and players have wiped then reset instance
-        if (GetData(DATA_MAIN_DOOR) != GO_STATE_ACTIVE && CheckWipe())
+        // if main event is in progress and players have wiped then reset instance
+        if ( uiMainEventPhase == IN_PROGRESS && CheckWipe())
         {
             SetData(DATA_REMOVE_NPC, 1);
             StartBossEncounter(uiFirstBoss, false);
@@ -677,6 +691,7 @@ struct instance_violet_hold : public ScriptedInstance
 
             SetData(DATA_MAIN_DOOR,GO_STATE_ACTIVE);
             SetData(DATA_WAVE_COUNT, 0);
+            uiMainEventPhase = NOT_STARTED;
 
             if (Creature* pSinclari = instance->GetCreature(uiSinclari))
             {
@@ -737,7 +752,7 @@ struct instance_violet_hold : public ScriptedInstance
         }
 
         // if there are NPCs in front of the prison door, which are casting the door seal spell and doors are active
-        if(GetData(DATA_NPC_PRESENCE_AT_DOOR) && (GetData(DATA_MAIN_DOOR) == GO_STATE_READY))
+        if (GetData(DATA_NPC_PRESENCE_AT_DOOR) && uiMainEventPhase == IN_PROGRESS)
         {
             // if door integrity is > 0 then decrase it's integrity state
             if(GetData(DATA_DOOR_INTEGRITY))
@@ -750,9 +765,35 @@ struct instance_violet_hold : public ScriptedInstance
             }
             // else set door state to active (means door will open and group have failed to sustain mob invasion on the door)
             else
+            {
                 SetData(DATA_MAIN_DOOR,GO_STATE_ACTIVE);
+                uiMainEventPhase = FAIL;
+            }
         }
     }
+
+    void ActivateCrystal()
+    {
+        // Kill all mobs registered with SetData64(ADD_TRASH_MOB)
+        // TODO: All visual, spells etc
+        for (std::set<uint64>::const_iterator itr = trashMobs.begin(); itr != trashMobs.end(); ++itr)
+        {
+            Creature* pCreature = instance->GetCreature(*itr);
+            if (pCreature && pCreature->isAlive())
+                pCreature->CastSpell(pCreature,SPELL_ARCANE_LIGHTNING,true);  // Who should cast the spell?
+        }
+    }
+
+    void ProcessEvent(GameObject* pGO, uint32 uiEventId)
+    {
+        switch(uiEventId)
+        {
+            case EVENT_ACTIVATE_CRYSTAL:
+                bCrystalActivated = true; // Activation by player's will throw event signal
+                ActivateCrystal();
+                break;
+        }
+}
 };
 
 InstanceData* GetInstanceData_instance_violet_hold(Map* pMap)

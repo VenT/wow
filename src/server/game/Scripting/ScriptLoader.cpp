@@ -367,6 +367,8 @@ void AddSC_boss_drakos();                //The Nexus The Oculus
 void AddSC_boss_urom();
 void AddSC_instance_oculus();
 void AddSC_oculus();
+void AddSC_boss_malygos();                //The Nexus: Eye of Eternity
+void AddSC_instance_eye_of_eternity();
 void AddSC_boss_sartharion();            //Obsidian Sanctum
 void AddSC_instance_obsidian_sanctum();
 void AddSC_boss_bjarngrim();             //Ulduar Halls of Lightning
@@ -431,19 +433,19 @@ void AddSC_halls_of_reflection();
 void AddSC_boss_falric();
 void AddSC_boss_marwyn();
 void AddSC_instance_icecrown_citadel(); //Icecrown Citadel
-void AddSC_blood_prince_council();
-void AddSC_boss_valithria_dreamwalker();
+void AddSC_boss_rat_des_blutes();
+void AddSC_boss_valithria();
 void AddSC_boss_saurfang();
-void AddSC_Boss_Fauldarm();
-void AddSC_boss_Rotface();
-void AddSC_boss_Deahtwisper();
+void AddSC_boss_festergut();
+void AddSC_boss_rotface();
+void AddSC_boss_deahtwisper();
 void AddSC_boss_marrowgar();
-void AddSC_Boss_ProfessorPutricide();
-void AddSC_Boss_Sindragosa();
+void AddSC_boss_professor_putricide();
+void AddSC_boss_sindragosa();
 void AddSC_boss_lichking();
 void AddSC_icecrown_teleporter();
-void AddSC_LowerSpireTrash();
-void AddSC_boss_blood_queen_lanathel();
+void AddSC_icecrown_citadel_trash();
+void AddSC_boss_blood_queen_lana_thel();
 
 void AddSC_dalaran();
 void AddSC_borean_tundra();
@@ -892,6 +894,8 @@ void AddScripts()
     AddSC_boss_urom();
     AddSC_instance_oculus();
     AddSC_oculus();
+    AddSC_boss_malygos();                //The Nexus: Eye of Eternity
+    AddSC_instance_eye_of_eternity();
     AddSC_boss_sartharion();            //Obsidian Sanctum
     AddSC_instance_obsidian_sanctum();
     AddSC_boss_bjarngrim();             //Ulduar Halls of Lightning
@@ -956,19 +960,19 @@ void AddScripts()
     AddSC_boss_falric();
     AddSC_boss_marwyn();
     AddSC_instance_icecrown_citadel(); //Icecrown Citadel
-    AddSC_blood_prince_council();
+    AddSC_boss_rat_des_blutes();
     AddSC_boss_saurfang();
-    AddSC_Boss_Fauldarm();
-    AddSC_boss_Deahtwisper();
+    AddSC_boss_festergut();
+    AddSC_boss_deahtwisper();
     AddSC_boss_marrowgar();
-    AddSC_boss_Rotface();
-    AddSC_boss_valithria_dreamwalker();
-    AddSC_Boss_ProfessorPutricide();
-    AddSC_Boss_Sindragosa();
+    AddSC_boss_rotface();
+    AddSC_boss_valithria();
+    AddSC_boss_professor_putricide();
+    AddSC_boss_sindragosa();
     AddSC_boss_lichking();
     AddSC_icecrown_teleporter();
-    AddSC_LowerSpireTrash();
-    AddSC_boss_blood_queen_lanathel();
+    AddSC_icecrown_citadel_trash();
+    AddSC_boss_blood_queen_lana_thel();
 
     AddSC_dalaran();
     AddSC_borean_tundra();

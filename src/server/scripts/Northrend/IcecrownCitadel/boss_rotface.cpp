@@ -1,315 +1,331 @@
 /*
- * Copyright (C) 2009 - 2010 TrinityCore <http://www.trinitycore.org/>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- */
+* Copyright (C) 2009 - 2010 TrinityCore <http://www.trinitycore.org/>
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
 
 /*Comment:
-Script created by Goga (TrinDev Team special for trinity-core.ru and wowjp.net) Please if you use this script contact copiryght*/
+Creared by Lordronn*/
 
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
-#include "ScriptedEscortAI.h"
 
 enum Yells
 {
-SAY_AGGRO                  = -1666016,
-SAY_DEATH                  = -1666024,
-SAY_DEATH_2                = -1666025,
-SAY_KILLING                = -1666022,
-SAY_KILLING_2              = -1666021, 
-SAY_BERSERK                = -1666023,
-SAY_SLIME_SPRAY            = -1666017,
-SAY_EXPLOSION              = -1666018,
-
+	SAY_AGGRO                  = -1666016,
+	SAY_DEATH                  = -1666024,
+	SAY_DEATH_2                = -1666025,
+	SAY_KILL                   = -1666022,
+	SAY_KILL2                  = -1666021, 
+	SAY_BERSERK                = -1666023,
+	SAY_SLIME_SPRAY            = -1666017,
+	SAY_EXPLOSION              = -1666018,
 };
 
 enum Creatures
 {
-CREATURE_OOZE_BIG             = 36899,
-CREATURE_LITTLE_OOZE          = 36897,
-CREATURE_PROFFESOR_PUTRICIDE  = 36678,
+	CREATURE_OOZE_BIG             = 36899,
+	CREATURE_LITTLE_OOZE          = 36897,
+	CREATURE_PROFFESOR_PUTRICIDE  = 36678,
 };
 
-enum RotfaceSpells
+enum Spells
 {
-SPELL_OOZE_FLOOD           = 71215,
-SPELL_SLIME_SPRAY          = 71213,
-SPELL_MUTATED_INFECTION    = 71224,
-SPELL_BERSERK              = 47008,
+	SPELL_OOZE_FLOOD           = 69783,
+	SPELL_OOZE_FLOOD1          = 69785,
+	SPELL_OOZE_FLOOD2          = 69788,
+	SPELL_SLIME_SPRAY          = 69508,
+	SPELL_MUTATED_INFECTION    = 71224,
+	SPELL_SUMMON_LITTLE_OOZE   = 69706,
+	SPELL_SUMMON_BIG_OOZE      = 69540,
+	SPELL_BERSERK              = 47008,
+	SPELL_STICKY_OOZE          = 71208,
+	SPELL_RADIATING_OOZE       = 71212,
+	SPELL_UNSTABLE_OOZE        = 69558,
+	SPELL_UNSTABLE_EXPLOSION   = 71209,
+	SPELL_MERGE_OOZE           = 69889,
+        SPELL_OOZE_NOVA            = 55081, //spell forcing little ooze and big ooze to despawn after a while - workaround to be removed once the spells are fixed
 };
 
-enum OozeSpells
+struct boss_rotfaceAI : public ScriptedAI
 {
-SPELL_STICKY_OOZE          = 71208,
-SPELL_RADIATING_OOZE       = 71212,
-SPELL_UNSTABLE_OOZE        = 69558,
-SPELL_UNSTABLE_EXPLOSION   = 71209,
-};
-
-Creature* pProfessor_Putricide;
-
-struct boss_RotfaceAI : public ScriptedAI
-{
-    boss_RotfaceAI(Creature *pCreature) : ScriptedAI(pCreature)
-    {
+	boss_rotfaceAI(Creature *pCreature) : ScriptedAI(pCreature)
+	{
 		m_pInstance = pCreature->GetInstanceData();
-    }
-    
-    ScriptedInstance* m_pInstance;
+	}
 
-	uint32 m_uiOozeFloodTimer;
+	ScriptedInstance* m_pInstance;
+
+	uint32 m_uiFloodTimer;
 	uint32 m_uiSlimeSprayTimer;
 	uint32 m_uiMutatedInfectionTimer;
-    uint32 m_uiBerserkTimer;
-    uint32 m_uiSummonBigTimer;
-    uint32 m_uiSummonLittleTimer;
+	uint32 m_uiBerserkTimer;
+	uint32 m_uiBigOozeTimer;
+	uint32 m_uiLittleOozeTimer;
 
-    void Reset()
-    {
-	m_uiOozeFloodTimer = 12000+rand()%3000;
-	m_uiSlimeSprayTimer = 20000+rand()%2000;
-	m_uiMutatedInfectionTimer = 6000+rand()%4000;
-    m_uiBerserkTimer = 360000;
-	m_uiSummonLittleTimer = 5000; // not officially ?
-	m_uiSummonBigTimer = 15000; // not officially
-	 
-
-		if(m_pInstance)
-		m_pInstance->SetData(DATA_ROTFACE_EVENT, NOT_STARTED);  
-    }
-
-    void JustDied(Unit* pKiller)
-    {
-        DoScriptText(SAY_DEATH, me);
-        DoScriptText(SAY_DEATH_2, pProfessor_Putricide);
+	void Reset()
+	{
+		m_uiFloodTimer = 6000;
+		m_uiSlimeSprayTimer = 20000;
+		m_uiMutatedInfectionTimer = 28000;
+		m_uiBerserkTimer = 360000;
+		m_uiBigOozeTimer = 35000;
+		m_uiLittleOozeTimer = 17000;
 
 		if(m_pInstance)
-		m_pInstance->SetData(DATA_ROTFACE_EVENT, DONE);  
-    }
+			m_pInstance->SetData(DATA_ROTFACE_EVENT, NOT_STARTED);  
+	}
 
-    void EnterCombat(Unit* who)
-    {
+	void JustDied(Unit* pKiller)
+	{
+		DoScriptText(SAY_DEATH, me);
+		DoScriptText(SAY_DEATH_2, me);
+
+		if(m_pInstance)
+			m_pInstance->SetData(DATA_ROTFACE_EVENT, DONE);  
+	}
+
+	void EnterCombat(Unit* who)
+	{
 		DoScriptText(SAY_AGGRO, me);
-    }
 
-    void JustReachedHome()
-    {
 		if(m_pInstance)
-		m_pInstance->SetData(DATA_ROTFACE_EVENT, FAIL);  
-    }
+			m_pInstance->SetData(DATA_ROTFACE_EVENT, IN_PROGRESS);  
+	}
 
-    void KilledUnit(Unit *victim)
-    {
-        DoScriptText(SAY_KILLING, me);
-        DoScriptText(SAY_KILLING_2, me);
-    }
+	void JustReachedHome()
+	{
+		if(m_pInstance)
+			m_pInstance->SetData(DATA_ROTFACE_EVENT, FAIL);  
+	}
+
+	void KilledUnit(Unit *pVictim)
+	{
+		switch(urand(0, 1))
+		{
+		case 0:
+			DoScriptText(SAY_KILL, me);
+			break;
+		case 1:
+			DoScriptText(SAY_KILL2, me);
+			break;
+		}
+	}
 
 	void UpdateAI(const uint32 diff)
 	{
 		if (!UpdateVictim())
 			return;
 
-            if (m_uiSummonLittleTimer<= diff)  
-            { 
-                 me->SummonCreature(36897, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-
-                m_uiSummonLittleTimer = 23000+rand()%4000; 
-            }  
-            else m_uiSummonLittleTimer -= diff;
-
-            if (m_uiSummonBigTimer<= diff)  
-            { 
-                 me->SummonCreature(36899, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-
-                m_uiSummonBigTimer = 32000+rand()%4000; 
-            }  
-            else m_uiSummonBigTimer -= diff;
-
-
-		if (m_uiOozeFloodTimer <= diff)
-		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71215);
-			m_uiOozeFloodTimer = 12000+rand()%3000;
-		} else m_uiOozeFloodTimer -= diff;
+		if (m_uiBigOozeTimer<= diff)  
+		{ 
+			Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
+			DoCast(pTarget, SPELL_SUMMON_BIG_OOZE);
+			m_uiBigOozeTimer = 35000;
+		}  
+		else m_uiBigOozeTimer -= diff;
 
 		if (m_uiSlimeSprayTimer <= diff)
 		{
+			Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
 			DoScriptText(SAY_SLIME_SPRAY, me);
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71213);
-			m_uiSlimeSprayTimer = 20000+rand()%2000;
+			DoCast(pTarget, SPELL_SLIME_SPRAY);
+			m_uiSlimeSprayTimer = 20000;
 		} else m_uiSlimeSprayTimer -= diff;
 
-		if (m_uiMutatedInfectionTimer <= diff)
+		if (m_uiFloodTimer <= diff)
 		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71213);
-			m_uiMutatedInfectionTimer = 6000+rand()%4000;
-		} else m_uiMutatedInfectionTimer -= diff;
+			DoCast(SPELL_OOZE_FLOOD);
+			m_uiFloodTimer = 20000;
+		} else m_uiFloodTimer -= diff;
 
-		if (m_uiBerserkTimer <= diff)
+		if (m_uiLittleOozeTimer <= diff)
 		{
-                  DoScriptText(SAY_BERSERK, me);
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 47008);
-			m_uiBerserkTimer = 360000;
-		} else m_uiBerserkTimer -= diff;
+			DoCast(SPELL_SUMMON_LITTLE_OOZE);
+			m_uiLittleOozeTimer = 17000;
+	    } else m_uiLittleOozeTimer -= diff;
 
-		DoMeleeAttackIfReady();
-	}
+	if (m_uiMutatedInfectionTimer <= diff)
+	{
+		Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
+			if(pTarget && !pTarget->HasAura(SPELL_MUTATED_INFECTION))
+			{
+				DoCast(pTarget, SPELL_MUTATED_INFECTION);
+			}
+		m_uiMutatedInfectionTimer = 28000;
+	} else m_uiMutatedInfectionTimer -= diff;
+
+	if (m_uiBerserkTimer <= diff)
+	{
+		DoScriptText(SAY_BERSERK, me);
+		DoCast(me, SPELL_BERSERK);
+		m_uiBerserkTimer = 360000;
+	} else m_uiBerserkTimer -= diff;
+
+	DoMeleeAttackIfReady();
+}
 };
 
-struct npc_OozeBigAI : public ScriptedAI
+struct npc_ooze_bigAI : public ScriptedAI
 {
-    npc_OozeBigAI(Creature *pCreature) : ScriptedAI(pCreature)
-    {
+	npc_ooze_bigAI(Creature *pCreature) : ScriptedAI(pCreature)
+	{
 		m_pInstance = pCreature->GetInstanceData();
-    }
-    
-    ScriptedInstance* m_pInstance;
+	}
+
+	ScriptedInstance* m_pInstance;
 
 	uint32 m_uiStickyOozeTimer;
-	uint32 m_uiRadiatingOozeTimer;
 	uint32 m_uiUnstableOozeTimer;
-      uint32 m_uiUnstableExplosionTimer;
+	uint32 m_uiUnstableExplosionTimer;
 
-    void Reset()
-    {
-	m_uiStickyOozeTimer = 5000+rand()%3000;
-	m_uiRadiatingOozeTimer = 7000+rand()%2000;
-      m_uiUnstableOozeTimer = 4000;
-      m_uiUnstableExplosionTimer = 20000;
-    }
+	void Reset()
+	{
+		m_uiStickyOozeTimer = 4000;
+		m_uiUnstableOozeTimer = 8000;
+		DoCast(SPELL_RADIATING_OOZE);
+		me->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+		me->SetSpeed(MOVE_WALK, 0.5f);
+	}
 
-    void EnterCombat(Unit* who)
-    {
-    }
+	void EnterCombat(Unit* who)
+	{
+	}
 
-    void KilledUnit(Unit *victim)
-    {
-    }
+	void KilledUnit(Unit *pVictim)
+	{
+	}
 
 	void UpdateAI(const uint32 diff)
 	{
 		if (!UpdateVictim())
 			return;
 
+		if (!m_pInstance || m_pInstance->GetData(DATA_ROTFACE_EVENT) != IN_PROGRESS) 
+			me->ForcedDespawn();
+
 		if (m_uiStickyOozeTimer <= diff)
 		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71208);
-			m_uiStickyOozeTimer = 5000+rand()%3000;
+			DoCast(SPELL_STICKY_OOZE);
+			m_uiStickyOozeTimer = 4000;
 		} else m_uiStickyOozeTimer -= diff;
-
-		if (m_uiRadiatingOozeTimer <= diff)
-		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71212);
-			m_uiRadiatingOozeTimer = 360000;
-		} else m_uiRadiatingOozeTimer -= diff;
 
 		if (m_uiUnstableOozeTimer <= diff)
 		{
-			DoCast(me, 69558);
-			 m_uiUnstableOozeTimer = 4000;
+			DoCast(me, SPELL_UNSTABLE_OOZE);
+			m_uiUnstableOozeTimer = 6000;
 		} else m_uiUnstableOozeTimer -= diff;
 
-		if (m_uiUnstableExplosionTimer <= diff)
+		if (Aura *UnstableAura = me->GetAura(SPELL_UNSTABLE_OOZE))
 		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71212);
-			m_uiUnstableExplosionTimer = 20000;
-		} else m_uiUnstableExplosionTimer -= diff;
+			if (UnstableAura->GetStackAmount() == 5)
+			{
+				DoCast(SPELL_UNSTABLE_EXPLOSION);
+				me->ForcedDespawn();
+			}
+		}
 
 		DoMeleeAttackIfReady();
 	}
 };
 
-struct npc_OozeLittleAI : public ScriptedAI
+struct npc_ooze_littleAI : public ScriptedAI
 {
-    npc_OozeLittleAI(Creature *pCreature) : ScriptedAI(pCreature)
-    {
+	npc_ooze_littleAI(Creature *pCreature) : ScriptedAI(pCreature)
+	{
 		m_pInstance = pCreature->GetInstanceData();
-    }
-    
-    ScriptedInstance* m_pInstance;
+	}
+
+	ScriptedInstance* m_pInstance;
 
 	uint32 m_uiStickyOozeTimer;
-	uint32 m_uiRadiatingOozeTimer;
+	uint32 m_uiOozeDespawnTimer;
 
-    void Reset()
-    {
-	m_uiStickyOozeTimer = 5000+rand()%2000;
-	m_uiRadiatingOozeTimer = 6000+rand()%3000;
-    }
 
-    void EnterCombat(Unit* who)
-    {
-    }
+	void Reset()
+	{
+		m_uiStickyOozeTimer = 3000;
+                m_uiOozeDespawnTimer = 102000;
+		DoCast(SPELL_RADIATING_OOZE);
+		me->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+		me->SetSpeed(MOVE_WALK, 0.5f);
+	}
 
-    void KilledUnit(Unit *victim)
-    {
-    }
+	void EnterCombat(Unit* who)
+	{
+	}
+
+	void KilledUnit(Unit *victim)
+	{
+	}
 
 	void UpdateAI(const uint32 diff)
 	{
 		if (!UpdateVictim())
 			return;
 
+		if (!m_pInstance || m_pInstance->GetData(DATA_ROTFACE_EVENT) != IN_PROGRESS) 
+			me->ForcedDespawn();
+
 		if (m_uiStickyOozeTimer <= diff)
 		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71208);
-			m_uiStickyOozeTimer = 5000+rand()%3000;
+			DoCast(SPELL_STICKY_OOZE);
+			m_uiStickyOozeTimer = 3000;
 		} else m_uiStickyOozeTimer -= diff;
 
-		if (m_uiRadiatingOozeTimer <= diff)
+		if (m_uiStickyOozeTimer <= diff)
 		{
-			DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 0, true), 71210);
-			m_uiRadiatingOozeTimer = 360000;
-		} else m_uiRadiatingOozeTimer -= diff;
+			DoCast(SPELL_OOZE_NOVA);
+			me->ForcedDespawn();
+		} else m_uiOozeDespawnTimer -= diff;
 
 		DoMeleeAttackIfReady();
 	}
 };
 
-CreatureAI* GetAI_boss_Rotface(Creature* pCreature)
+CreatureAI* GetAI_boss_rotface(Creature* pCreature)
 {
-    return new boss_RotfaceAI(pCreature);
+	return new boss_rotfaceAI(pCreature);
 }
 
-CreatureAI* GetAI_npc_OozeBig(Creature* pCreature)
+CreatureAI* GetAI_npc_ooze_big(Creature* pCreature)
 {
-    return new npc_OozeBigAI(pCreature);
+	return new npc_ooze_bigAI(pCreature);
 }
 
-CreatureAI* GetAI_npc_OozeLittle(Creature* pCreature)
+CreatureAI* GetAI_npc_ooze_little(Creature* pCreature)
 {
-    return new npc_OozeLittleAI(pCreature);
+	return new npc_ooze_littleAI(pCreature);
 }
 
-void AddSC_boss_Rotface()
+void AddSC_boss_rotface()
 {
-    Script* NewScript;
-
-    NewScript = new Script;
-    NewScript->Name = "boss_Rotface";
-    NewScript->GetAI = &GetAI_boss_Rotface;
-    NewScript->RegisterSelf();
+	Script* NewScript;
 
 	NewScript = new Script;
-    NewScript->Name = "npc_OozeBig";
-    NewScript->GetAI = &GetAI_npc_OozeBig;
-    NewScript->RegisterSelf();
+	NewScript->Name = "boss_rotface";
+	NewScript->GetAI = &GetAI_boss_rotface;
+	NewScript->RegisterSelf();
 
 	NewScript = new Script;
-    NewScript->Name = "npc_OozeLittle";
-    NewScript->GetAI = &GetAI_npc_OozeLittle;
-    NewScript->RegisterSelf();
+	NewScript->Name = "npc_ooze_big";
+	NewScript->GetAI = &GetAI_npc_ooze_big;
+	NewScript->RegisterSelf();
+
+	NewScript = new Script;
+	NewScript->Name = "npc_ooze_little";
+	NewScript->GetAI = &GetAI_npc_ooze_little;
+	NewScript->RegisterSelf();
 }
