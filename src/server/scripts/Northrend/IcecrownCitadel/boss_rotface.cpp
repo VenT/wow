@@ -56,6 +56,7 @@ enum Spells
 	SPELL_UNSTABLE_OOZE        = 69558,
 	SPELL_UNSTABLE_EXPLOSION   = 71209,
 	SPELL_MERGE_OOZE           = 69889,
+        SPELL_OOZE_NOVA            = 55081, //spell forcing little ooze and big ooze to despawn after a while - workaround to be removed once the spells are fixed
 };
 
 struct boss_rotfaceAI : public ScriptedAI
@@ -76,12 +77,12 @@ struct boss_rotfaceAI : public ScriptedAI
 
 	void Reset()
 	{
-		m_uiFloodTimer = 20000;
+		m_uiFloodTimer = 6000;
 		m_uiSlimeSprayTimer = 20000;
-		m_uiMutatedInfectionTimer = 20000;
+		m_uiMutatedInfectionTimer = 28000;
 		m_uiBerserkTimer = 360000;
-		m_uiBigOozeTimer = 30000;
-		m_uiLittleOozeTimer = 10000;
+		m_uiBigOozeTimer = 35000;
+		m_uiLittleOozeTimer = 17000;
 
 		if(m_pInstance)
 			m_pInstance->SetData(DATA_ROTFACE_EVENT, NOT_STARTED);  
@@ -132,7 +133,7 @@ struct boss_rotfaceAI : public ScriptedAI
 		{ 
 			Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
 			DoCast(pTarget, SPELL_SUMMON_BIG_OOZE);
-			m_uiBigOozeTimer = 30000;
+			m_uiBigOozeTimer = 35000;
 		}  
 		else m_uiBigOozeTimer -= diff;
 
@@ -153,7 +154,7 @@ struct boss_rotfaceAI : public ScriptedAI
 		if (m_uiLittleOozeTimer <= diff)
 		{
 			DoCast(SPELL_SUMMON_LITTLE_OOZE);
-			m_uiLittleOozeTimer = 10000;
+			m_uiLittleOozeTimer = 17000;
 	    } else m_uiLittleOozeTimer -= diff;
 
 	if (m_uiMutatedInfectionTimer <= diff)
@@ -163,7 +164,7 @@ struct boss_rotfaceAI : public ScriptedAI
 			{
 				DoCast(pTarget, SPELL_MUTATED_INFECTION);
 			}
-		m_uiMutatedInfectionTimer = 20000;
+		m_uiMutatedInfectionTimer = 28000;
 	} else m_uiMutatedInfectionTimer -= diff;
 
 	if (m_uiBerserkTimer <= diff)
@@ -192,8 +193,8 @@ struct npc_ooze_bigAI : public ScriptedAI
 
 	void Reset()
 	{
-		m_uiStickyOozeTimer = 1000;
-		m_uiUnstableOozeTimer = 5000;
+		m_uiStickyOozeTimer = 4000;
+		m_uiUnstableOozeTimer = 8000;
 		DoCast(SPELL_RADIATING_OOZE);
 		me->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 		me->SetSpeed(MOVE_WALK, 0.5f);
@@ -218,13 +219,13 @@ struct npc_ooze_bigAI : public ScriptedAI
 		if (m_uiStickyOozeTimer <= diff)
 		{
 			DoCast(SPELL_STICKY_OOZE);
-			m_uiStickyOozeTimer = 1000;
+			m_uiStickyOozeTimer = 4000;
 		} else m_uiStickyOozeTimer -= diff;
 
 		if (m_uiUnstableOozeTimer <= diff)
 		{
 			DoCast(me, SPELL_UNSTABLE_OOZE);
-			m_uiUnstableOozeTimer = 5000;
+			m_uiUnstableOozeTimer = 6000;
 		} else m_uiUnstableOozeTimer -= diff;
 
 		if (Aura *UnstableAura = me->GetAura(SPELL_UNSTABLE_OOZE))
@@ -250,10 +251,13 @@ struct npc_ooze_littleAI : public ScriptedAI
 	ScriptedInstance* m_pInstance;
 
 	uint32 m_uiStickyOozeTimer;
+	uint32 m_uiOozeDespawnTimer;
+
 
 	void Reset()
 	{
-		m_uiStickyOozeTimer = 1000;
+		m_uiStickyOozeTimer = 3000;
+                m_uiOozeDespawnTimer = 102000;
 		DoCast(SPELL_RADIATING_OOZE);
 		me->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 		me->SetSpeed(MOVE_WALK, 0.5f);
@@ -278,8 +282,14 @@ struct npc_ooze_littleAI : public ScriptedAI
 		if (m_uiStickyOozeTimer <= diff)
 		{
 			DoCast(SPELL_STICKY_OOZE);
-			m_uiStickyOozeTimer = 1000;
+			m_uiStickyOozeTimer = 3000;
 		} else m_uiStickyOozeTimer -= diff;
+
+		if (m_uiStickyOozeTimer <= diff)
+		{
+			DoCast(SPELL_OOZE_NOVA);
+			me->ForcedDespawn();
+		} else m_uiOozeDespawnTimer -= diff;
 
 		DoMeleeAttackIfReady();
 	}
