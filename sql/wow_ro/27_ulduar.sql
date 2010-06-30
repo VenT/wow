@@ -15,3 +15,13 @@ UPDATE `gameobject_template` SET `type` = 22, `data0` = 53141, `data2` = 1, `dat
 DELETE FROM `creature` WHERE `id`=33672 AND guid IN (136552, 136553);
 INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (136553, 33672, 603, 1, 1, 28935, 0, -815.68, -197.498, 429.925, 5.525, 180, 0, 0, 9416, 8459, 0, 0);
+
+-- Achievement The Antechamber of Ulduar
+DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (10578, 10579, 10580, 10581, 10598, 10599);
+INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
+(10578, 12, 0, 0),
+(10580, 12, 0, 0),
+(10598, 12, 0, 0),
+(10579, 12, 1, 0),
+(10581, 12, 1, 0),
+(10599, 12, 1, 0);

@@ -256,6 +256,7 @@ struct boss_steelbreakerAI : public ScriptedAI
         {
             pInstance->SetBossState(BOSS_ASSEMBLY, DONE);
             pInstance->DoCompleteAchievement(ACHIEVEMENT_CHOOSE_STEELBREAKER);
+            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65195);
         }
         else me->SetLootRecipient(0);
             
@@ -391,6 +392,7 @@ struct boss_runemaster_molgeimAI : public ScriptedAI
         {
             pInstance->SetBossState(BOSS_ASSEMBLY, DONE);
             pInstance->DoCompleteAchievement(ACHIEVEMENT_CHOOSE_MOLGEIM);
+            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65195);
         }
         else me->SetLootRecipient(0);
             
@@ -554,7 +556,8 @@ struct boss_stormcaller_brundirAI : public ScriptedAI
         if(IsEncounterComplete(pInstance, me) && pInstance)
         {
             pInstance->SetBossState(BOSS_ASSEMBLY, DONE);
-            pInstance->DoCompleteAchievement(ACHIEVEMENT_CHOOSE_BRUNDIR);            
+            pInstance->DoCompleteAchievement(ACHIEVEMENT_CHOOSE_BRUNDIR);
+            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65195);
         }
         else me->SetLootRecipient(0);
             
