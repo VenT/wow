@@ -506,12 +506,13 @@ bool GossipHello_keeper_norgannon(Player* pPlayer, Creature* pCreature)
     InstanceData *data = pPlayer->GetInstanceData();
     ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
     
-    if (data->GetBossState(BOSS_LEVIATHAN) == NOT_STARTED && pInstance && pPlayer)
-    {
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_1,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
-        pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
-    }
+    if (pInstance && pPlayer)
+        if (data->GetBossState(BOSS_LEVIATHAN) != DONE || data->GetBossState(BOSS_LEVIATHAN) != SPECIAL)
+        {
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_1,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
+            pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
+        }
     else pPlayer->SEND_GOSSIP_MENU(1, pCreature->GetGUID());
 
     return true;
