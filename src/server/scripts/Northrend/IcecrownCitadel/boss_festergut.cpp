@@ -73,7 +73,7 @@ struct boss_festergutAI : public ScriptedAI
         m_uiInhaleBlightTimer  = 33000;
         m_uiVileGasTimer = 30000;
         m_uiGasSporesTimer = 20000;
-        m_uiGastricBloatTimer = 10000;
+        m_uiGastricBloatTimer = 15000;
         m_uiBerserkTimer = 300000;
 
         if (m_pInstance)
@@ -141,7 +141,7 @@ struct boss_festergutAI : public ScriptedAI
         {
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
             DoCast(pTarget, SPELL_GASTRIC_BLOAT);
-            m_uiGastricBloatTimer = 15000;
+            m_uiGastricBloatTimer = 21000;
         } else m_uiGastricBloatTimer -= uiDiff;
 
         if(m_uiInhaleBlightTimer < uiDiff)
@@ -157,12 +157,23 @@ struct boss_festergutAI : public ScriptedAI
             m_uiVileGasTimer = 30000;
         } else m_uiVileGasTimer -= uiDiff;
 
-        if (m_uiGasSporesTimer < uiDiff)
+        if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
         {
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            DoCast(pTarget, SPELL_GAS_SPORES);
-            m_uiGasSporesTimer = 35000;
-        } else m_uiGasSporesTimer -= uiDiff;
+            if (m_uiGasSporesTimer < uiDiff)
+            {
+                DoScriptText(SAY_GAS_SPORES, me);
+                uint32 count = RAID_MODE(2,3,2,3);
+                for (uint8 i = 1; i <= count; i++)
+                {
+                    Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 200, true);
+                    if (pTarget && !pTarget->HasAura(SPELL_GAS_SPORES))
+                    {
+                        DoCast(pTarget, SPELL_GAS_SPORES);
+                    }
+                }
+                m_uiGasSporesTimer = 31000;
+            } else m_uiGasSporesTimer -= uiDiff;
+        }
 
         if (m_uiPungentBlightTimer < uiDiff)
         {
