@@ -259,7 +259,7 @@ struct boss_lady_deathwisperAI : public ScriptedAI
 				m_uiSummonWaveTimer = 60000;
 			} else m_uiSummonWaveTimer -= uiDiff;
 
-			if (!me->HasAura(SPELL_MANA_BARRIER))
+			if ((me->GetPower(POWER_MANA)*100 / me->GetMaxPower(POWER_MANA)) < 1)
 			{
 				DoScriptText(SAY_PHASE_2, me);
 				DoResetThreat();
@@ -269,6 +269,9 @@ struct boss_lady_deathwisperAI : public ScriptedAI
 
 		if (m_uiPhase == 2)
 		{
+      if (me->HasAura(SPELL_MANA_BARRIER))
+        me->RemoveAurasDueToSpell(SPELL_MANA_BARRIER);
+
 			if (me->HasAura(SPELL_ROOT))
 				me->RemoveAurasDueToSpell(SPELL_ROOT);
 

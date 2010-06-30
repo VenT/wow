@@ -1068,7 +1068,7 @@ void AuraEffect::UpdatePeriodic(Unit * caster)
                         --m_amount;
                     break;
             }
-               // Lady Deathwhisper - Mana Barrier
+/*               // Lady Deathwhisper - Mana Barrier
                 case 70842:
                 {
                     Unit * caster = GetBase()->GetUnitOwner();
@@ -1090,7 +1090,7 @@ void AuraEffect::UpdatePeriodic(Unit * caster)
                         caster->SetPower(POWER_MANA, caster->GetPower(POWER_MANA) - hp_to_restore);
                     }
                 break;
-				}
+				}*/
             break;
         case SPELL_AURA_PERIODIC_DUMMY:
             switch(GetSpellProto()->SpellFamilyName)
