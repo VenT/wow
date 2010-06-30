@@ -3781,6 +3781,11 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->AttributesEx3 |= SPELL_ATTR_EX3_NO_INITIAL_AGGRO;
             count++;
             break;
+        case 62345:     // Ram (Ulduar Siege)
+        case 62308:     // Ram (Ulduar Demolisher)
+            spellInfo->Effect[0] = 0;
+            count++;
+            break;
         case 61306:     // Kirin Tor Commendation Badge
         case 61308:     // Wyrmrest Commendation Badge
         case 61311:     // Argent Crusade Commendation Badge

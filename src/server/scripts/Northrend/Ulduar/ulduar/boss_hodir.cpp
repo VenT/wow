@@ -19,8 +19,8 @@
 /* ScriptData
 SDName: Hodir
 SDAuthor: PrinceCreed
-SD%Complete: 90
-SDComments: TODO: Achievements and Hardmode Chest spawn
+SD%Complete: 95
+SDComments:
 EndScriptData */
 
 #include "ScriptPCH.h"
@@ -334,20 +334,22 @@ struct boss_hodir_AI : public BossAI
         std::list<HostileReference*> ThreatList = me->getThreatManager().getThreatList();
         for (std::list<HostileReference*>::const_iterator itr = ThreatList.begin(); itr != ThreatList.end(); ++itr)
         {
-            Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
-            
-            if (pTarget->HasAura(SPELL_BLOCK_OF_ICE))
+            if (Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid()))
             {
-                DoCast(pTarget, SPELL_FROZEN_KILL);
-                continue;
-            }
-            else
-            {
-                if (GetClosestCreatureWithEntry(pTarget, NPC_ICICLE_TARGET, 5.0f))
+                if (pTarget->HasAura(SPELL_BLOCK_OF_ICE))
+                {
+                    DoCast(pTarget, SPELL_FROZEN_KILL);
                     continue;
                     
-                else if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 105000))
-                    pIceBlock->CastSpell(pTarget, SPELL_BLOCK_OF_ICE, true);
+                }
+               else
+                {
+                    if (GetClosestCreatureWithEntry(pTarget, NPC_ICICLE_TARGET, 5.0f))
+                        continue;
+
+                    else if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 105000))
+                        pIceBlock->CastSpell(pTarget, SPELL_BLOCK_OF_ICE, true);
+              }
             }
         }
     }
