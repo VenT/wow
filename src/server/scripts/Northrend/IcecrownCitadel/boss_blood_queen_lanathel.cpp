@@ -206,7 +206,7 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
                 SelectTargetList(pTargets, 5, SELECT_TARGET_RANDOM, 80, true);
                 for (std::list<Unit*>::const_iterator i = pTargets.begin(); i != pTargets.end(); ++i)
                     DoCast(*i, RAID_MODE(SPELL_TWILIGHT_BLOODBOLT,SPELL_TWILIGHT_BLOODBOLT));
-                m_uiBloodboldSplashTimer = 2000;
+                m_uiBloodboldSplashTimer = 6000;
             } else m_uiBloodboldSplashTimer -= uiDiff;
 
             if (m_uiLandingTimer < uiDiff)
@@ -257,7 +257,7 @@ struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
         if (m_uiSwarmingShadowTimer < uiDiff)
         {
             DoCast(me, RAID_MODE(SPELL_SWARMING_SHADOW_10_NORMAL, SPELL_SWARMING_SHADOW_25_NORMAL, SPELL_SWARMING_SHADOW_10_HEROIC, SPELL_SWARMING_SHADOW_25_HEROIC));
-            m_uiSwarmingShadowTimer = 2000;
+            m_uiSwarmingShadowTimer = 8000;
         } else m_uiSwarmingShadowTimer -= uiDiff;
     }
 };
