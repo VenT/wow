@@ -28,7 +28,6 @@ enum Yells
     SAY_KILL2           = -1665977,
     SAY_BERSERK         = -1665978,
     SAY_DEATH           = -1665979,
-    /*
     SAY_INTRO_1_A       = -1665960,
     SAY_INTRO_2_A       = -1665961,
     SAY_INTRO_3_A       = -1665962,
@@ -41,7 +40,6 @@ enum Yells
     SAY_INTRO_6_H       = -1665969,
     SAY_INTRO_7_H       = -1665970,
     SAY_INTRO_8_H       = -1665972,
-    */
 };
 
 enum SaurfangSpells
@@ -60,7 +58,7 @@ enum SaurfangSpells
     SPELL_FALLEN_CHAMPION         = 72293,
     SPELL_FALLEN_CHAMPION_AURA    = 72260,
     SPELL_BOILING_BLOOD_10_NORMAL = 72385,
-    //SPELL_BOILING_BLOOD_25_NORMAL = 72441,
+    SPELL_BOILING_BLOOD_25_NORMAL = 72441,
     SPELL_BLOOD_NOVA_10_NORMAL    = 72378,
     SPELL_BLOOD_NOVA_25_NORMAL    = 73058,
     SPELL_BLOOD_NOVA_10_HEROIC    = 72380,
@@ -201,8 +199,7 @@ struct boss_saurfangAI : public ScriptedAI
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_BOILING_BLOOD_10_NORMAL);
             m_uiBoilingBloodTimer = 20000;
-        }
-        else m_uiBoilingBloodTimer -= uiDiff;
+        } else m_uiBoilingBloodTimer -= uiDiff;
 
 
         if (m_uiBloodNovaTimer < uiDiff)
@@ -214,25 +211,21 @@ struct boss_saurfangAI : public ScriptedAI
                 DoCast(pTarget, RAID_MODE(SPELL_BLOOD_NOVA_10_NORMAL,SPELL_BLOOD_NOVA_25_NORMAL,SPELL_BLOOD_NOVA_10_HEROIC,SPELL_BLOOD_NOVA_25_HEROIC));
                 m_uiBloodNovaTimer = 20000;
             }
-        }
-        else m_uiBloodNovaTimer -= uiDiff;
+        } else m_uiBloodNovaTimer -= uiDiff;
 
         if (m_uiSummonBloodBeastTimer <= uiDiff)
         {
             DoCast(me, SPELL_SUMMON_BLOOD_BEAST_1);
             DoCast(me, SPELL_SUMMON_BLOOD_BEAST_2);
-
-            if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+            if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
             {
                 DoCast(me, SPELL_SUMMON_BLOOD_BEAST_3);
                 DoCast(me, SPELL_SUMMON_BLOOD_BEAST_4);
                 DoCast(me, SPELL_SUMMON_BLOOD_BEAST_5);
             }
-
             DoScriptText(SAY_BLOODBEASTS, me);
             m_uiSummonBloodBeastTimer = 40000;
-        } 
-        else m_uiSummonBloodBeastTimer -= uiDiff;
+        } else m_uiSummonBloodBeastTimer -= uiDiff;
 
         if (me->GetPower(POWER_ENERGY) == 100)
         {
@@ -248,8 +241,7 @@ struct boss_saurfangAI : public ScriptedAI
             DoCast(pTarget, RAID_MODE(SPELL_RUNE_OF_BLOOD_10_NORMAL,SPELL_RUNE_OF_BLOOD_25_NORMAL,SPELL_RUNE_OF_BLOOD_10_HEROIC,SPELL_RUNE_OF_BLOOD_25_HEROIC));
             me->ModifyHealth(me->GetMaxHealth() * 0.05);
             m_uiRuneOfBloodTimer = 30000;
-        }
-        else m_uiRuneOfBloodTimer -= uiDiff;
+        } else m_uiRuneOfBloodTimer -= uiDiff;
 
         if(me->GetHealth()*100 / me->GetMaxHealth() < 30)
         {
@@ -262,9 +254,9 @@ struct boss_saurfangAI : public ScriptedAI
         if (m_uiBerserkTimer < uiDiff)
         {
             DoCast(SPELL_BERSERK);
+			DoScriptText(SAY_BERSERK, me);
             m_uiBerserkTimer = 480000;
-        }
-        else m_uiBerserkTimer -= uiDiff;
+        } else m_uiBerserkTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
@@ -313,6 +305,8 @@ struct npc_bloodbeastAI : public ScriptedAI
         if (!m_pInstance || m_pInstance->GetData(DATA_SAURFANG_EVENT) != IN_PROGRESS) 
             me->ForcedDespawn();
 
+     if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+     {
         if (m_uiScentOfBloodTimer < uiDiff)
         {
             if (!ScentOfBlood && (me->GetHealth()*100) / me->GetMaxHealth() < 20)
@@ -323,6 +317,7 @@ struct npc_bloodbeastAI : public ScriptedAI
                 m_uiScentOfBloodTimer = 5000;
             }
         } else m_uiScentOfBloodTimer -= uiDiff;
+	 }
 
         DoMeleeAttackIfReady();
     }
