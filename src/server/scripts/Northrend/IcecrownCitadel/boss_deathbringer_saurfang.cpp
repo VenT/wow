@@ -100,8 +100,8 @@ struct boss_saurfangAI : public ScriptedAI
 
     void Reset()
     {
-        m_uiBoilingBloodTimer    = 20000;
-        m_uiBloodNovaTimer = 20000;
+        m_uiBoilingBloodTimer    = 15000;
+        m_uiBloodNovaTimer = 23000;
         m_uiRuneOfBloodTimer = 30000;
         m_uiSummonBloodBeastTimer = 40000;
         m_uiBerserkTimer = 480000;
@@ -209,7 +209,7 @@ struct boss_saurfangAI : public ScriptedAI
             {
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 DoCast(pTarget, RAID_MODE(SPELL_BLOOD_NOVA_10_NORMAL,SPELL_BLOOD_NOVA_25_NORMAL,SPELL_BLOOD_NOVA_10_HEROIC,SPELL_BLOOD_NOVA_25_HEROIC));
-                m_uiBloodNovaTimer = 20000;
+                m_uiBloodNovaTimer = 23000;
             }
         } else m_uiBloodNovaTimer -= uiDiff;
 
@@ -224,7 +224,7 @@ struct boss_saurfangAI : public ScriptedAI
                 DoCast(me, SPELL_SUMMON_BLOOD_BEAST_5);
             }
             DoScriptText(SAY_BLOODBEASTS, me);
-            m_uiSummonBloodBeastTimer = 40000;
+            m_uiSummonBloodBeastTimer = 48000;
         } else m_uiSummonBloodBeastTimer -= uiDiff;
 
         if (me->GetPower(POWER_ENERGY) == 100)
@@ -240,7 +240,7 @@ struct boss_saurfangAI : public ScriptedAI
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
             DoCast(pTarget, RAID_MODE(SPELL_RUNE_OF_BLOOD_10_NORMAL,SPELL_RUNE_OF_BLOOD_25_NORMAL,SPELL_RUNE_OF_BLOOD_10_HEROIC,SPELL_RUNE_OF_BLOOD_25_HEROIC));
             me->ModifyHealth(me->GetMaxHealth() * 0.05);
-            m_uiRuneOfBloodTimer = 30000;
+            m_uiRuneOfBloodTimer = 40000;
         } else m_uiRuneOfBloodTimer -= uiDiff;
 
         if(me->GetHealth()*100 / me->GetMaxHealth() < 30)
@@ -282,7 +282,7 @@ struct npc_bloodbeastAI : public ScriptedAI
 
         ScentOfBlood = false;
 
-        m_uiScentOfBloodTimer = 5000;
+        m_uiScentOfBloodTimer = 9000;
     }
 
     void EnterCombat(Unit* pWho)
@@ -314,7 +314,7 @@ struct npc_bloodbeastAI : public ScriptedAI
                 if (urand(0,1))
                 DoCast(me, SPELL_SCENT_OF_BLOOD);
                 ScentOfBlood = true;
-                m_uiScentOfBloodTimer = 5000;
+                m_uiScentOfBloodTimer = 9000;
             }
         } else m_uiScentOfBloodTimer -= uiDiff;
 	 }
