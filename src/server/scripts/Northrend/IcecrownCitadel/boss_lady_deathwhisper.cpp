@@ -259,7 +259,7 @@ struct boss_lady_deathwisperAI : public ScriptedAI
 				m_uiSummonWaveTimer = 60000;
 			} else m_uiSummonWaveTimer -= uiDiff;
 
-			if ((me->GetPower(POWER_MANA)*100 / me->GetMaxPower(POWER_MANA)) < 1)
+			if (!me->HasAura(SPELL_MANA_BARRIER))
 			{
 				DoScriptText(SAY_PHASE_2, me);
 				DoResetThreat();
@@ -269,9 +269,6 @@ struct boss_lady_deathwisperAI : public ScriptedAI
 
 		if (m_uiPhase == 2)
 		{
-			if (me->HasAura(SPELL_MANA_BARRIER))
-				me->RemoveAurasDueToSpell(SPELL_MANA_BARRIER);
-
 			if (me->HasAura(SPELL_ROOT))
 				me->RemoveAurasDueToSpell(SPELL_ROOT);
 
@@ -297,27 +294,22 @@ struct boss_lady_deathwisperAI : public ScriptedAI
 				m_uiInsignificanceTimer = 30000;
 			} else m_uiInsignificanceTimer -= uiDiff;
 
-			if (getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+			if (m_uiSummonWaveTimer < uiDiff)
 			{
-				if (m_uiSummonWaveTimer < uiDiff)
-				{
-					Unit* pSummoned= NULL;
-					me->SummonCreature(NPC_CULT_FANATIC,-619.006,2158.104,50.848,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
-					me->SummonCreature(NPC_CULT_ADHERENT,-598.697,2157.767,50.848,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
-					me->SummonCreature(NPC_CULT_FANATIC,-577.992,2156.989,50.848,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
-					m_uiSummonWaveTimer = 60000;
-				} else m_uiSummonWaveTimer -= uiDiff;
-			}
-
-			if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC)
-			{
-				if (m_uiSummonWaveTimer < uiDiff)
-				{
-					Unit* pSummoned= NULL;
-					me->SummonCreature(RAND(NPC_CULT_FANATIC, NPC_CULT_ADHERENT), -555.643,2211.281,49.476,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
-					m_uiSummonWaveTimer = 60000;
-				} else m_uiSummonWaveTimer -= uiDiff;
-			}
+				if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC)
+			    {
+			        Unit* pSummoned= NULL;
+			        me->SummonCreature(RAND(NPC_CULT_FANATIC, NPC_CULT_ADHERENT), -555.643,2211.281,49.476,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
+				}
+				if (getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+			    {
+				    Unit* pSummoned= NULL;
+				    me->SummonCreature(NPC_CULT_FANATIC,-619.006,2158.104,50.848,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
+				    me->SummonCreature(NPC_CULT_ADHERENT,-598.697,2157.767,50.848,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
+				    me->SummonCreature(NPC_CULT_FANATIC,-577.992,2156.989,50.848,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,10000);
+				}
+				m_uiSummonWaveTimer = 60000;
+			} else m_uiSummonWaveTimer -= uiDiff;
 
 			if (m_uiShadeTimer < uiDiff)
 			{
