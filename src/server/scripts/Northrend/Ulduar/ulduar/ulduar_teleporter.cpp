@@ -21,7 +21,7 @@ bool GoHello_ulduar_teleporter( Player *pPlayer, GameObject *pGO )
     if(!pInstance | !data) return true;
 
     pPlayer->ADD_GOSSIP_ITEM(0, "Expedition Base Camp", GOSSIP_SENDER_MAIN, BASE_CAMP);
-    pPlayer->ADD_GOSSIP_ITEM(0, "Formation Grounds", GOSSIP_SENDER_MAIN, GROUNDS);
+//    pPlayer->ADD_GOSSIP_ITEM(0, "Formation Grounds", GOSSIP_SENDER_MAIN, GROUNDS);
     if (data->GetBossState(BOSS_LEVIATHAN) == DONE)
     {
         pPlayer->ADD_GOSSIP_ITEM(0, "Colossal Forge", GOSSIP_SENDER_MAIN, FORGE);
@@ -35,7 +35,7 @@ bool GoHello_ulduar_teleporter( Player *pPlayer, GameObject *pGO )
                 if (data->GetBossState(BOSS_AURIAYA) == DONE)
                 {
                     pPlayer->ADD_GOSSIP_ITEM(0, "Conservatory of Life", GOSSIP_SENDER_MAIN, CONSERVATORY);
-                    pPlayer->ADD_GOSSIP_ITEM(0, "Spark of Imagination", GOSSIP_SENDER_MAIN, SPARK_IMAGINATION);
+//                    pPlayer->ADD_GOSSIP_ITEM(0, "Spark of Imagination", GOSSIP_SENDER_MAIN, SPARK_IMAGINATION);
                     if (data->GetBossState(BOSS_VEZAX) == DONE)
                         pPlayer->ADD_GOSSIP_ITEM(0, "Descent into Madness", GOSSIP_SENDER_MAIN, DESCENT_MADNESS);
                 }
