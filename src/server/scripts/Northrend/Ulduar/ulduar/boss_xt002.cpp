@@ -79,7 +79,7 @@ enum Timers
     TIMER_TRAMPLE                               = 22000,
     TIMER_UPPERCUT                              = 17000,
 
-    TIMER_SPAWN_ADD                             = 16000,
+    TIMER_SPAWN_ADD                             = 12000,
 };
 
 enum Creatures

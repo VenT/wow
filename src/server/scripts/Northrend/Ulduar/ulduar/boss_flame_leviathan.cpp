@@ -258,7 +258,7 @@ struct boss_flame_leviathanAI : public BossAI
                 break;
             case EVENT_MISSILE:
                 DoCastAOE(SPELL_MISSILE_BARRAGE);
-                events.RescheduleEvent(EVENT_MISSILE, 3000);
+                events.RescheduleEvent(EVENT_MISSILE, 1500);
                 break;
             case EVENT_VENT:
                 DoCastAOE(SPELL_FLAME_VENTS);
@@ -507,12 +507,13 @@ bool GossipHello_keeper_norgannon(Player* pPlayer, Creature* pCreature)
     ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
     
     if (pInstance && pPlayer)
-        if (data->GetBossState(BOSS_LEVIATHAN) != DONE || data->GetBossState(BOSS_LEVIATHAN) != SPECIAL)
-        {
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_1,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
-            pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
-        }
+       if (data->GetBossState(BOSS_LEVIATHAN) != DONE)
+            if (data->GetBossState(BOSS_LEVIATHAN) != SPECIAL)
+            {
+                pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_1,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
+                pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
+            }
     else pPlayer->SEND_GOSSIP_MENU(1, pCreature->GetGUID());
 
     return true;
