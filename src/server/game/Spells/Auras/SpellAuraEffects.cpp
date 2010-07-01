@@ -364,7 +364,8 @@ pAuraEffectHandler AuraEffectHandler[TOTAL_AURAS]=
     &AuraEffect::HandleNULL,                                      //307 absorb healing?
     &AuraEffect::HandleNULL,                                      //308 new aura for hunter traps
     &AuraEffect::HandleNULL,                                      //309 absorb healing?
-    &AuraEffect::HandleNoImmediateEffect,                         //310 SPELL_AURA_MOD_PET_AOE_DAMAGE_AVOIDANCE    &AuraEffect::HandleNULL,                                      //311 0 spells in 3.3
+    &AuraEffect::HandleNoImmediateEffect,                         //310 SPELL_AURA_MOD_PET_AOE_DAMAGE_AVOIDANCE
+    &AuraEffect::HandleNULL,                                      //311 0 spells in 3.3
     &AuraEffect::HandleNULL,                                      //312 0 spells in 3.3
     &AuraEffect::HandleNULL,                                      //313 0 spells in 3.3
     &AuraEffect::HandleNULL,                                      //314 1 test spell (reduce duration of silince/magic)
