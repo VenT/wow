@@ -7854,6 +7854,12 @@ void Spell::SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const *
                 summon->SetDisplayId(1126);
 
         summon->AI()->EnterEvadeMode();
+
+        if (AuraEffect *avoidance = m_originalCaster->GetAuraEffect(SPELL_AURA_ADD_FLAT_MODIFIER, SPELLFAMILY_DEATHKNIGHT, 2718, 0)) {
+            int32 bp = avoidance->GetAmount() / 1000;
+            summon->CastCustomSpell(summon, 62137, &bp, NULL, NULL, true);
+        }
+
     }
 }
 
