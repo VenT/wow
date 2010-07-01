@@ -129,7 +129,7 @@ if(MSVC)
 set(scripts_STAT_SRCS
     ../game/PrecompiledHeaders/ScriptPCH.cpp
     ${scripts_STAT_SRCS})
-endif(
+endif()
 
 add_library(scripts STATIC ${scripts_STAT_SRCS})
 
