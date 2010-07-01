@@ -307,6 +307,56 @@ UPDATE `creature_template` SET `unit_flags` = 0 WHERE `entry` = 32941;
 UPDATE `creature_template` SET `unit_flags` = 33686016, `flags_extra` = 2 WHERE `entry` = 30298;
 
 DELETE FROM `creature` WHERE `id` = 32938;
+DELETE FROM `creature` WHERE id = 34014;
+UPDATE `creature_template` SET `unit_flags` = 0, `type_flags` = 0 WHERE `entry` = 33515;
+UPDATE `creature_template` SET `equipment_id` = 2500 WHERE `entry` = 33515;
+
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `ScriptName` = 'feral_defender_trigger' WHERE `entry` = 34096;
+UPDATE `creature_template` SET `ScriptName` = 'mob_feral_defender' WHERE `entry` = 34035;
+UPDATE `creature_template` SET `ScriptName` = 'mob_sanctum_sentry' WHERE `entry` = 34014;
+UPDATE `creature_template` SET `ScriptName` = 'seeping_trigger' WHERE `entry` = 34098;
+
+DELETE FROM `creature_equip_template` WHERE entry = 2500;
+INSERT INTO `creature_equip_template` VALUES ('2500','45315','0','0');
+
+DELETE FROM `creature_addon` WHERE guid = 137496;
+INSERT INTO `creature_addon` VALUES ('137496','1033515','0','0','0','0','0');
+
+DELETE FROM `waypoint_data` WHERE id = 1033515;
+INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `delay`, `move_flag`, `action`, `action_chance`, `wpguid`) VALUES
+('1033515','1','1968.46','51.75','417.72','0','0','0','100','0'),
+('1033515','2','1956.75','49.22','411.35','0','0','0','100','0'),
+('1033515','3','1938.90','42.09','411.35','3000','0','0','100','0'),
+('1033515','4','1956.75','49.22','411.35','0','0','0','100','0'),
+('1033515','5','1968.46','51.75','417.72','0','0','0','100','0'),
+('1033515','6','2011.43','44.91','417.72','0','0','0','100','0'),
+('1033515','7','2022.65','37.74','411.36','0','0','0','100','0'),
+('1033515','8','2046.65','9.61','411.36','0','0','0','100','0'),
+('1033515','9','2053.4','-8.65','421.68','0','0','0','100','0'),
+('1033515','10','2053.14','-39.8','421.66','0','0','0','100','0'),
+('1033515','11','2046.26','-57.96','411.35','0','0','0','100','0'),
+('1033515','12','2022.42','-86.39','411.35','0','0','0','100','0'),
+('1033515','13','2011.26','-92.95','417.71','0','0','0','100','0'),
+('1033515','14','1969.43','-100.02','417.72','0','0','0','100','0'),
+('1033515','15','1956.66','-97.4','411.35','0','0','0','100','0'),
+('1033515','16','1939.18','-90.90','411.35','3000','0','0','100','0'),
+('1033515','17','1956.66','-97.4','411.35','0','0','0','100','0'),
+('1033515','18','1969.43','-100.02','417.72','0','0','0','100','0'),
+('1033515','19','2011.26','-92.95','417.71','0','0','0','100','0'),
+('1033515','20','2022.42','-86.39','411.35','0','0','0','100','0'),
+('1033515','21','2046.26','-57.96','411.35','0','0','0','100','0'),
+('1033515','22','2053.14','-39.8','421.66','0','0','0','100','0'),
+('1033515','23','2053.4','-8.65','421.68','0','0','0','100','0'),
+('1033515','24','2046.65','9.61','411.36','0','0','0','100','0'),
+('1033515','25','2022.65','37.74','411.36','0','0','0','100','0'),
+('1033515','26','2011.43','44.91','417.72','0','0','0','100','0');
+UPDATE `creature_template` SET `faction_A` = 35, `faction_H` = 35, `unit_flags` = 33554434, `ScriptName` = 'mob_iron_construct', `flags_extra` = 0 WHERE `entry` = 33121;
+
+DELETE FROM `creature_template` WHERE `entry` IN (33119);
+INSERT INTO `creature_template` VALUES
+('33119','0','0','0','0','0','13069','0','0','0','Scorch trigger','','','0','80','80','2','16','16','0','1','1.14286','85','1','0','0','0','0','1','2000','0','1','0','0','0','0','0','0','0','0','0','0','4','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','4','1','1','0','0','0','0','0','0','0','94','1','0','0','0','mob_scorch_ground','11159');
+
+DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33119);
 -- Ulduar crash fixes
 UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=33142;
 UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=33139;
@@ -452,6 +502,39 @@ DELETE FROM `creature_model_info` WHERE `modelid`=28831;
 INSERT INTO `creature_model_info` (`modelid`, `bounding_radius`, `combat_reach`, `gender`, `modelid_other_gender`) VALUES
 (28831, 0.5, 7, 2, 0);
 
+UPDATE `creature_template` SET `ScriptName` = 'boss_elder_brightleaf' WHERE `entry` =32915;
+UPDATE `creature_template` SET `ScriptName` = 'boss_elder_ironbranch' WHERE `entry` =32913;
+UPDATE `creature_template` SET `ScriptName` = 'boss_elder_stonebark' WHERE `entry` =32914;
+UPDATE `creature_template` SET `ScriptName` = 'creature_sun_beam', `unit_flags` = 33685510, `modelid1` = 11686, `modelid2` = 0 WHERE `entry` =33170;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` = 393220, `ScriptName` = 'creature_iron_roots' WHERE `entry` = 33168;
+
+DELETE FROM `spell_linked_spell` WHERE `spell_effect` = -62243;
+INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+(62217, -62243, 1, 'cancels the effects of Unstable Sun Beam'),
+(62922, -62243, 1, 'cancels the effects of Unstable Sun Beam');
+
+DELETE FROM `creature` WHERE `id` IN (33378, 32892);
+UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0 WHERE `entry`IN (33378, 32892);
+DELETE FROM `creature` WHERE `guid` IN (136718, 136694, 136757, 136700, 136754, 136666, 136718, 136653);
+
+DELETE FROM `gameobject_template` WHERE `entry`=194265;
+INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES
+('194265','1','295','Lever','','','','0','16','3','0','0','0','0','0','0','0','0','6000','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','11403');
+
+UPDATE `gameobject` SET `id` = 194265, `rotation2` = 1, `rotation3` = 0, `spawntimesecs` = 7200, `animprogress` = 100 WHERE `guid` = 55194;
+
+DELETE FROM `creature` WHERE `guid`=136816;
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
+('136816','33725','603','1','1','16925','0','2134.93','-339.696','437.311','0','604800','0','0','12600','0','0','0');
+
+UPDATE `creature_template` SET `ScriptName` = '' WHERE `entry` = 33725;
+UPDATE `creature_template` SET `flags_extra` = 2, `ScriptName` = 'thorim_phase_trigger' WHERE `entry` = 32892;
+
+DELETE FROM `creature_addon` WHERE `guid`IN (136059, 136816);
+INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
+('136059','0','0','0','1','0','40775 0'),
+('136816','0','0','0','1','0','40775 0');
+UPDATE `creature_template` SET `dmgschool` = 4, `dmg_multiplier` = 7.5, `unit_flags` = 33587202, `ScriptName` = 'npc_sif' WHERE `entry` = 33196;
 
 
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger`=62475;
