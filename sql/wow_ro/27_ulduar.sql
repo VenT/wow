@@ -1,3 +1,6 @@
+DELETE FROM areatrigger_scripts WHERE `entry`=4156;
+INSERT INTO areatrigger_scripts VALUES (4156,'at_naxxramas_frostwyrm_wing');
+
 DELETE FROM `script_texts` WHERE `entry` BETWEEN -1603999 AND -1603000;
 INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 -- Algalon
@@ -479,7 +482,6 @@ INSERT INTO `spell_script_target` (`entry`, `type`, `targetEntry`) VALUES('62016
 UPDATE `creature_template` SET `unit_flags` = 0, `ScriptName` = 'mob_runic_colossus' WHERE `entry` = 32872;
 UPDATE `creature_template` SET `unit_flags` = 0, `ScriptName` = 'mob_rune_giant' WHERE `entry` = 32873;
 UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0, `ScriptName` = 'thorim_trap_bunny' WHERE `entry` IN (33725, 33282);
-UPDATE `creature_template` SET `flags_extra` = 0, `ScriptName` = 'thorim_energy_source' WHERE `entry` = 32892;
 UPDATE `creature_template` SET `ScriptName` = 'boss_thorim' WHERE `entry` = 32865;
 DELETE FROM `creature` WHERE `id`=33282;
 UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` IN (33233,33259);
@@ -531,7 +533,7 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 ('136816','33725','603','1','1','16925','0','2134.93','-339.696','437.311','0','604800','0','0','12600','0','0','0');
 
 UPDATE `creature_template` SET `ScriptName` = '' WHERE `entry` = 33725;
-UPDATE `creature_template` SET `flags_extra` = 2, `ScriptName` = 'thorim_phase_trigger' WHERE `entry` = 32892;
+UPDATE `creature_template` SET `flags_extra` = 0, `ScriptName` = 'thorim_energy_source' WHERE `entry` = 32892;
 
 DELETE FROM `creature_addon` WHERE `guid`IN (136059, 136816);
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
