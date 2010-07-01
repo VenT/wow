@@ -481,6 +481,9 @@ UPDATE `creature_template` SET `unit_flags` = 0, `ScriptName` = 'mob_rune_giant'
 UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0, `ScriptName` = 'thorim_trap_bunny' WHERE `entry` IN (33725, 33282);
 UPDATE `creature_template` SET `flags_extra` = 0, `ScriptName` = 'thorim_energy_source' WHERE `entry` = 32892;
 UPDATE `creature_template` SET `ScriptName` = 'boss_thorim' WHERE `entry` = 32865;
+DELETE FROM `creature` WHERE `id`=33282;
+UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` IN (33233,33259);
+UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0, `flags_extra` = 2, `ScriptName` = 'mole_machine_trigger' WHERE `entry` = 33282;
 
 UPDATE `gameobject_template` SET `flags` = 32, `data2` = 3000, `ScriptName` = 'go_call_tram' WHERE `entry` IN (194914, 194912, 194437);
 DELETE FROM gameobject WHERE id = '194437';
