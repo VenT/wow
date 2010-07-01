@@ -693,9 +693,10 @@ void Aura::SetDuration(int32 duration, bool withMods)
 void Aura::RefreshDuration()
 {
     SetDuration(GetMaxDuration());
-    for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
-        if (m_effects[i])
-            m_effects[i]->ResetPeriodic();
+// Aura refresh should not reset periodicTimer
+//    for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
+//       if (m_effects[i])
+//            m_effects[i]->ResetPeriodic();
 
     if (m_spellProto->manaPerSecond || m_spellProto->manaPerSecondPerLevel)
         m_timeCla = 1 * IN_MILISECONDS;
@@ -947,20 +948,17 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                         // Arcane Potency
                         if (AuraEffect const * aurEff = caster->GetAuraEffect(SPELL_AURA_DUMMY, SPELLFAMILY_MAGE, 2120, 0))
                         {
-                            if (roll_chance_i(aurEff->GetAmount()))
-                            {
-                                uint32 spellId = 0;
+                            uint32 spellId = 0;
 
-                                switch (aurEff->GetId())
-                                {
-                                    case 31571: spellId = 57529; break;
-                                    case 31572: spellId = 57531; break;
-                                    default:
-                                        sLog.outError("Aura::HandleAuraSpecificMods: Unknown rank of Arcane Potency (%d) found", aurEff->GetId());
-                                }
-                                if (spellId)
-                                    caster->CastSpell(caster, spellId, true);
+                            switch (aurEff->GetId())
+                            {
+                                case 31571: spellId = 57529; break;
+                                case 31572: spellId = 57531; break;
+                                default:
+                                    sLog.outError("Aura::HandleAuraSpecificMods: Unknown rank of Arcane Potency (%d) found", aurEff->GetId());
                             }
+                            if(spellId)
+                                caster->CastSpell(caster, spellId, true);
                         }
                         break;
                 }

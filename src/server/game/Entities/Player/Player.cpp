@@ -5041,6 +5041,13 @@ void Player::RepopAtGraveyard()
         SpawnCorpseBones();
     }
 
+   // Naxxramas is unreachable as a ghost and the player must be automatically revived - HACK
+    if ((!isAlive() && zone && zone->ID == 4188 && GetPositionZ() > 240))
+    {
+        ResurrectPlayer(0.5f);
+        SpawnCorpseBones();
+    }
+
     WorldSafeLocsEntry const *ClosestGrave = NULL;
 
     // Special handle for battleground maps
