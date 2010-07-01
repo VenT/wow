@@ -9,6 +9,7 @@ UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=34224;
 UPDATE `creature_template` SET `minlevel`=80,`maxlevel`=83,`exp`=2,`unit_class`=1 WHERE `entry`=33139;
 -- Leviathan Torret 33142
 UPDATE `creature_template` SET `minlevel`=80,`maxlevel`=83,`exp`=2,`unit_class`=1 WHERE `entry`=33142;
+UPDATE `creature_template` SET `vehicleId` = 318 WHERE `entry` = 33118;
 
 DELETE FROM gameobject WHERE id = '194905';
 INSERT INTO gameobject VALUES 
