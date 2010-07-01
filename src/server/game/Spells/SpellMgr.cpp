@@ -3565,6 +3565,12 @@ void SpellMgr::LoadSpellCustomAttr()
         case 39365: // Thundering Storm
         case 41071: // Raise Dead (HACK)
         case 52124: // Sky Darkener Assault
+        case 62374: // Pursued
+        case 63024: // Gravity Bomb Normal
+        case 64234: // Gravity Bomb Hero
+        case 63018: // Searing Light Normal
+        case 65121: // Searing Light Hero
+        case 62016: // Charge Orb
             spellInfo->MaxAffectedTargets = 1;
             count++;
             break;

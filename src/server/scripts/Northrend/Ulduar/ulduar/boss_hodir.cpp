@@ -231,6 +231,8 @@ struct boss_hodir_AI : public BossAI
         // Achievements
         if (pInstance)
         {
+            // Kill credit
+            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET2, 64899);
             // Getting Cold in Here
             if (!bMoreThanTwoIntenseCold)
                 pInstance->DoCompleteAchievement(ACHIEVEMENT_COLD_IN_HERE);

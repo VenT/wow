@@ -274,6 +274,8 @@ struct boss_thorimAI : public BossAI
         // Achievements
         if (pInstance)
         {
+            // Kill credit
+            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 64985);
             // Lose Your Illusion
             if (HardMode)
             {

@@ -248,6 +248,8 @@ struct boss_freyaAI : public BossAI
         
         if (pInstance)
         {
+            // Kill credit
+            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65074);
             // Knock on Wood
             if (EldersCount == 1)
                 pInstance->DoCompleteAchievement(ACHIEVEMENT_KNOCK_ON_WOOD_1);

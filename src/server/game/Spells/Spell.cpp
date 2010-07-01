@@ -2324,6 +2324,10 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                         }
                         break;
 
+                    case 62343: // Scorch Ground (Ignis)
+                        SearchAreaTarget(unitList, radius, pushType, SPELL_TARGETS_ANY);
+                        break;
+
                     default:
                         sLog.outDebug("Spell (ID: %u) (caster Entry: %u) does not have record in `spell_script_target`", m_spellInfo->Id, m_caster->GetEntry());
 
