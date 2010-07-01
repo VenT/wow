@@ -66,6 +66,8 @@ class AuraEffect
         uint32 GetTickNumber() const { return m_tickNumber; }
         int32 GetTotalTicks() const { return m_amplitude ? (GetBase()->GetMaxDuration() / m_amplitude) : 1;}
         void ResetPeriodic(bool resetPeriodicTimer = false) { if (resetPeriodicTimer) m_periodicTimer = m_amplitude; m_tickNumber = 0;}
+        int32 GetPeriodic() { return m_periodicTimer; }
+        void SetPeriodic(int32 timer) { m_periodicTimer = timer; }
 
         bool IsPeriodic() const { return m_isPeriodic; }
         bool IsAffectedOnSpell(SpellEntry const *spell) const;
