@@ -388,6 +388,8 @@ void AddSC_boss_hodir();
 void AddSC_boss_freya();
 void AddSC_boss_thorim();
 void AddSC_boss_mimiron();
+void AddSC_boss_Algalon();
+void AddSC_boss_general_vezax();
 void AddSC_ulduar_teleporter();
 void AddSC_instance_ulduar();
 void AddSC_boss_keleseth();              //Utgarde Keep
@@ -919,6 +921,8 @@ void AddScripts()
     AddSC_boss_freya();
     AddSC_boss_thorim();
     AddSC_boss_mimiron();
+    AddSC_boss_Algalon();
+    AddSC_boss_general_vezax();
     AddSC_ulduar_teleporter();
     AddSC_instance_ulduar();
     AddSC_boss_keleseth();              //Utgarde Keep
