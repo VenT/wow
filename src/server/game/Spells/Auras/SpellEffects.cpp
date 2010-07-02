@@ -414,14 +414,6 @@ void Spell::SpellDamageSchoolDmg(uint32 effect_idx)
                         if (!unitTarget->HasAura(27825))
                             return;
                         break;
-                    // Polarity Shift charges
-                    case 28059:
-                    case 28084:
-                    case 39088:
-                    case 39091:
-                        // only affects players
-                        if(unitTarget->GetTypeId() != TYPEID_PLAYER)
-                            return;
                     // Cataclysmic Bolt
                     case 38441:
                     {
@@ -1123,12 +1115,12 @@ void Spell::EffectDummy(uint32 i)
                 }
                 // Polarity Shift
                 case 28089:
-                    if(unitTarget && unitTarget->GetTypeId() == TYPEID_PLAYER)
+                    if (unitTarget)
                         unitTarget->CastSpell(unitTarget, roll_chance_i(50) ? 28059 : 28084, true, NULL, NULL, m_caster->GetGUID());
                     break;
                 // Polarity Shift
                 case 39096:
-                    if(unitTarget && unitTarget->GetTypeId() == TYPEID_PLAYER)
+                    if (unitTarget)
                         unitTarget->CastSpell(unitTarget, roll_chance_i(50) ? 39088 : 39091, true, NULL, NULL, m_caster->GetGUID());
                     break;
                 case 29200:                                 // Purify Helboar Meat

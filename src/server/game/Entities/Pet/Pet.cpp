@@ -933,24 +933,6 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
                     SetBonusDamage(int32(val));
                     break;
                 }
-                case 19668: // priest Shadowfiend
-                {
-                    //35% damage bonus of priest's spell power
-                    float val = (int32(m_owner->SpellBaseDamageBonus(SPELL_SCHOOL_MASK_MAGIC) * 0.35f));
-                    SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, float((val) - petlevel));
-                    SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, float((val) + petlevel));
-                    SetAttackTime(BASE_ATTACK, 1500);
-                    break;
-                }
-                case 89: // Infernal
-                {
-                    //60% damage bonus of warlock's fire damage
-                    float val = m_owner->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS + SPELL_SCHOOL_FIRE) * 0.6;
-                    SetBonusDamage( int32(val));
-                    SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, float((val) - petlevel));
-                    SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, float((val) + petlevel));
-                    break;
-                }
                 case 1964: //force of nature
                 {
                     if (!pInfo)
