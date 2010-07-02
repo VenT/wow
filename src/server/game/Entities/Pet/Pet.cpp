@@ -1924,12 +1924,6 @@ void Pet::CastPetAuras(bool current)
         else
             CastPetAura(pa);
     }
-
-    if (AuraEffect *avoidance = owner->GetAuraEffect(SPELL_AURA_ADD_FLAT_MODIFIER, SPELLFAMILY_DEATHKNIGHT, 2718, 0)) {
-        int32 bp = (avoidance->GetAmount() / 1000);
-        CastCustomSpell(this, 62137, &bp, NULL, NULL, true);
-    }
-
 }
 
 void Pet::CastPetAura(PetAura const* aura)

@@ -5461,7 +5461,7 @@ SpellCastResult Spell::CheckCast(bool strict)
                 }
                 break;
             }
-            /*case SPELL_AURA_RANGED_AP_ATTACKER_CREATURES_BONUS:
+            case SPELL_AURA_RANGED_AP_ATTACKER_CREATURES_BONUS:
             {
                 if (!m_targets.getUnitTarget() && m_targets.getUnitTarget()->GetTypeId() != TYPEID_UNIT)
                     return SPELL_FAILED_BAD_IMPLICIT_TARGETS;
@@ -5471,7 +5471,7 @@ SpellCastResult Spell::CheckCast(bool strict)
                     return SPELL_FAILED_TARGET_FRIENDLY;
 
                 break;
-            }*/
+            }
             case SPELL_AURA_PERIODIC_MANA_LEECH:
             {
                 if (!m_targets.getUnitTarget())
@@ -6805,10 +6805,7 @@ int32 Spell::CalculateDamageDone(Unit *unit, const uint32 effectMask, float *mul
             {
                 if (IsAreaEffectTarget[m_spellInfo->EffectImplicitTargetA[i]] || IsAreaEffectTarget[m_spellInfo->EffectImplicitTargetB[i]])
                 {
-                    int32 reducedPct;
-                    if(reducedPct = unit->GetMaxNegativeAuraModifier(SPELL_AURA_MOD_AOE_DAMAGE_AVOIDANCE))
-                        m_damage = m_damage * (100 + reducedPct) / 100;
-                    if(reducedPct = unit->GetMaxNegativeAuraModifier(SPELL_AURA_MOD_PET_AOE_DAMAGE_AVOIDANCE))
+                    if (int32 reducedPct = unit->GetMaxNegativeAuraModifier(SPELL_AURA_MOD_AOE_DAMAGE_AVOIDANCE))
                         m_damage = m_damage * (100 + reducedPct) / 100;
 
                     if (m_caster->GetTypeId() == TYPEID_PLAYER)
