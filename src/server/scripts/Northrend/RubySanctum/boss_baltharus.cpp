@@ -41,11 +41,11 @@ enum eTexts
 enum eBaltharusSpells
 {
 	SPELL_BLADE_TEMPEST = 75125,
-	SPELL_BLADE_TEMPEST_H = 75126,
+	SPELL_BLADE_TEMPEST_25 = 75126,
 	SPELL_CLEAVE = 40504,
-	SPELL_CLEAVE_H = 40505,
+	SPELL_CLEAVE_25 = 40505,
 	SPELL_ENERVATING_BRAND = 74502,
-	SPELL_ENERVATING_BRAND_H = 74505,
+	SPELL_ENERVATING_BRAND_25 = 74505,
 	SPELL_ENERVATING_BRAND_BUFF = 74507,
 	SPELL_RESPELLING_WAVE = 74509,
 	SPELL_SUMMON_CLONE = 74511
@@ -85,7 +85,7 @@ struct boss_baltharusAI : public ScriptedAI
 		uiClone2GUID = 0;
 		uiClone3GUID = 0;
 
-		if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC)
+		if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
 			isMode25 = false;
 		else
 			isMode25 = true;
@@ -107,19 +107,19 @@ struct boss_baltharusAI : public ScriptedAI
 
 		if (uiBladeTempestTimer <= diff)
         {
-			DoCast((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC) ? SPELL_BLADE_TEMPEST_H : SPELL_BLADE_TEMPEST);
+			DoCast(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_BLADE_TEMPEST_25 : SPELL_BLADE_TEMPEST);
 			uiBladeTempestTimer = urand(7000,7500);
 		} else uiBladeTempestTimer -= diff;
 
 		if (uiCleaveTimer <= diff)
         {
-			DoCastVictim((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC) ? SPELL_CLEAVE_H : SPELL_CLEAVE);
+			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_CLEAVE_25 : SPELL_CLEAVE);
 			uiCleaveTimer = urand(2000,2500);
 		} else uiCleaveTimer -= diff;
 
 		if (uiEnervatingBrandTimer <= diff)
         {
-			DoCastVictim((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC) ? SPELL_ENERVATING_BRAND_H : SPELL_ENERVATING_BRAND);
+			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_ENERVATING_BRAND_25 : SPELL_ENERVATING_BRAND);
 			DoCast(me, SPELL_ENERVATING_BRAND_BUFF); 
 			uiEnervatingBrandTimer = urand(30000,45000);
 			DoScriptText(SAY_YELL, me);
@@ -262,19 +262,19 @@ struct boss_baltharus_cloneAI : public ScriptedAI
 
 		if (uiBladeTempestTimer <= diff)
         {
-			DoCast((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC) ? SPELL_BLADE_TEMPEST_H : SPELL_BLADE_TEMPEST);
+			DoCast(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL? SPELL_BLADE_TEMPEST_25 : SPELL_BLADE_TEMPEST);
 			uiBladeTempestTimer = urand(7000,7500);
 		} else uiBladeTempestTimer -= diff;
 
 		if (uiCleaveTimer <= diff)
         {
-			DoCastVictim((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC) ? SPELL_CLEAVE_H : SPELL_CLEAVE);
+			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_CLEAVE_25 : SPELL_CLEAVE);
 			uiCleaveTimer = urand(2000,2500);
 		} else uiCleaveTimer -= diff;
 
 		if (uiEnervatingBrandTimer <= diff)
         {
-			DoCastVictim((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC) ? SPELL_ENERVATING_BRAND_H : SPELL_ENERVATING_BRAND);
+			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_ENERVATING_BRAND_25 : SPELL_ENERVATING_BRAND);
 			DoCast(me, SPELL_ENERVATING_BRAND_BUFF); 
 			uiEnervatingBrandTimer = urand(30000,45000);
 		} else uiEnervatingBrandTimer -= diff;

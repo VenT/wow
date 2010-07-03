@@ -32,7 +32,9 @@ enum eSpells
 	SPELL_FLAME_BREATH = 74403,
 	SPELL_FLAME_BREATH_25 = 74404,
 	SPELL_FIRE_NOVA = 78723,
-	SPELL_CONFLAGRATION = 74452
+	SPELL_CONFLAGRATION_FIRE_BALL = 74454,
+	SPELL_CONFLAGRATION_DMG = 74456,
+	SPELL_FLAME_BEACON = 74453
 };
 
 struct boss_ragefireAI : public ScriptedAI
@@ -45,10 +47,30 @@ struct boss_ragefireAI : public ScriptedAI
 	InstanceData* pInstance;
 
 	uint32 uiFlameBreathTimer;
+	uint32 uiEnrageTimer;
+	uint32 uiConflagrationTimer;
+	uint32 uiAirSteps;
+	uint32 uiAirTimer;
+	uint32 uiFlameNovaTimer;
+
+	Player* pConflagrationTarget1;
+	Player* pConflagrationTarget2;
+	Player* pConflagrationTarget3;
+	Player* pConflagrationTarget4;
+	Player* pConflagrationTarget5;
+
+	bool bAir;
 
 	void Reset()
 	{
 		uiFlameBreathTimer = 10000;
+		uiEnrageTimer = 25000;
+		uiConflagrationTimer = 45000;
+		uiFlameNovaTimer = 9000;
+		uiAirSteps = 0;
+		uiAirTimer = 5000;
+
+		bAir = false;
 	}
 
 	void EnterCombat(Unit*)
@@ -62,13 +84,115 @@ struct boss_ragefireAI : public ScriptedAI
 		if(!UpdateVictim())
 			return;
 
-		if(uiFlameBreathTimer <= diff)
+		if(!bAir)
 		{
-			DoCast((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL) ? SPELL_FLAME_BREATH_25 : SPELL_FLAME_BREATH);
-			uiFlameBreathTimer = urand(10000, 15000);
-		} else uiFlameBreathTimer -= diff;
+			if(uiFlameBreathTimer <= diff)
+			{
+				DoCast(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_FLAME_BREATH_25 : SPELL_FLAME_BREATH);
+				uiFlameBreathTimer = urand(10000, 15000);
+			}else uiFlameBreathTimer -= diff;
 
-		DoMeleeAttackIfReady();
+			if(uiEnrageTimer <= diff)
+			{
+				DoCast(SPELL_ENRAGE);
+				uiEnrageTimer = 25000;
+			}else uiEnrageTimer -= diff;
+
+			if(uiFlameNovaTimer <= diff)
+			{
+				DoCast(SPELL_FIRE_NOVA);
+				uiFlameNovaTimer = urand(9000, 11000);
+			}else uiFlameNovaTimer -= diff;
+
+			if(uiConflagrationTimer <= diff)
+			{
+				bAir = true;
+				uiConflagrationTimer = 45000;
+			}else uiConflagrationTimer -= diff;
+
+			DoMeleeAttackIfReady();
+		}
+		else
+		{
+			switch(uiAirSteps)
+			{
+			case 0:
+				me->GetMotionMaster()->MovePoint(1, 3159.04, 676.08, 103.05);
+				if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+				{
+					pConflagrationTarget1 = Unit::GetPlayer(SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+					pConflagrationTarget2 = Unit::GetPlayer(SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+				}
+				else
+				{
+					pConflagrationTarget1 = Unit::GetPlayer(SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+					pConflagrationTarget2 = Unit::GetPlayer(SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+					pConflagrationTarget3 = Unit::GetPlayer(SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+					pConflagrationTarget4 = Unit::GetPlayer(SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+					pConflagrationTarget5 = Unit::GetPlayer(SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+				}
+				uiAirSteps++;
+				break;
+			case 1:
+				if(uiAirTimer <= diff)
+				{
+					DoScriptText(SAY_SPECIAL, me);
+					if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+					{
+						me->CastSpell(pConflagrationTarget1, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget1, SPELL_CONFLAGRATION_FIRE_BALL, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_CONFLAGRATION_FIRE_BALL, true);
+					}
+					else
+					{
+						me->CastSpell(pConflagrationTarget1, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget3, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget4, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget5, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget1, SPELL_CONFLAGRATION_FIRE_BALL, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_CONFLAGRATION_FIRE_BALL, true);
+						me->CastSpell(pConflagrationTarget3, SPELL_CONFLAGRATION_FIRE_BALL, true);
+						me->CastSpell(pConflagrationTarget4, SPELL_CONFLAGRATION_FIRE_BALL, true);
+						me->CastSpell(pConflagrationTarget5, SPELL_CONFLAGRATION_FIRE_BALL, true);
+					}
+					uiAirSteps++;
+					uiAirTimer = 4000;
+				}else uiAirTimer -= diff;
+				break;
+			case 2:
+				if(uiAirTimer <= diff)
+				{
+					me->GetMotionMaster()->MoveTargetedHome();
+					uiAirSteps++;
+					uiAirTimer = 1000;
+				}else uiAirTimer -= diff;
+				break;
+			case 3:
+				if(uiAirTimer <= diff)
+				{
+					DoCast(SPELL_CONFLAGRATION_DMG); // Visual in Case of No Target
+					if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+					{
+						me->CastSpell(pConflagrationTarget1, SPELL_CONFLAGRATION_DMG, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_CONFLAGRATION_DMG, true);
+					}
+					else
+					{
+						me->CastSpell(pConflagrationTarget1, SPELL_CONFLAGRATION_DMG, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_CONFLAGRATION_DMG, true);
+						me->CastSpell(pConflagrationTarget3, SPELL_CONFLAGRATION_DMG, true);
+						me->CastSpell(pConflagrationTarget4, SPELL_CONFLAGRATION_DMG, true);
+						me->CastSpell(pConflagrationTarget5, SPELL_CONFLAGRATION_DMG, true);
+					}
+					uiAirSteps = 0;
+					bAir = false;
+					uiAirTimer = 5000;
+				}else uiAirTimer -= diff;
+				break;
+			}
+		}
 	}
 
 	void KilledUnit(Unit *victim)

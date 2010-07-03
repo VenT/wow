@@ -57,7 +57,7 @@ struct boss_halionAI : public ScriptedAI
 	void UpdateAI(const uint32 diff)
 	{
 		if(!bIntro)
-			if(pInstance->GetData(DATA_BALTHARUS_EVENT) == DONE && pInstance->GetData(DATA_ZARITHRIAN_EVENT) == DONE && pInstance->GetData(DATA_RAGEFIRE_EVENT) == DONE)
+			if((pInstance->GetData(DATA_BALTHARUS_EVENT) == DONE && pInstance->GetData(DATA_ZARITHRIAN_EVENT) == DONE && pInstance->GetData(DATA_RAGEFIRE_EVENT) == DONE) || (pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC))
 			{
 				DoScriptText(SAY_SPAWN, me);
 				bIntro = true;

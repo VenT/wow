@@ -86,13 +86,13 @@ struct boss_zarithrianAI : public ScriptedAI
 
 		if(uiCleaveArmorTimer <= diff)
 		{
-			DoCastVictim(SPELL_CLEAVE_ARMOR);
+			DoCastVictim(SPELL_CLEAVE_ARMOR, true);
 			uiCleaveArmorTimer = urand(3500,4500);
 		}else uiCleaveArmorTimer -= diff;
 
 		if(uiIntimidatingRoarTimer <= diff)
 		{
-			DoCast(SPELL_INTIMIDATING_ROAR);
+			DoCastVictim(SPELL_INTIMIDATING_ROAR, true);
 			uiIntimidatingRoarTimer = urand(9500,11000);
 		}else uiIntimidatingRoarTimer -= diff;
 
@@ -183,13 +183,13 @@ struct npc_onyx_flamecallerAI : public ScriptedAI
 
 		if(uiLavaAttackTimer <= diff)
 		{
-			DoCastVictim((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL) ? SPELL_ONYX_LAVA_ATTACK_25 : SPELL_ONYX_LAVA_ATTACK);
+			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_ONYX_LAVA_ATTACK_25 : SPELL_ONYX_LAVA_ATTACK);
 			uiLavaAttackTimer = urand(2000, 5000);
 		}else uiLavaAttackTimer -= diff;
 
 		if(uiBlastNovaTimer <= diff)
 		{
-			DoCastVictim((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL) ? SPELL_BLAST_NOVA_25 : SPELL_BLAST_NOVA);
+			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_BLAST_NOVA_25 : SPELL_BLAST_NOVA);
 			uiBlastNovaTimer = urand(8000, 10000);
 		}else uiBlastNovaTimer -= diff;
 
