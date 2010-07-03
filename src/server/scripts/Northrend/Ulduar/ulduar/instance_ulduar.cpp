@@ -91,7 +91,11 @@ struct instance_ulduar : public InstanceData
     uint64 uiMagneticCore;
     uint64 KeepersGateGUID;
     uint64 uiVezax;
-        
+    uint64 uiFreyaImage;
+    uint64 uiThorimImage;
+    uint64 uiMimironImage;
+    uint64 uiHodirImage;
+
     GameObject* pLeviathanDoor, *KologarnChest, *HodirChest, *HodirRareChest, *pRunicDoor, *pStoneDoor, *pThorimLever,
         *MimironTram, *MimironElevator;
 
@@ -162,6 +166,40 @@ struct instance_ulduar : public InstanceData
             case 33670: uiAerialUnit = pCreature->GetGUID(); return;
             case 34068: uiMagneticCore = pCreature->GetGUID(); return;
             case 33271: uiVezax = pCreature->GetGUID(); return;
+
+            // Keeper's Images
+            case 33241: uiFreyaImage = pCreature->GetGUID();
+            {
+               InstanceData *data = pCreature->GetInstanceData();
+                pCreature->SetVisibility(VISIBILITY_OFF);
+                if (data && data->GetBossState(BOSS_VEZAX) == DONE)
+                    pCreature->SetVisibility(VISIBILITY_ON);
+            }
+            return;
+            case 33242: uiThorimImage = pCreature->GetGUID();
+            {
+                InstanceData *data = pCreature->GetInstanceData();
+                pCreature->SetVisibility(VISIBILITY_OFF);
+                if (data && data->GetBossState(BOSS_VEZAX) == DONE)
+                    pCreature->SetVisibility(VISIBILITY_ON);
+            }
+            return;
+            case 33244: uiMimironImage = pCreature->GetGUID();
+            {
+                InstanceData *data = pCreature->GetInstanceData();
+                pCreature->SetVisibility(VISIBILITY_OFF);
+                if (data && data->GetBossState(BOSS_VEZAX) == DONE)
+                    pCreature->SetVisibility(VISIBILITY_ON);
+            }
+            return;
+            case 33213: uiHodirImage = pCreature->GetGUID();
+            {
+                InstanceData *data = pCreature->GetInstanceData();
+                pCreature->SetVisibility(VISIBILITY_OFF);
+                if (data && data->GetBossState(BOSS_VEZAX) == DONE)
+                    pCreature->SetVisibility(VISIBILITY_ON);
+            }
+            return;
         }
 
         // Hodir: Alliance npcs are spawned by default
@@ -327,6 +365,20 @@ struct instance_ulduar : public InstanceData
                 break;
             case BOSS_FREYA:
                 CheckKeepersState();
+                break;
+            case BOSS_VEZAX:
+                if (state == DONE)
+                {
+                  // Keeper's Images
+                if (Creature* pFreya = instance->GetCreature(uiFreyaImage))
+                     pFreya->SetVisibility(VISIBILITY_ON);
+                    if (Creature* pThorim = instance->GetCreature(uiThorimImage))
+                        pThorim->SetVisibility(VISIBILITY_ON);
+                    if (Creature* pMimiron = instance->GetCreature(uiMimironImage))
+                        pMimiron->SetVisibility(VISIBILITY_ON);
+                    if (Creature* pHodir = instance->GetCreature(uiHodirImage))
+                        pHodir->SetVisibility(VISIBILITY_ON);
+                }
                 break;
         }
         

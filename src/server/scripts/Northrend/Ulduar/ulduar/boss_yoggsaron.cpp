@@ -16,6 +16,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+ /* ScriptData
+SDName: Yogg-Saron
+SDAuthor: PrinceCreed
+SD%Complete: 10
+SDComments:
+EndScriptData */
+
 #include "ScriptPCH.h"
 #include "ulduar.h"
 
@@ -48,3 +55,135 @@ enum YoggSaron_Yells
     WHISP_INSANITY_2                            = -1603340,
     SAY_DEATH                                   = -1603341,
 };
+
+// Keepers
+#define GOSSIP_THORIM_IMAGE         "Help me, Thorim!"
+#define GOSSIP_FREYA_IMAGE          "Help me, Freya!"
+#define GOSSIP_MIMIRON_IMAGE        "Help me, Mimiron!"
+#define GOSSIP_HODIR_IMAGE          "Help me, Hodir!"
+
+enum Keepers_Yells
+{
+    SAY_MIMIRON_HELP                            = -1603259,
+    SAY_FREYA_HELP                              = -1603189,
+    SAY_THORIM_HELP                             = -1603287,
+    SAY_HODIR_HELP                              = -1603217,
+};
+
+enum Keepers_Spells
+{
+    SPELL_FURY_OF_THE_STORMS                    = 62702,
+    SPELL_RESILIENCE_OF_NATURE                  = 62670,
+    SPELL_SPEED_OF_INVENTION                    = 62671,
+    SPELL_FORTITUDE_OF_FROST                    = 62650,
+};
+
+bool FreyaHelp = false;
+bool MimironHelp = false;
+bool ThorimHelp = false;
+bool HodirHelp = false;
+
+
+struct keeper_imageAI : public ScriptedAI
+{
+    keeper_imageAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = c->GetInstanceData();
+    }
+
+    ScriptedInstance* pInstance;
+};
+
+bool GossipHello_keeper_image(Player* pPlayer, Creature* pCreature)
+{
+    InstanceData *data = pPlayer->GetInstanceData();
+    ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
+    
+    if (pInstance && pPlayer)
+    {
+        switch (pCreature->GetEntry())
+        {
+            case 33241:
+                if (!FreyaHelp)
+                {
+                    pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_FREYA_IMAGE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
+                    pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
+                }
+                break;
+            case 33242:
+                if (!ThorimHelp)
+                {
+                    pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_THORIM_IMAGE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
+                    pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
+                }
+                break;
+            case 33244:
+                if (!MimironHelp)
+                {
+                    pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_MIMIRON_IMAGE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
+                    pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
+                }
+                break;
+            case 33213:
+                if (!HodirHelp)
+                {
+                    pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_HODIR_IMAGE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
+                    pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
+                }
+                break;
+        }
+    }
+    return true;
+}
+
+bool GossipSelect_keeper_image(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    InstanceData *data = pPlayer->GetInstanceData();
+    ScriptedInstance* pInstance = pCreature->GetInstanceData();
+    
+    if (pPlayer)
+        pPlayer->CLOSE_GOSSIP_MENU();
+        
+    switch (pCreature->GetEntry())
+    {
+        case 33241:
+            DoScriptText(SAY_FREYA_HELP, pCreature);
+            FreyaHelp = true;
+            break;
+        case 33242:
+            DoScriptText(SAY_THORIM_HELP, pCreature);
+            ThorimHelp = true;
+            break;
+        case 33244:
+            DoScriptText(SAY_MIMIRON_HELP, pCreature);
+            MimironHelp = true;
+            break;
+        case 33213:
+            DoScriptText(SAY_HODIR_HELP, pCreature);
+            HodirHelp = true;
+            break;
+    }
+    
+    return true;
+}
+
+CreatureAI* GetAI_keeper_image(Creature* pCreature)
+{
+    return new keeper_imageAI (pCreature);
+}
+
+void AddSC_boss_yogg_saron()
+{
+    Script *newscript;
+    
+    newscript = new Script;
+    newscript->Name="npc_keeper_image";
+    newscript->pGossipHello =  &GossipHello_keeper_image;
+    newscript->pGossipSelect = &GossipSelect_keeper_image;
+    newscript->GetAI = &GetAI_keeper_image;
+    newscript->RegisterSelf();
+}
