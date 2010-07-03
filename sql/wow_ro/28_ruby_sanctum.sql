@@ -6,8 +6,8 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_zarithrian' WHERE `entry` = 
 INSERT INTO access_requirement VALUES
 (5690, 80, 80, 0, 0, 0, 0, 0, 0, '', 0, '', 'Ruby Sactum', 15);
 INSERT INTO areatrigger_teleport VALUES
-(5869, 'Kammer der Aspekte, Rubin Sanktum(Eingang)', 5690, 724, 3267.97, 533.6, 87.65, 3.047),
-(5872, 'Kammer der Aspekte, Rubin Sanktum(Ausgang)', 0, 571, 3597.65, 201.19, -115.05, 0);
+(5869, 'Chamber of Aspects, Ruby Sanctum(Entrance)', 5690, 724, 3267.97, 533.6, 87.65, 3.047),
+(5872, 'Chamber of Aspects, Ruby Sanctum(Exit)', 0, 571, 3597.65, 201.19, -115.05, 0);
 REPLACE INTO creature_ai_scripts VALUES
 ( 4041901, 40419, 0, 0, 100, 31, 2000, 2000, 5000, 5000, 11, 15284, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0,'Charscale Assaulter Cleave'),
 ( 4041902, 40419, 0, 0, 100, 11, 5000, 5000, 10000, 10000, 11, 75417, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0,'Charscale Assaulter Shockwave 1'),
