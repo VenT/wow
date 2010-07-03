@@ -22,7 +22,6 @@
 #include "DBCStructure.h"
 #include "DBCStores.h"
 #include "ObjectMgr.h"
-#include "gamePCH.h"
 
 #ifdef _WIN32
 #include <windows.h>
