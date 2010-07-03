@@ -39,10 +39,11 @@ enum Spells
     SPELL_SABER_SLASH_25_NORMAL          =  70814,
     SPELL_SABER_SLASH_10_HEROIC          =  70814,
     SPELL_SABER_SLASH_25_HEROIC          =  70814,
-    SPELL_COLD_FLAME_10_NORMAL           =  69146,
+    SPELL_COLD_FLAME_10_NORMAL           =  69145, //69146 - was the old spell - and it was the wrong one - or maybe not but lets try using this for the given situation
     SPELL_COLD_FLAME_25_NORMAL           =  70823,
     SPELL_COLD_FLAME_10_HEROIC           =  70824,
     SPELL_COLD_FLAME_25_HEROIC           =  70825,
+    SPELL_COLD_DESPAWN                   =  66346,
     SPELL_COLD_FLAME_SPAWN               =  69138,
     SPELL_BONE_SPIKE_GRAVEYARD_10_NORMAL =  69057,
     SPELL_BONE_SPIKE_GRAVEYARD_25_NORMAL =  70826,
@@ -224,8 +225,8 @@ struct boss_lord_marrowgarAI : public ScriptedAI
 
                 if (m_uiColdFlameTimer <= uiDiff)
                 {
-                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 8000);
-                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 8000);
+                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 3000);
+                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 3000);
                     me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 8000);
                     me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 8000);
                     m_uiColdFlameTimer = 15000;
@@ -308,6 +309,7 @@ struct npc_cold_flameAI : public ScriptedAI
         me->SetReactState(REACT_PASSIVE);
         me->SetSpeed(MOVE_WALK, 1.5f, true);
         m_uiColdFlameTimer = 1000;
+        m_uiColdDespawn    = 7000;
     }
     void UpdateAI(const uint32 uiDiff)
     {
@@ -317,6 +319,11 @@ struct npc_cold_flameAI : public ScriptedAI
             m_uiColdFlameTimer = 1000;
         } else m_uiColdFlameTimer -= uiDiff;
 
+        if(m_uiColdDespawn <= uiDiff)
+        {
+            DoCast(me, SPELL_COLD_DESPAWN);
+            me->ForcedDespawn();
+        } m_uiColdDespawn -= uiDiff;
     }
 };
 
