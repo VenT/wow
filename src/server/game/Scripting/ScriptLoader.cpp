@@ -452,6 +452,8 @@ void AddSC_boss_blood_queen_lana_thel();
 void AddSC_instance_ruby_sanctum();   // Ruby Sanctum
 void AddSC_boss_baltharus();
 void AddSC_boss_zarithrian();
+void AddSC_boss_halion();
+void AddSC_boss_ragefire();
 
 void AddSC_dalaran();
 void AddSC_borean_tundra();
@@ -989,8 +991,10 @@ void AddScripts()
     AddSC_instance_ruby_sanctum();   // Ruby Sanctum
     AddSC_boss_baltharus();
     AddSC_boss_zarithrian();
-    AddSC_dalaran();
+    AddSC_boss_halion();
+    AddSC_boss_ragefire();
 
+    AddSC_dalaran();
     AddSC_borean_tundra();
     AddSC_dragonblight();
     AddSC_grizzly_hills();

@@ -46,6 +46,7 @@ enum eBaltharusSpells
 	SPELL_CLEAVE_H = 40505,
 	SPELL_ENERVATING_BRAND = 74502,
 	SPELL_ENERVATING_BRAND_H = 74505,
+	SPELL_ENERVATING_BRAND_BUFF = 74507,
 	SPELL_RESPELLING_WAVE = 74509,
 	SPELL_SUMMON_CLONE = 74511
 };
@@ -72,7 +73,6 @@ struct boss_baltharusAI : public ScriptedAI
 	bool bClone1;
 	bool bClone2;
 	bool bClone3;
-	bool help;
 
 	void Reset()
 	{
@@ -92,24 +92,12 @@ struct boss_baltharusAI : public ScriptedAI
 		bClone1 = false;
 		bClone2 = false;
 		bClone3 = false;
-		help = false;
 	}
 
 	void EnterCombat(Unit* )
 	{
 		DoScriptText(SAY_AGGRO, me);
 		pInstance->SetData(DATA_BALTHARUS, IN_PROGRESS);	
-	}
-
-	void MoveInLineOfSight(Unit *victim)
-	{
-		if(!help)
-		{
-			DoScriptText(XERESTRASZA_HELP, pInstance->instance->GetCreature(pInstance->GetData64(DATA_XERESTRASZA)));
-			help = true;
-		}
-		if(victim->IsInRange(me, 0.0f, 25.0f) && !victim->IsFriendlyTo(me))
-			me->Attack(victim, true);
 	}
 
 	void UpdateAI(const uint32 diff)
@@ -132,7 +120,7 @@ struct boss_baltharusAI : public ScriptedAI
 		if (uiEnervatingBrandTimer <= diff)
         {
 			DoCastVictim((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC) ? SPELL_ENERVATING_BRAND_H : SPELL_ENERVATING_BRAND);
-			DoCast(me, 74507); // EnervatinBrand Boss Buff
+			DoCast(me, SPELL_ENERVATING_BRAND_BUFF); 
 			uiEnervatingBrandTimer = urand(30000,45000);
 			DoScriptText(SAY_YELL, me);
 		} else uiEnervatingBrandTimer -= diff;
@@ -214,8 +202,6 @@ struct boss_baltharusAI : public ScriptedAI
 		if(pInstance)
 		{
 			pInstance->SetData(DATA_BALTHARUS, DONE);
-			DoScriptText(XERESTRASZA_THX, pInstance->instance->GetCreature(pInstance->GetData64(DATA_XERESTRASZA)));
-			pInstance->SetData(DATA_XERESTRASZA, NOT_STARTED);
 		}
 	}
 
@@ -289,7 +275,7 @@ struct boss_baltharus_cloneAI : public ScriptedAI
 		if (uiEnervatingBrandTimer <= diff)
         {
 			DoCastVictim((pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC || pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC) ? SPELL_ENERVATING_BRAND_H : SPELL_ENERVATING_BRAND);
-			DoCast(me, 74507); // EnervatinBrand Boss Buff
+			DoCast(me, SPELL_ENERVATING_BRAND_BUFF); 
 			uiEnervatingBrandTimer = urand(30000,45000);
 		} else uiEnervatingBrandTimer -= diff;
 
@@ -304,7 +290,7 @@ CreatureAI* GetAI_boss_baltharus_clone(Creature *pCreature)
 
 bool GossipHello_npc_xerestrasza(Player *pPlayer, Creature *pCreature)
 {
-	if(pCreature->GetInstanceData()->GetData(DATA_XERESTRASZA) == NOT_STARTED)
+	if(pCreature->GetInstanceData()->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
 		pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Was ist hier vorgefallen?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
     pPlayer->PlayerTalkClass->SendGossipMenu(1, pCreature->GetGUID());
 	return true;
@@ -313,7 +299,7 @@ bool GossipHello_npc_xerestrasza(Player *pPlayer, Creature *pCreature)
 bool GossipSelect_npc_xerestrasza(Player *pPlayer, Creature *pCreature, uint32, uint32 uiAction)
 {
 	if(uiAction == GOSSIP_ACTION_INFO_DEF+1)
-		pCreature->GetInstanceData()->SetData(DATA_XERESTRASZA, IN_PROGRESS);
+		pCreature->GetInstanceData()->SetData(DATA_XERESTRASZA_EVENT, IN_PROGRESS);
 	pPlayer->PlayerTalkClass->CloseGossip();
 	return true;
 }
@@ -329,15 +315,36 @@ struct npc_xerestraszaAI : public ScriptedAI
 	uint32 Timer;
 	uint32 Counter;
 
+	bool bThx;
+	bool bHelp;
+
 	void Reset()
 	{
 		Timer = 9000;
 		Counter = 0;
+		bThx = false;
+		bHelp = false;
+	}
+
+	void MoveInLineOfSight(Unit*)
+	{
+		if(!bHelp)
+		{
+			DoScriptText(XERESTRASZA_HELP, pInstance->instance->GetCreature(pInstance->GetData64(DATA_XERESTRASZA)));
+			bHelp = true;
+		}
 	}
 
 	void UpdateAI(const uint32 diff)
 	{
-		if(pInstance->GetData(DATA_XERESTRASZA) == IN_PROGRESS)
+		if(!bThx)
+			if(pInstance->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
+			{
+				DoScriptText(XERESTRASZA_THX, pInstance->instance->GetCreature(pInstance->GetData64(DATA_XERESTRASZA)));
+				bThx = true;
+			}
+
+		if(pInstance->GetData(DATA_XERESTRASZA_EVENT) == IN_PROGRESS)
 		{
 		switch(Counter)
 		{
@@ -349,7 +356,7 @@ struct npc_xerestraszaAI : public ScriptedAI
 			if (Timer <= diff)
 			{
 				DoScriptText(XERESTRASZA_2, me);
-				Timer = 9000;
+				Timer = 11000;
 				Counter++;
 			} else Timer -= diff;
 			break;
@@ -357,7 +364,7 @@ struct npc_xerestraszaAI : public ScriptedAI
 			if (Timer <= diff)
 			{
 				DoScriptText(XERESTRASZA_3, me);
-				Timer = 9000;
+				Timer = 11000;
 				Counter++;
 			} else Timer -= diff;
 			break;
@@ -365,7 +372,7 @@ struct npc_xerestraszaAI : public ScriptedAI
 			if (Timer <= diff)
 			{
 				DoScriptText(XERESTRASZA_4, me);
-				Timer = 9000;
+				Timer = 11000;
 				Counter++;
 			} else Timer -= diff;
 			break;
@@ -373,7 +380,7 @@ struct npc_xerestraszaAI : public ScriptedAI
 			if (Timer <= diff)
 			{
 				DoScriptText(XERESTRASZA_5, me);
-				Timer = 9000;
+				Timer = 11000;
 				Counter++;
 			} else Timer -= diff;
 			break;
@@ -381,7 +388,7 @@ struct npc_xerestraszaAI : public ScriptedAI
 			if (Timer <= diff)
 			{
 				DoScriptText(XERESTRASZA_6, me);
-				Timer = 9000;
+				Timer = 11000;
 				Counter++;
 			} else Timer -= diff;
 			break;
@@ -389,7 +396,7 @@ struct npc_xerestraszaAI : public ScriptedAI
 			if (Timer <= diff)
 			{
 				DoScriptText(XERESTRASZA_7, me);
-				pInstance->SetData(DATA_XERESTRASZA, DONE);
+				pInstance->SetData(DATA_XERESTRASZA_EVENT, DONE);
 			} else Timer -= diff;
 			break;
 		}
@@ -400,6 +407,13 @@ struct npc_xerestraszaAI : public ScriptedAI
 CreatureAI* GetAI_npc_xerestrasza(Creature *pCreature)
 {
 	return new npc_xerestraszaAI(pCreature);
+}
+
+bool GOHello_go_firefield(Player *pPlayer, GameObject *pGO)
+{
+	pGO->SetGoState(GO_STATE_ACTIVE);
+	pGO->GetInstanceData()->SetData(DATA_XERESTRASZA_EVENT, NOT_STARTED);
+	return true;
 }
 
 void AddSC_boss_baltharus()
@@ -421,5 +435,10 @@ void AddSC_boss_baltharus()
 	newscript->pGossipHello = &GossipHello_npc_xerestrasza;
 	newscript->pGossipSelect = &GossipSelect_npc_xerestrasza;
 	newscript->GetAI = &GetAI_npc_xerestrasza;
+	newscript->RegisterSelf();
+
+	newscript = new Script;
+	newscript->Name = "go_firefield";
+	newscript->pGOHello = &GOHello_go_firefield;
 	newscript->RegisterSelf();
 }
