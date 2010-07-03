@@ -294,7 +294,7 @@ struct boss_thorimAI : public BossAI
     void EnterCombat(Unit* pWho)
     {
         DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2), me);
-//        _EnterCombat();
+        _EnterCombat();
 
         if (phase == PHASE_NULL && FirstTime)
         {
@@ -436,7 +436,7 @@ struct boss_thorimAI : public BossAI
         {
             // Event starts
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-//            DoZoneInCombat();
+            DoZoneInCombat();
         }
     }
     

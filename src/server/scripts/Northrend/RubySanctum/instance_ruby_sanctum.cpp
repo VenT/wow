@@ -222,4 +222,4 @@ void AddSC_instance_ruby_sanctum()
 	newscript->Name = "instance_ruby_sanctum";
 	newscript->GetInstanceData = &GetInstanceData_instance_ruby_sanctum;
 	newscript->RegisterSelf();
-}}
+}
