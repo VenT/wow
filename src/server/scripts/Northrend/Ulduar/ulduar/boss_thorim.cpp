@@ -294,7 +294,7 @@ struct boss_thorimAI : public BossAI
     void EnterCombat(Unit* pWho)
     {
         DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2), me);
-        _EnterCombat();
+//        _EnterCombat();
         
         // Spawn Thunder Orbs
         for(uint8 n = 0; n < 7; n++)
@@ -428,7 +428,7 @@ struct boss_thorimAI : public BossAI
         {
             // Event starts
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            DoZoneInCombat();
+//            DoZoneInCombat();
         }
     }
     
