@@ -64,7 +64,7 @@ UPDATE `creature_template` set `minlevel` = 80,`maxlevel` = 80,`faction_A` = 16,
 
 # Other
 UPDATE `creature_template` SET `faction_A` = '35', `faction_H` = '35', `unit_flags` = '8', `type_flags` = '67113038' WHERE `entry` IN(36789,10067,10068,10069);
----UPDATE `creature_template` SET `VehicleId` = 639 WHERE `entry` IN (37813,13106,13107,13108);
+-- UPDATE `creature_template` SET `VehicleId` = 639 WHERE `entry` IN (37813,13106,13107,13108);
 UPDATE `creature_template` SET `vehicleId` = 318 WHERE `entry` = 36609;
 
 # Instance
