@@ -72,17 +72,12 @@ enum Keepers_Yells
 
 enum Keepers_Spells
 {
+    SPELL_KEEPER_ACTIVE                         = 62647,
     SPELL_FURY_OF_THE_STORMS                    = 62702,
     SPELL_RESILIENCE_OF_NATURE                  = 62670,
     SPELL_SPEED_OF_INVENTION                    = 62671,
     SPELL_FORTITUDE_OF_FROST                    = 62650,
 };
-
-bool FreyaHelp = false;
-bool MimironHelp = false;
-bool ThorimHelp = false;
-bool HodirHelp = false;
-
 
 struct keeper_imageAI : public ScriptedAI
 {
@@ -104,7 +99,7 @@ bool GossipHello_keeper_image(Player* pPlayer, Creature* pCreature)
         switch (pCreature->GetEntry())
         {
             case 33241:
-                if (!FreyaHelp)
+                if (!pCreature->HasAura(SPELL_KEEPER_ACTIVE))
                 {
                     pPlayer->PrepareQuestMenu(pCreature->GetGUID());
                     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_FREYA_IMAGE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
@@ -112,7 +107,7 @@ bool GossipHello_keeper_image(Player* pPlayer, Creature* pCreature)
                 }
                 break;
             case 33242:
-                if (!ThorimHelp)
+                if (!pCreature->HasAura(SPELL_KEEPER_ACTIVE))
                 {
                     pPlayer->PrepareQuestMenu(pCreature->GetGUID());
                     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_THORIM_IMAGE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
@@ -120,7 +115,7 @@ bool GossipHello_keeper_image(Player* pPlayer, Creature* pCreature)
                 }
                 break;
             case 33244:
-                if (!MimironHelp)
+                if (!pCreature->HasAura(SPELL_KEEPER_ACTIVE))
                 {
                     pPlayer->PrepareQuestMenu(pCreature->GetGUID());
                     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_MIMIRON_IMAGE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
@@ -128,7 +123,7 @@ bool GossipHello_keeper_image(Player* pPlayer, Creature* pCreature)
                 }
                 break;
             case 33213:
-                if (!HodirHelp)
+                if (!pCreature->HasAura(SPELL_KEEPER_ACTIVE))
                 {
                     pPlayer->PrepareQuestMenu(pCreature->GetGUID());
                     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_HODIR_IMAGE,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
@@ -152,19 +147,19 @@ bool GossipSelect_keeper_image(Player* pPlayer, Creature* pCreature, uint32 uiSe
     {
         case 33241:
             DoScriptText(SAY_FREYA_HELP, pCreature);
-            FreyaHelp = true;
+            pCreature->CastSpell(pCreature, SPELL_KEEPER_ACTIVE, true);
             break;
         case 33242:
             DoScriptText(SAY_THORIM_HELP, pCreature);
-            ThorimHelp = true;
+            pCreature->CastSpell(pCreature, SPELL_KEEPER_ACTIVE, true);
             break;
         case 33244:
             DoScriptText(SAY_MIMIRON_HELP, pCreature);
-            MimironHelp = true;
+            pCreature->CastSpell(pCreature, SPELL_KEEPER_ACTIVE, true);
             break;
         case 33213:
             DoScriptText(SAY_HODIR_HELP, pCreature);
-            HodirHelp = true;
+            pCreature->CastSpell(pCreature, SPELL_KEEPER_ACTIVE, true);
             break;
     }
     
