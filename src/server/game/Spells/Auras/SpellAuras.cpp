@@ -1108,7 +1108,7 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                             target->RemoveAura(61988);
                         break;
                     case 61990: // Hodir Flash Freeze immunity remove
-                        if (target->HasAura(61990) & removeMode == AURA_REMOVE_BY_DEATH)
+                        if (target->HasAura(61990) && removeMode == AURA_REMOVE_BY_DEATH)
                             target->RemoveAura(7940);
                     case 72368: // Shared Suffering
                     case 72369:
