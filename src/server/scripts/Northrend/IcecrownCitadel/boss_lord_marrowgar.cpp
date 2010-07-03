@@ -299,7 +299,6 @@ struct npc_cold_flameAI : public ScriptedAI
     }
     ScriptedInstance* m_pInstance;
     uint32 m_uiColdFlameTimer;
-    uint32 m_uiColdFlameTimer;
     void Reset()
     {
         float x, y, z;
