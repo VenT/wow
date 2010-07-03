@@ -243,6 +243,7 @@ struct boss_razorscaleAI : public BossAI
                         return;
                     case EVENT_LAND:
                         me->SetFlying(false);
+                        me->NearTeleportTo(586.966, -175.534, 391.516998, 1.691704);
                         me->CastSpell(me, SPELL_STUN, true);
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         if (Creature *pCommander = me->GetCreature(*me, pInstance->GetData64(DATA_EXP_COMMANDER)))

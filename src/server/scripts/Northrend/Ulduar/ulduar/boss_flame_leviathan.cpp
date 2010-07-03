@@ -315,6 +315,22 @@ struct boss_flame_leviathanAI : public BossAI
         }
     }
 
+    // HACK: this fixes problems in instance bind and loot.
+    void DamageTaken(Unit* pKiller, uint32 &damage)
+    {
+        if(damage >= me->GetHealth())
+        {
+            if (pKiller && pKiller->IsVehicle())
+            {
+                damage = 0;
+                if (!pKiller->GetVehicleKit()->HasEmptySeat(0))
+                    pKiller->GetVehicleKit()->GetPassenger(0)->Kill(me, false);
+                else if (!pKiller->GetVehicleKit()->HasEmptySeat(1))
+                    pKiller->GetVehicleKit()->GetPassenger(1)->Kill(me, false);
+            }
+        }
+    }
+
     void DespawnCreatures(uint32 entry, float distance, bool discs = false)
     {
         std::list<Creature*> m_pCreatures;
