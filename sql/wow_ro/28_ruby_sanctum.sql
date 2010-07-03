@@ -202,8 +202,8 @@ INSERT INTO quest_template
 VALUES
    (26034, 2, 82, 80, 4987, 62, 0, 0, 0, 0, 0, 0, 7, 240000, 202500, 0, 0, 0, 0, 0, 200, 0, 0, 0, 0, 0, 49426, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'The Twilight Destroyer', 'Defeat Halion and repel the invasion of the Ruby Sanctum.', 'This was no reckless attack, but rather a carefully orchestrated strike against the heart of the Red Dragonflight.$B$BZarithrian, on the bluff over there, is overseeing the assault, but the true leader of this force is a brash and powerful Twilight dragon named Halion. Not since Dargonax has a full-grown spawn of Sinestra\'s twisted experiments been seen.$B$BSlay him, $N, and then when the invasion has been fully repelled, report to Krasus regarding all you have seen here.', '', 'Report back to Krasus atop Wyrmrest Temple.', 39863, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '');
 REPLACE INTO script_texts (`entry`, `content_default`, `npc_entry`, `content_loc3`, `sound`, `type`, `language`) VALUES
-( -1752008, "", 0, "Hilfe! Ich bin in diesem Baum gefangen! Helft mir!", 17490, 1, 7),
-( -1752009, "", 0, "Danke", 17491, 1, 7),
+( -1752008, "", 0, "Help! I am traped within this tree, I require aid!", 17490, 1, 7),
+( -1752009, "", 0, "Thank you!", 17491, 1, 7),
 ( -1752010, "", 0, "Wir glaubten das Sanktum ist gut geschätzt, aber auf diese Art von Angriff waren wir nicht vorbereitet...", 17492, 0, 7),
 ( -1752011, "", 0, "Die Schwarzen Drachkin tauchten aus dem nichts auf und überfielen uns bevor wir reagieren konnten...", 17493, 0, 7),
 ( -1752012, "", 0, "Wir hatten keine Chance...Während meine Brüder starben, konnte ich mich hier zurückziehen und den Eingang versperren.", 17494, 0, 7),
