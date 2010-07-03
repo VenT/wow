@@ -86,6 +86,7 @@ struct instance_icecrown_citadel : public ScriptedInstance
     uint64 uiCitadelTp;
     uint64 uiSindragossaTp;
     uint64 uiLichTp;
+    m_uiColdDespawn;
 
     uint32 auiEncounter[MAX_ENCOUNTER];
 
