@@ -397,18 +397,11 @@ struct boss_thorimAI : public BossAI
                     
         DoMeleeAttackIfReady();
     }
-        if (phase == PHASE_1 && HealthBelowPct(95))
-        {
-            DoZoneInCombat();
-            phase = PHASE_2;
-        }
     
-        if (phase == PHASE_2)
+    void DoAction(const int32 action)
+    {
+        switch (action)
         {
-            while (uint32 eventId = events.ExecuteEvent())
-            {
-                switch(eventId)
-                {
             case INCREASE_PREADDS_COUNT:
                 ++PreAddsCount;
                 break;
@@ -437,10 +430,7 @@ struct boss_thorimAI : public BossAI
                 }
                 else me->AddAura(SPELL_TOUCH_OF_DOMINION, me);
                 break;
-            }
-       }
-        DoMeleeAttackIfReady();
-    }
+        }
         
         if (PreAddsCount >= 6 && FirstTime)
         {
