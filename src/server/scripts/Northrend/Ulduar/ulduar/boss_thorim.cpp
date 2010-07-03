@@ -295,15 +295,7 @@ struct boss_thorimAI : public BossAI
     {
         DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2), me);
         _EnterCombat();
-
-        if (phase == PHASE_NULL && FirstTime)
-        {
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            DoZoneInCombat();
-            phase = PHASE_1;
-    
-        }
-
+        
         // Spawn Thunder Orbs
         for(uint8 n = 0; n < 7; n++)
             me->SummonCreature(33378, PosOrbs[n], TEMPSUMMON_CORPSE_DESPAWN);
@@ -829,7 +821,7 @@ struct thorim_energy_sourceAI : public Scripted_NoMovementAI
     {
         TransferTimer = 0;
         me->ForcedDespawn(5000);
-//        me->SetReactState(REACT_PASSIVE);
+        me->SetReactState(REACT_PASSIVE);
     }
 
     void UpdateAI(const uint32 uiDiff)
