@@ -853,3 +853,9 @@ UPDATE `creature_template` SET `dmg_multiplier` = 50, flags_extra = 1 WHERE `ent
 UPDATE `creature_template` SET `dmg_multiplier` = 75, flags_extra = 1 WHERE `entry` = 33293;
 UPDATE `creature_template` SET flags_extra = 257 WHERE entry IN (33113, 33271); 
 UPDATE `creature_template` SET flags_extra = 1 WHERE entry IN (32867, 32927, 32857, 32930, 33515, 32906, 32845, 33350, 33432, 33651, 33670, 32865, 33288);
+-- Thorim adds e Dalaran Portal
+UPDATE `creature_template` SET `dmg_multiplier` = 15 WHERE `entry` IN (32876, 32877);
+UPDATE `creature_template` SET `dmg_multiplier` = 8 WHERE `entry` = 32904;
+UPDATE `creature_template` SET `dmg_multiplier` = 10 WHERE `entry` = 32878;
+
+UPDATE `gameobject_template` SET `faction` = 2007, `data0` = 53141, `data2` = 0 WHERE `entry` = 194481;

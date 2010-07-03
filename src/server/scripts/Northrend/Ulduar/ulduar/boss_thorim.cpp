@@ -270,7 +270,9 @@ struct boss_thorimAI : public BossAI
     {
         DoScriptText(SAY_DEATH, me);
         _JustDied();
-        
+
+        me->setFaction(35);
+
         // Achievements
         if (pInstance)
         {
