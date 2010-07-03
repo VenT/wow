@@ -1,3 +1,9 @@
+-- Some cleanup
+UPDATE `creature_template` SET `ScriptName`= '' WHERE `entry` IN (33365,33370,33312,33367,33686,33579,34275,33214);
+UPDATE `gameobject_template` SET `ScriptName`= 'go_ulduar_tower' WHERE `entry` IN (194375,194371,194370,194377);
+DELETE FROM `areatrigger_scripts` WHERE `entry` IN (5369,5423);
+DELETE FROM `script_waypoint` WHERE `entry`=33370;
+
 DELETE FROM areatrigger_scripts WHERE `entry`=4156;
 INSERT INTO areatrigger_scripts VALUES (4156,'at_naxxramas_frostwyrm_wing');
 
