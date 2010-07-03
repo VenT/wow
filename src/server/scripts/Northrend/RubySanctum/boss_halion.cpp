@@ -15,3 +15,4 @@
  */
 
 #include "ScriptPCH.h"
+#include "ruby_sanctum.h"
