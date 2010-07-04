@@ -235,7 +235,6 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player, bool loginCheck)
         if (boundedInstance && boundedInstance->save)
             if (Map *boundedMap = sMapMgr.FindMap(mapid,boundedInstance->save->GetInstanceId()))
                 if (!loginCheck && !boundedMap->CanEnter(player))
-            sLog.outDebug("Map::CanPlayerEnter - Prevents crash!");
                     return false;
             /*
                 This check has to be moved to InstanceMap::CanEnter()
