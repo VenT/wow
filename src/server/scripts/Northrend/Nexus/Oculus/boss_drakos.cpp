@@ -72,7 +72,7 @@ struct boss_drakosAI : public ScriptedAI
         lSummons.DespawnAll();
         uiMagicPullTimer = 15000;
         uiStompTimer = 17000;
-        uiBombSummonTimer = 2000;
+        uiBombSummonTimer = 6000;
 
         bPostPull = false;
 
@@ -118,7 +118,7 @@ struct boss_drakosAI : public ScriptedAI
                 me->SummonCreature(NPC_UNSTABLE_SPHERE, pPosition);
             }
 
-            uiBombSummonTimer = 2000;
+            uiBombSummonTimer = 6000;
         } else uiBombSummonTimer -= uiDiff;
 
         if (uiMagicPullTimer <= uiDiff)
@@ -148,7 +148,7 @@ struct boss_drakosAI : public ScriptedAI
         {
             pInstance->SetData(DATA_DRAKOS_EVENT, DONE);
             // start achievement timer (kill Eregos within 20 min)
-            pInstance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
+            //pInstance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
         }
 
         lSummons.DespawnAll();
@@ -202,6 +202,7 @@ CreatureAI* GetAI_npc_unstable_sphere(Creature* pCreature)
     return new npc_unstable_sphereAI (pCreature);
 }
 
+
 void AddSC_boss_drakos()
 {
     Script* newscript;
@@ -216,3 +217,4 @@ void AddSC_boss_drakos()
     newscript->GetAI = &GetAI_npc_unstable_sphere;
     newscript->RegisterSelf();
 }
+
