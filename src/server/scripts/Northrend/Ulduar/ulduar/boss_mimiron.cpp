@@ -372,6 +372,8 @@ struct boss_mimironAI : public BossAI
                                         pAerialUnit->DisappearAndDie();
                                         DespawnCreatures(34050, 100);
                                         me->Kill(me, false);
+                                        if (Player* pTarget = me->SelectNearestTarget()->ToPlayer())
+                                          pTarget->RewardPlayerAndGroupAtKill(pLeviathan);
                                         checkBotAlive = true;
                                     }
             }

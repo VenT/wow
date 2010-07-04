@@ -134,10 +134,6 @@ enum Spells
     
     // Healthy Spore
     SPELL_HEALTHY_SPORE_VISUAL                  = 62538,
-    SPELL_HEALTHY_SPORE_NE                      = 62591,
-    SPELL_HEALTHY_SPORE_NW                      = 62582,
-    SPELL_HEALTHY_SPORE_SE                      = 62592,
-    SPELL_HEALTHY_SPORE_SW                      = 62593,
     SPELL_GROW                                  = 62559,
     SPELL_POTENT_PHEROMONES                     = 62541,
     SPELL_POTENT_PHEROMONES_AURA                = 64321,
@@ -985,9 +981,6 @@ struct creature_ancient_conservatorAI : public ScriptedAI
     
     void EnterCombat(Unit* pWho)
     {
-        DoCast(RAND(SPELL_HEALTHY_SPORE_NE, SPELL_HEALTHY_SPORE_SE));
-        DoCast(RAND(SPELL_HEALTHY_SPORE_NW, SPELL_HEALTHY_SPORE_SW));
-        healthySporesSpawned += 2;
         DoCast(me, SPELL_CONSERVATORS_GRIP);
     }
 
@@ -1023,10 +1016,12 @@ struct creature_ancient_conservatorAI : public ScriptedAI
 
         if(uiSpawnHealthySporeTimer <= 0 && healthySporesSpawned < 10)
         {
-            DoCast(RAND(SPELL_HEALTHY_SPORE_NE, SPELL_HEALTHY_SPORE_SE));
-            DoCast(RAND(SPELL_HEALTHY_SPORE_NW, SPELL_HEALTHY_SPORE_SW));
-            healthySporesSpawned += 2;
-            uiSpawnHealthySporeTimer = 2000;
+            for (uint32 i = 0; i < 2; ++i)
+            {
+                Position pos;
+                me->GetRandomNearPosition(pos, 25);
+                me->SummonCreature(NPC_HEALTHY_SPORE, pos, TEMPSUMMON_TIMED_DESPAWN, 20000);
+            }            uiSpawnHealthySporeTimer = 2000;
         }
         else uiSpawnHealthySporeTimer -= diff;
 
@@ -1055,7 +1050,6 @@ struct creature_healthy_sporeAI : public Scripted_NoMovementAI
         DoCast(me, SPELL_HEALTHY_SPORE_VISUAL);
         DoCast(me, SPELL_POTENT_PHEROMONES);
         DoCast(me, SPELL_GROW);
-        me->ForcedDespawn(20000);
     }
 
     ScriptedInstance* m_pInstance;
