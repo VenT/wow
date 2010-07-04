@@ -357,7 +357,7 @@ struct instance_ulduar : public InstanceData
                 break;
             case BOSS_THORIM:
                 if (state == IN_PROGRESS)
-//                    pThorimLever->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_UNK1);
+                    pThorimLever->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_UNK1);
                 CheckKeepersState();
                 break;
             case BOSS_MIMIRON:
