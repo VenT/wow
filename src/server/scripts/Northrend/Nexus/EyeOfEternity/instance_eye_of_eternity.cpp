@@ -1,7 +1,7 @@
 #include "ScriptPCH.h"
 #include "eye_of_eternity.h"
 #include "WorldPacket.h"
- 
+
 #define DISABLED_ENTER_MESSAGE "You cannot enter Eye of Eternity now"
 #define EXIT_MAP 571
 #define EXIT_X 3864
@@ -27,8 +27,6 @@ struct instance_eye_of_eternity : public ScriptedInstance
  
     uint64 m_uiMalygosGUID;
     uint64 m_uiPlayerCheckGUID;
-
-    std::list<uint64> m_flyingPlayers;
     
     bool m_bVortex;
     
@@ -64,7 +62,7 @@ struct instance_eye_of_eternity : public ScriptedInstance
         switch(pGo->GetEntry())
         {
             case 193070: m_uiMalygosPlatformGUID = pGo->GetGUID(); break;
-            case 193958: //normal, hero 
+            case 193958: m_uiFocusingIrisGUID = pGo->GetGUID(); break;//normal,hero
             case 193960: m_uiFocusingIrisGUID = pGo->GetGUID(); break;
             case 193908: m_uiExitPortalGUID = pGo->GetGUID(); break;
             default:
@@ -173,8 +171,6 @@ struct instance_eye_of_eternity : public ScriptedInstance
                 return m_uiMalygosPlatformData;
             case TYPE_VORTEX:
                 return m_bVortex;
-            case TYPE_CHECK_PLAYER_FLYING:
-                return isFlying(m_uiPlayerCheckGUID);
         }
         return 0;
     }
@@ -191,65 +187,18 @@ struct instance_eye_of_eternity : public ScriptedInstance
         return 0;
     }
 
-    void SetData64(uint32 uiType, uint64 uiData)
-    {
-        switch(uiType)
-        {
-        case TYPE_PLAYER_HOVER:
-            if(!isFlying(uiData))
-            {
-                Unit* pUnit = Unit::GetUnit(*(instance->GetCreature(m_uiMalygosGUID)), uiData);
-                if(pUnit && pUnit->GetTypeId() == TYPEID_PLAYER)
-                {
-                    m_flyingPlayers.push_back(uiData);
-
-                    //Using packet workaround
-                    WorldPacket data(12);
-                    data.SetOpcode(SMSG_MOVE_SET_CAN_FLY);
-                    data.append(pUnit->GetPackGUID());
-                    data << uint32(0);
-                    pUnit->SendMessageToSet(&data, true);
-                }
-            }
-            break;
-
-        case TYPE_SET_PLAYER_TO_CHECK:
-            m_uiPlayerCheckGUID = uiData;
-            break;
-        }
-    }
-
-    bool isFlying(uint64 GUID)
-    {
-        if(m_flyingPlayers.empty())
-            return false;
-
-        for(std::list<uint64>::iterator itr = m_flyingPlayers.begin(); itr != m_flyingPlayers.end(); ++itr)
-        {
-            if(Player* pPlayer = (Player*)Unit::GetUnit(*(instance->GetCreature(m_uiMalygosGUID)), (*itr)))
-            {
-                if(pPlayer->GetGUID() == GUID)
-                    return true;
-            }
-        }
-        return false;
-    }
-
     void dropAllPlayers()
     {
-        for(std::list<uint64>::iterator itr = m_flyingPlayers.begin(); itr != m_flyingPlayers.end(); ++itr)
-        {
-            if(Unit* pUnit = Unit::GetUnit(*(instance->GetCreature(m_uiMalygosGUID)), (*itr)))
-            {
-                //Using packet workaround
-                WorldPacket data(12);
-                data.SetOpcode(SMSG_MOVE_UNSET_CAN_FLY);
-                data.append(pUnit->GetPackGUID());
-                data << uint32(0);
-                pUnit->SendMessageToSet(&data, true);
-            }
-        }
-        m_flyingPlayers.clear();
+        Map::PlayerList const &PlayerList = instance->GetPlayers();
+
+        if (!PlayerList.isEmpty())
+            for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                if (Player *pPlayer = i->getSource())
+                    if (Unit* pDisk = pPlayer->GetVehicleBase())
+                    {
+                        pPlayer->ExitVehicle();
+                        pDisk->ToCreature()->ForcedDespawn();
+                    }
     }
 
     void OnPlayerEnter(Player* pPlayer)
@@ -270,7 +219,7 @@ InstanceData* GetInstanceData_instance_eye_of_eternity(Map* pMap)
 {
     return new instance_eye_of_eternity(pMap);
 }
- 
+
 void AddSC_instance_eye_of_eternity()
 {
     Script *newscript;
