@@ -1,11 +1,6 @@
 #! /bin/bash
 while true
 do
-#  PID1=$(pidof worldserver)
-#  if (( PID1 < 1 ))
-#  then
-#                screen -A -m -d -S worldserver ./startw
-#  fi
   PID2=$(pidof authserver)
   if (( PID2 < 1 ))
   then

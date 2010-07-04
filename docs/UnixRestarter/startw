@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ###############
-# About: Auto restart mangos-worldd on crash & generate crash report into crash_log_(DATE_TIME).log
+# About: Auto restart worldserver on crash & generate crash report into crash_log_(DATE_TIME).log
 ###############
 # 1. Compile TrinityCore with the following command: cmake /root/wow/ -DPREFIX=/opt/trinity -DDO_DEBUG=1 -DCMAKE_C_FLAGS="-m32 -D_LARGEFILE_SOURCE -DFD_SETSIZE=131072 -march=prescott -ggdb3 -g3 -pipe -fno-strength-reduce -fno-delete-null-pointer-checks -fno-strict-aliasing -frename-registers"
 # 2. Put these files: start, startw, startl, restarter, restarter-bin, in /opt/trinity/bin folder.
