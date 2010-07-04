@@ -1,19 +1,3 @@
-/* Copyright (C) 2009 - 2010 TrinityCore <http://www.trinitycore.org/>
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 #include "ScriptPCH.h"
 #include "obsidian_sanctum.h"
 
@@ -32,10 +16,15 @@ struct instance_obsidian_sanctum : public ScriptedInstance
     uint64 m_uiTenebronGUID;
     uint64 m_uiShadronGUID;
     uint64 m_uiVesperonGUID;
+    uint64 m_uiDiscipleOfVesperonGUID;    
+
+    std::list<uint64> TwilightPortals;
+    std::list<uint64>::const_iterator PortalsItr;
 
     bool m_bTenebronKilled;
     bool m_bShadronKilled;
     bool m_bVesperonKilled;
+    bool LoadedItr;
 
     void Initialize()
     {
@@ -49,9 +38,12 @@ struct instance_obsidian_sanctum : public ScriptedInstance
         m_bTenebronKilled = false;
         m_bShadronKilled = false;
         m_bVesperonKilled = false;
+        LoadedItr = false;
+
+        TwilightPortals.clear();
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* pCreature, bool add)
     {
         switch(pCreature->GetEntry())
         {
@@ -72,19 +64,24 @@ struct instance_obsidian_sanctum : public ScriptedInstance
                 m_uiVesperonGUID = pCreature->GetGUID();
                 pCreature->setActive(true);
                 break;
+            case NPC_DISCIPLE_OF_VESPERON:
+                m_uiDiscipleOfVesperonGUID = pCreature->GetGUID();
+                pCreature->setActive(true);
+                break;
         }
     }
 
-    void SetData(uint32 uiType, uint32 uiData)
+    void OnGameObjectCreate(GameObject* pGo, bool add)
     {
-        if (uiType == TYPE_SARTHARION_EVENT)
-            m_auiEncounter[0] = uiData;
-        else if(uiType == TYPE_TENEBRON_PREKILLED)
-            m_bTenebronKilled = true;
-        else if(uiType == TYPE_SHADRON_PREKILLED)
-            m_bShadronKilled = true;
-        else if(uiType == TYPE_VESPERON_PREKILLED)
-            m_bVesperonKilled = true;
+        switch (pGo->GetEntry())
+        {
+            case 193988:
+            {
+                TwilightPortals.push_back(pGo->GetGUID());
+                pGo->SetPhaseMask(2, true);
+                break;
+            }
+        }
     }
 
     uint32 GetData(uint32 uiType)
@@ -97,6 +94,8 @@ struct instance_obsidian_sanctum : public ScriptedInstance
             return m_bShadronKilled;
         else if(uiType == TYPE_VESPERON_PREKILLED)
             return m_bVesperonKilled;
+        else if (uiType == DATA_TWILIGHT_PORTAL_SIZE)
+            return TwilightPortals.size();
 
         return 0;
     }
@@ -113,8 +112,40 @@ struct instance_obsidian_sanctum : public ScriptedInstance
                 return m_uiShadronGUID;
             case DATA_VESPERON:
                 return m_uiVesperonGUID;
+            case DATA_DISCIPLE_OF_VESPERON:
+                return m_uiDiscipleOfVesperonGUID;
+            case DATA_TWILIGHT_PORTAL:
+            {
+                if (TwilightPortals.empty())
+                {
+                    sLog.outError("TSCR: Obsidian Sanctum: There aren't Twilight Portals in Inst Data");
+                    return 0;
+                }
+
+                if (!LoadedItr)
+                {
+                    PortalsItr = TwilightPortals.begin();
+                    LoadedItr = true;
+                }
+
+                uint64 guid = *PortalsItr;
+                ++PortalsItr;
+                return guid;
+            }
         }
         return 0;
+    }
+
+    void SetData(uint32 uiType, uint32 uiData)
+    {
+        if (uiType == TYPE_SARTHARION_EVENT)
+            m_auiEncounter[0] = uiData;
+        else if(uiType == TYPE_TENEBRON_PREKILLED)
+            m_bTenebronKilled = true;
+        else if(uiType == TYPE_SHADRON_PREKILLED)
+            m_bShadronKilled = true;
+        else if(uiType == TYPE_VESPERON_PREKILLED)
+            m_bVesperonKilled = true;
     }
 };
 
