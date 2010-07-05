@@ -51,7 +51,7 @@ enum ProfessorSpells
     SPELL_CHOKING_GAS_10_NORMAL    =    71278,
 	SPELL_CHOKING_GAS_25_NORMAL    =    72619,
 	SPELL_CHOKING_GAS_10_HEROIC    =    72619,
-	SPELL_CHOKING_GAS_10_HEROIC    =    72620,
+	SPELL_CHOKING_GAS_25_HEROIC    =    72620,
     SPELL_CHOKING_GAS_EXPLOSION    =    71279,
 };
 
@@ -76,6 +76,8 @@ struct boss_professor_putricideAI : public ScriptedAI
     uint32 m_uiPhase;
     uint32 m_uiUnstableExperimentTimer;
     uint32 m_uiAddSpawnTimer;
+    uint32 m_uiGooTimer;
+    uint32 m_uiBombtimer;
 
     void Reset()
     {
@@ -365,20 +367,20 @@ CreatureAI* GetAI_boss_professor_putricide(Creature* pCreature)
 
 void AddSC_boss_professor_putricide()
 {
-    Script *newscript;
+    Script *NewScript;
 
-    newscript = new Script;
-    newscript->Name = "boss_professor_putricide";
-    newscript->GetAI = &GetAI_boss_professor_putricide;
-    newscript->RegisterSelf();
+    NewScript = new Script;
+    NewScript->Name = "boss_professor_putricide";
+    NewScript->GetAI = &GetAI_boss_professor_putricide;
+    NewScript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "npc_volatile_ooze";
-    newscript->GetAI = &GetAI_npc_volatile_ooze;
-    newscript->RegisterSelf();
+    NewScript = new Script;
+    NewScript->Name = "npc_volatile_ooze";
+    NewScript->GetAI = &GetAI_npc_volatile_ooze;
+    NewScript->RegisterSelf();
 
-    newScript = new Script;
-    newScript->Name = "npc_choke_bomb";
-    newScript->GetAI = &GetAI_npc_choke_bomb;
-    newScript->RegisterSelf(); 
+    NewScript = new Script;
+    NewScript->Name = "npc_choke_bomb";
+    NewScript->GetAI = &GetAI_npc_choke_bomb;
+    NewScript->RegisterSelf(); 
 }
