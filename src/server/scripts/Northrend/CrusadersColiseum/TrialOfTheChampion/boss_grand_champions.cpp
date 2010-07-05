@@ -1,5 +1,4 @@
-/* Copyright (C) 2008 - 2010 Trinity <http://www.trinitycore.org/>
- * Copyright (C) 2006 - 2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -30,10 +29,10 @@ EndScriptData */
 enum eSpells
 {
     //Vehicle
-    SPELL_CHARGE                    = 63010,
+	
     SPELL_SHIELD_BREAKER            = 68504,
-    SPELL_SHIELD                    = 66482,
-
+    SPELL_SHIELD                    = 62544,
+	
     // Marshal Jacob Alerius && Mokra the Skullcrusher || Warrior
     SPELL_MORTAL_STRIKE             = 68783,
     SPELL_MORTAL_STRIKE_H           = 68784,
@@ -61,7 +60,7 @@ enum eSpells
     // Jaelyne Evensong && Zul'tore || Hunter
     SPELL_DISENGAGE                 = 68340, //not implemented in the AI yet...
     SPELL_LIGHTNING_ARROWS          = 66083,
-    SPELL_MULTI_SHOT                = 66081,
+    SPELL_MULTI_SHOT                = 49047,
     SPELL_SHOOT                     = 65868,
     SPELL_SHOOT_H                   = 67988,
 
@@ -71,7 +70,12 @@ enum eSpells
     SPELL_FAN_OF_KNIVES             = 67706,
     SPELL_POISON_BOTTLE             = 67701
 };
-
+enum eEnums
+{
+    SAY_START_1                      = -1999939,
+    SAY_START_2                      = -1999937
+};
+	
 enum eSeat
 {
     SEAT_ID_0                       = 0
@@ -93,17 +97,17 @@ void AggroAllPlayers(Creature* pTemp)
 {
     Map::PlayerList const &PlList = pTemp->GetMap()->GetPlayers();
 
-    if (PlList.isEmpty())
+    if(PlList.isEmpty())
             return;
 
     for (Map::PlayerList::const_iterator i = PlList.begin(); i != PlList.end(); ++i)
     {
-        if (Player* pPlayer = i->getSource())
+        if(Player* pPlayer = i->getSource())
         {
-            if (pPlayer->isGameMaster())
+            if(pPlayer->isGameMaster())
                 continue;
 
-            if (pPlayer->isAlive())
+            if(pPlayer->isAlive())
             {
                 pTemp->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
                 pTemp->SetReactState(REACT_AGGRESSIVE);
@@ -152,9 +156,10 @@ struct generic_vehicleAI_toc5AI : public npc_escortAI
         pInstance = pCreature->GetInstanceData();
     }
 
+
+
     ScriptedInstance* pInstance;
 
-    uint32 uiChargeTimer;
     uint32 uiShieldBreakerTimer;
     uint32 uiBuffTimer;
 
@@ -162,32 +167,41 @@ struct generic_vehicleAI_toc5AI : public npc_escortAI
 
     void Reset()
     {
-        uiChargeTimer = 5000;
         uiShieldBreakerTimer = 8000;
         uiBuffTimer = urand(30000,60000);
     }
 
-    void SetData(uint32 uiType, uint32 /*uiData*/)
+    void SetData(uint32 uiType, uint32 uiData)
     {
         switch(uiType)
         {
             case 1:
-                AddWaypoint(0,747.36,634.07,411.572);
-                AddWaypoint(1,780.43,607.15,411.82);
-                AddWaypoint(2,785.99,599.41,411.92);
-                AddWaypoint(3,778.44,601.64,411.79);
+                AddWaypoint(0,746.45,647.03,411.57);
+                AddWaypoint(1,771.434, 642.606, 411.9);
+                AddWaypoint(2,779.807, 617.535, 411.716);
+                AddWaypoint(3,771.098, 594.635, 411.625);
+				AddWaypoint(4,746.887, 583.425, 411.668);
+				AddWaypoint(5,715.176, 583.782, 412.394);
+				AddWaypoint(6,720.719, 591.141, 411.737);
                 uiWaypointPath = 1;
                 break;
             case 2:
-                AddWaypoint(0,747.35,634.07,411.57);
-                AddWaypoint(1,768.72,581.01,411.92);
-                AddWaypoint(2,763.55,590.52,411.71);
+                AddWaypoint(0,746.45,647.03,411.57);
+                AddWaypoint(1,771.434, 642.606, 411.9);
+                AddWaypoint(2,779.807, 617.535, 411.716);
+                AddWaypoint(3,771.098, 594.635, 411.625);
+				AddWaypoint(4,746.887, 583.425, 411.668);
+				AddWaypoint(5,746.16, 571.678, 412.389);
+				AddWaypoint(6,746.887, 583.425, 411.668);
                 uiWaypointPath = 2;
                 break;
             case 3:
-                AddWaypoint(0,747.35,634.07,411.57);
-                AddWaypoint(1,784.02,645.33,412.39);
-                AddWaypoint(2,775.67,641.91,411.91);
+                AddWaypoint(0,746.45,647.03,411.57);
+                AddWaypoint(1,771.434, 642.606, 411.9);
+                AddWaypoint(2,779.807, 617.535, 411.716);
+                AddWaypoint(3,771.098, 594.635, 411.625);
+				AddWaypoint(4,777.759, 584.577, 412.393);
+				AddWaypoint(5,772.48, 592.99, 411.68);
                 uiWaypointPath = 3;
                 break;
         }
@@ -211,7 +225,7 @@ struct generic_vehicleAI_toc5AI : public npc_escortAI
         }
     }
 
-    void EnterCombat(Unit* /*pWho*/)
+    void EnterCombat(Unit* pWho)
     {
         DoCastSpellShield();
     }
@@ -231,38 +245,19 @@ struct generic_vehicleAI_toc5AI : public npc_escortAI
 
         if (uiBuffTimer <= uiDiff)
         {
-            if (!me->HasAura(SPELL_SHIELD))
                 DoCastSpellShield();
-
             uiBuffTimer = urand(30000,45000);
         }else uiBuffTimer -= uiDiff;
-
-        if (uiChargeTimer <= uiDiff)
-        {
-            Map::PlayerList const& players = me->GetMap()->GetPlayers();
-            if (me->GetMap()->IsDungeon() && !players.isEmpty())
-            {
-                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-                {
-                    Player* pPlayer = itr->getSource();
-                    if (pPlayer && !pPlayer->isGameMaster() && me->IsInRange(pPlayer,8.0f,25.0f,false))
-                    {
-                        DoResetThreat();
-                        me->AddThreat(pPlayer,1.0f);
-                        DoCast(pPlayer, SPELL_CHARGE);
-                        break;
-                    }
-                }
-            }
-            uiChargeTimer = 5000;
-        }else uiChargeTimer -= uiDiff;
 
         //dosen't work at all
         if (uiShieldBreakerTimer <= uiDiff)
         {
             Vehicle *pVehicle = me->GetVehicleKit();
             if (!pVehicle)
+
+
                 return;
+
 
             if (Unit* pPassenger = pVehicle->GetPassenger(SEAT_ID_0))
             {
@@ -306,7 +301,6 @@ struct boss_warrior_toc5AI : public ScriptedAI
         uiPhaseTimer = 0;
 
         me->SetReactState(REACT_PASSIVE);
-        // THIS IS A HACK, SHOULD BE REMOVED WHEN THE EVENT IS FULL SCRIPTED
         me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
@@ -319,6 +313,7 @@ struct boss_warrior_toc5AI : public ScriptedAI
     uint32 uiInterceptTimer;
     uint32 uiMortalStrikeTimer;
     uint32 uiAttackTimer;
+	uint32 uiResetTimer;
 
     bool bDone;
     bool bHome;
@@ -348,6 +343,8 @@ struct boss_warrior_toc5AI : public ScriptedAI
         if (!bDone && GrandChampionsOutVehicle(me))
         {
             bDone = true;
+			
+ 		DoScriptText(SAY_START_2, me);	
 
             if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_1))
                 me->SetHomePosition(739.678,662.541,412.393,4.49);
@@ -389,28 +386,30 @@ struct boss_warrior_toc5AI : public ScriptedAI
                     }
                 }
             }
-            uiInterceptTimer = 7000;
+            uiInterceptTimer = 25000;
         } else uiInterceptTimer -= uiDiff;
 
         if (uiBladeStormTimer <= uiDiff)
         {
             DoCastVictim(SPELL_BLADESTORM);
-            uiBladeStormTimer = urand(15000,20000);
+            uiBladeStormTimer = urand(25000,35000);
         } else uiBladeStormTimer -= uiDiff;
 
         if (uiMortalStrikeTimer <= uiDiff)
         {
             DoCastVictim(SPELL_MORTAL_STRIKE);
-            uiMortalStrikeTimer = urand(8000,12000);
+            uiMortalStrikeTimer = urand(22000,26000);
         } else uiMortalStrikeTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
-
-    void JustDied(Unit* /*pKiller*/)
+	
+    void JustDied(Unit* pKiller)
     {
+	 		DoScriptText(SAY_START_1, me);	
         if (pInstance)
             pInstance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
+		
     }
 };
 
@@ -433,7 +432,6 @@ struct boss_mage_toc5AI : public ScriptedAI
         uiPhaseTimer = 0;
 
         me->SetReactState(REACT_PASSIVE);
-        // THIS IS A HACK, SHOULD BE REMOVED WHEN THE EVENT IS FULL SCRIPTED
         me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
@@ -500,34 +498,26 @@ struct boss_mage_toc5AI : public ScriptedAI
             }
         }else uiPhaseTimer -= uiDiff;
 
-        if (uiFireBallTimer <= uiDiff)
-        {
-            if (me->getVictim())
-                DoCastVictim(SPELL_FIREBALL);
-            uiFireBallTimer = 5000;
-        } else uiFireBallTimer -= uiDiff;
-
-
         if (!UpdateVictim() || me->HasUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT))
             return;
 
         if (uiFireBallTimer <= uiDiff)
         {
             DoCastVictim(SPELL_FIREBALL);
-            uiFireBallTimer = 5000;
+            uiFireBallTimer = 17000;
         } else uiFireBallTimer -= uiDiff;
 
         if (uiPolymorphTimer <= uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(pTarget, SPELL_POLYMORPH);
-            uiPolymorphTimer = 8000;
+            uiPolymorphTimer = 22000;
         } else uiPolymorphTimer -= uiDiff;
 
         if (uiBlastWaveTimer <= uiDiff)
         {
             DoCastAOE(SPELL_BLAST_WAVE,false);
-            uiBlastWaveTimer = 13000;
+            uiBlastWaveTimer = 30000;
         } else uiBlastWaveTimer -= uiDiff;
 
         if (uiHasteTimer <= uiDiff)
@@ -535,16 +525,18 @@ struct boss_mage_toc5AI : public ScriptedAI
             me->InterruptNonMeleeSpells(true);
 
             DoCast(me,SPELL_HASTE);
-            uiHasteTimer = 22000;
+            uiHasteTimer = 40000;
         } else uiHasteTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 
-    void JustDied(Unit* /*pKiller*/)
+    void JustDied(Unit* pKiller)
     {
+	 		DoScriptText(SAY_START_1, me);	
         if (pInstance)
             pInstance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
+		
     }
 };
 
@@ -567,7 +559,6 @@ struct boss_shaman_toc5AI : public ScriptedAI
         uiPhaseTimer = 0;
 
         me->SetReactState(REACT_PASSIVE);
-        // THIS IS A HACK, SHOULD BE REMOVED WHEN THE EVENT IS FULL SCRIPTED
         me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
@@ -648,7 +639,7 @@ struct boss_shaman_toc5AI : public ScriptedAI
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(pTarget,SPELL_CHAIN_LIGHTNING);
 
-            uiChainLightningTimer = 16000;
+            uiChainLightningTimer = 23000;
         } else uiChainLightningTimer -= uiDiff;
 
         if (uiHealingWaveTimer <= uiDiff)
@@ -662,30 +653,32 @@ struct boss_shaman_toc5AI : public ScriptedAI
             } else
                 DoCast(me,SPELL_HEALING_WAVE);
 
-            uiHealingWaveTimer = 12000;
+            uiHealingWaveTimer = 19000;
         } else uiHealingWaveTimer -= uiDiff;
 
         if (uiEartShieldTimer <= uiDiff)
         {
             DoCast(me,SPELL_EARTH_SHIELD);
 
-            uiEartShieldTimer = urand(30000,35000);
+            uiEartShieldTimer = urand(40000,45000);
         } else uiEartShieldTimer -= uiDiff;
 
         if (uiHexMendingTimer <= uiDiff)
         {
             DoCastVictim(SPELL_HEX_OF_MENDING,true);
 
-            uiHexMendingTimer = urand(20000,25000);
+            uiHexMendingTimer = urand(30000,35000);
         } else uiHexMendingTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 
-    void JustDied(Unit* /*pKiller*/)
+    void JustDied(Unit* pKiller)
     {
+	 		DoScriptText(SAY_START_1, me);	
         if (pInstance)
             pInstance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
+		
     }
 };
 
@@ -708,7 +701,6 @@ struct boss_hunter_toc5AI : public ScriptedAI
         uiPhaseTimer = 0;
 
         me->SetReactState(REACT_PASSIVE);
-        // THIS IS A HACK, SHOULD BE REMOVED WHEN THE EVENT IS FULL SCRIPTED
         me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
@@ -718,6 +710,7 @@ struct boss_hunter_toc5AI : public ScriptedAI
     uint32 uiPhaseTimer;
 
     uint32 uiShootTimer;
+    uint32 uiDisengageCooldown;
     uint32 uiMultiShotTimer;
     uint32 uiLightningArrowsTimer;
 
@@ -732,6 +725,7 @@ struct boss_hunter_toc5AI : public ScriptedAI
         uiShootTimer = 12000;
         uiMultiShotTimer = 0;
         uiLightningArrowsTimer = 7000;
+        uiDisengageCooldown = 10000;
 
         uiTargetGUID = 0;
 
@@ -770,7 +764,7 @@ struct boss_hunter_toc5AI : public ScriptedAI
             EnterEvadeMode();
             bHome = true;
         }
-
+				
         if (uiPhaseTimer <= uiDiff)
         {
             if (uiPhase == 1)
@@ -783,10 +777,23 @@ struct boss_hunter_toc5AI : public ScriptedAI
         if (!UpdateVictim() || me->HasUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT))
             return;
 
+        if (uiDisengageCooldown <= uiDiff)
+        {
+            if (me->IsWithinDistInMap(me->getVictim(), 5) && uiDisengageCooldown == 0)
+            {
+                DoCast(me, SPELL_DISENGAGE);
+                uiDisengageCooldown = 35000;
+            }
+            uiDisengageCooldown = 20000;
+        }else uiDisengageCooldown -= uiDiff;
+		
         if (uiLightningArrowsTimer <= uiDiff)
         {
-            DoCastAOE(SPELL_LIGHTNING_ARROWS,false);
-            uiLightningArrowsTimer = 7000;
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                DoCast(pTarget,SPELL_LIGHTNING_ARROWS);
+				
+            uiLightningArrowsTimer = 15000;
+
         } else uiLightningArrowsTimer -= uiDiff;
 
         if (uiShootTimer <= uiDiff)
@@ -796,8 +803,8 @@ struct boss_hunter_toc5AI : public ScriptedAI
                 uiTargetGUID = pTarget->GetGUID();
                 DoCast(pTarget, SPELL_SHOOT);
             }
-            uiShootTimer = 12000;
-            uiMultiShotTimer = 3000;
+            uiShootTimer = 19000;
+            uiMultiShotTimer = 8000;
             bShoot = true;
         } else uiShootTimer -= uiDiff;
 
@@ -831,11 +838,14 @@ struct boss_hunter_toc5AI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void JustDied(Unit* /*pKiller*/)
+    void JustDied(Unit* pKiller)
     {
+	 	DoScriptText(SAY_START_1, me);	
         if (pInstance)
             pInstance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
+		
     }
+ 
 };
 
 CreatureAI* GetAI_boss_hunter_toc5(Creature* pCreature)
@@ -857,7 +867,6 @@ struct boss_rouge_toc5AI : public ScriptedAI
         uiPhaseTimer = 0;
 
         me->SetReactState(REACT_PASSIVE);
-        // THIS IS A HACK, SHOULD BE REMOVED WHEN THE EVENT IS FULL SCRIPTED
         me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
 
@@ -927,29 +936,31 @@ struct boss_rouge_toc5AI : public ScriptedAI
         if (uiEviscerateTimer <= uiDiff)
         {
             DoCast(me->getVictim(),SPELL_EVISCERATE);
-            uiEviscerateTimer = 8000;
+            uiEviscerateTimer = 22000;
         } else uiEviscerateTimer -= uiDiff;
 
         if (uiFanKivesTimer <= uiDiff)
         {
             DoCastAOE(SPELL_FAN_OF_KNIVES,false);
-            uiFanKivesTimer = 14000;
+            uiFanKivesTimer = 20000;
         } else uiFanKivesTimer -= uiDiff;
 
         if (uiPosionBottleTimer <= uiDiff)
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_POISON_BOTTLE);
+            DoCast(pTarget,SPELL_POISON_BOTTLE);
             uiPosionBottleTimer = 19000;
         } else uiPosionBottleTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
 
-    void JustDied(Unit* /*pKiller*/)
+    void JustDied(Unit* pKiller)
     {
+	 	DoScriptText(SAY_START_1, me);	
         if (pInstance)
             pInstance->SetData(BOSS_GRAND_CHAMPIONS, DONE);
+		
     }
 };
 
