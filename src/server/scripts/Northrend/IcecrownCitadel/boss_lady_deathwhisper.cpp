@@ -344,6 +344,9 @@ struct npc_shadeAI : public ScriptedAI //Dont work
 		me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 		me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 		me->SetSpeed(MOVE_WALK, 1.1f, true);
+
+		Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM,0);
+		me->AddThreat(pTarget, 5000000.0f);
 	}
 
 	void EnterCombat(Unit* who)
@@ -356,7 +359,7 @@ struct npc_shadeAI : public ScriptedAI //Dont work
 
 	void MoveInLineOfSight(Unit *who)
 	{
-		if (!me->IsWithinDistInMap(who,3.0f))
+		if (!me->IsWithinDistInMap(who,2.0f))
 		{
 			Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM,0); 
 			DoCast(pTarget, RAID_MODE(SPELL_BLAST_10_NORMAL,SPELL_BLAST_25_NORMAL,SPELL_BLAST_10_HEROIC,SPELL_BLAST_25_HEROIC));

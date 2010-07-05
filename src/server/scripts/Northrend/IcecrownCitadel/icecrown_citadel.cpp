@@ -318,7 +318,7 @@ struct  npc_death_speaker_discipleAI: public ScriptedAI
         if (m_uiDarkTimer <= diff)
         {
             Unit* pTarget = me->SelectNearestTarget(45);
-            if(pTarget->GetMaxHealth() && pTarget->IsFriendlyTo(me))
+            if(pTarget && pTarget->GetMaxHealth() && pTarget->IsFriendlyTo(me))
             {
                 DoCast(pTarget, SPELL_DARKBLESSING);
                 m_uiDarkTimer = 20000;
