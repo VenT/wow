@@ -33,17 +33,25 @@ enum Yells
 
 enum ProfessorSpells
 {
+	SPELL_UNBOUND_PLAGUE           =    72856,
+	SPELL_SLIME_PUDDLE             =    70346, //work around since it would take too long to actually make it work:Lavi - yeah lazy, so what?
     SPELL_UNSTABLE_EXPERIMENT      =    71968,
     SPELL_TEAR_GAS                 =    71617,
     SPELL_CREATE_CONCOTION         =    71621,
     SPELL_GUZZLE_POTIONS           =    73122,
     SPELL_MALLEABLE_GOO_10_NORMAL  =    72296,
     SPELL_MALLEABLE_GOO_25_NORMAL  =    70852,
+	SPELL_MALLEABLE_GOO_10_HEROIC  =    70852,
+	SPELL_MALLEABLE_GOO_25_HEROIC  =    72874,
     SPELL_MUTATED_STRENGTH         =    71603,
     SPELL_MUTATED_PLAGUE           =    72672,
     SPELL_OOZE_ERUPTION            =    70492,
     SPELL_OOZE_ADHESIV             =    70447,
-    SPELL_CHOKING_GAS              =    71278,
+	SPELL_CHOKING_GAS_PROC         =    71255,
+    SPELL_CHOKING_GAS_10_NORMAL    =    71278,
+	SPELL_CHOKING_GAS_25_NORMAL    =    72619,
+	SPELL_CHOKING_GAS_10_HEROIC    =    72619,
+	SPELL_CHOKING_GAS_10_HEROIC    =    72620,
     SPELL_CHOKING_GAS_EXPLOSION    =    71279,
 };
 
@@ -51,6 +59,7 @@ enum Summons
 {
     SUMMON_GASCLOUD         =    37562,
     SUMMON_VOLATILE_OOZE    =    37697,
+	SUMMON_CHOKE            =    38159,
 };
 
 #define EMOTE_UNSTABLE_EXPERIMENT "Professor Putricide begins unstable experiment!"
@@ -121,24 +130,123 @@ struct boss_professor_putricideAI : public ScriptedAI
             DoCast(me, SPELL_UNSTABLE_EXPERIMENT);
             me->MonsterTextEmote(EMOTE_UNSTABLE_EXPERIMENT,NULL);
             m_uiUnstableExperimentTimer = 40000;
-            m_uiAddSpawnTimer = 5000;
+            m_uiAddSpawnTimer = 10000;
         } else m_uiUnstableExperimentTimer -= uiDiff;
 
         if (m_uiAddSpawnTimer < uiDiff)
         {
-            me->SummonCreature(SUMMON_VOLATILE_OOZE, me->GetPositionX()+20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 9999999);
+			switch(urand(0, 1))
+        {
+			case 0:
+				me->SummonCreature(SUMMON_GASCLOUD, me->GetPositionX()-35, me->GetPositionY()+35, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 9999999);
+				break;
+			case 1:
+				me->SummonCreature(SUMMON_VOLATILE_OOZE, me->GetPositionX()+35, me->GetPositionY()+35, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 9999999);
+				break;
             m_uiAddSpawnTimer = 60000;
         } else m_uiAddSpawnTimer -= uiDiff;
 
-        if (m_uiPhase == 1)
+		if(m_uiPhase == 1 && me->GetHealth()*100 / me->GetMaxHealth() < 81)
         {
-			// ToDO
-        }
+                DoScriptText(SAY_TRANSFORM_1, me);
+                DoCast(me, SPELL_TEAR_GAS);
+				DoCast(me, SPELL_CREATE_CONCOTION);
+                m_uiPhase = 2;
+		        m_uiGooTimer = 35000;
+		        m_uiBombtimer = 28000;
+				m_uiUnstableExperimentTimer = 40000;
+				m_uiAddSpawnTimer = 55000;
+		} 
 
         if (m_uiPhase == 2)
         {
-			// ToDO
-        }
+			if (m_uiUnstableExperimentTimer < uiDiff)
+					{
+						DoCast(me, SPELL_UNSTABLE_EXPERIMENT);
+						me->MonsterTextEmote(EMOTE_UNSTABLE_EXPERIMENT,NULL);
+						m_uiUnstableExperimentTimer = 40000;
+						m_uiAddSpawnTimer = 10000;
+			} else m_uiUnstableExperimentTimer -= uiDiff;
+			
+			if (m_uiAddSpawnTimer < uiDiff)
+			{
+				switch(urand(0, 1))
+				{
+				case 0:
+					me->SummonCreature(SUMMON_GASCLOUD, me->GetPositionX()-35, me->GetPositionY()+35, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 9999999);
+					break;
+				case 1:
+					me->SummonCreature(SUMMON_VOLATILE_OOZE, me->GetPositionX()+35, me->GetPositionY()+35, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 9999999);
+					break;
+					m_uiAddSpawnTimer = 60000;
+				} else m_uiAddSpawnTimer -= uiDiff;
+			}
+
+			if (m_uiBombtimer < uiDiff)
+			{
+				Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                DoCast(pTarget, SPELL_CHOKING_GAS_PROC);
+				switch(urand(0, 1))
+				{
+				case 0:
+                    me->SummonCreature(SUMMON_CHOKE, me->GetPositionX()+10, me->GetPositionY()+10, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
+                    me->SummonCreature(SUMMON_CHOKE, me->GetPositionX()-15, me->GetPositionY()+10, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
+                    me->SummonCreature(SUMMON_CHOKE, me->GetPositionX()+20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
+					m_uiBombtimer = 26000;
+					break;
+				case 1:
+					me->SummonCreature(SUMMON_CHOKE, me->GetPositionX()-10, me->GetPositionY()-10, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
+                    me->SummonCreature(SUMMON_CHOKE, me->GetPositionX()+15, me->GetPositionY()-10, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
+                    me->SummonCreature(SUMMON_CHOKE, me->GetPositionX()-20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
+					m_uiBombtimer = 26000;
+					break;
+				)
+            } else m_uiBombtimer -= uiDiff;
+
+			if (m_uiGooTimer < uiDiff)
+			{
+				DoScriptText(SAY_AIRLOCK, me);
+				uint32 count = RAID_MODE(1,2,1,2);
+				for (uint8 i = 1; i <= count; i++)
+				{
+					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					DoCast(pTarget, RAID_MODE(SPELL_MALLEABLE_GOO_10_NORMAL,SPELL_MALLEABLE_GOO_25_NORMAL,SPELL_MALLEABLE_GOO_10_HEROIC,SPELL_MALLEABLE_GOO_25_HEROIC));
+					m_uiGooTimer = 23000;
+				}
+			} else m_uiGooTimer -= uiDiff;
+		}
+
+		if(m_uiPhase == 2 && me->GetHealth()*100 / me->GetMaxHealth() < 36)
+        {
+                DoScriptText(SAY_TRANSFORM_2, me);
+                DoCast(me, SPELL_TEAR_GAS);
+				DoCast(me, SPELL_GUZZLE_POTIONS);
+				DoCast(me, SPELL_MUTATED_STRENGTH);
+				m_uiPhase = 3;
+				m_uiPuddleTimer = 8000;
+                m_uiUnboundPlague = 51000;
+		}
+
+		if (m_uiPhase == 3)
+		{
+			if (m_uiPuddleTimer < uiDiff)
+			{
+				Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                DoCast(pTarget, SPELL_SLIME_PUDDLE);
+			} else m_uiPuddleTimer -= uiDiff;
+
+			if (m_uiUnboundPlague <= uiDiff)
+			{
+				DoCast(me, SPELL_SLIME_PUDDLE);
+				if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+				{
+					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					DoCast(pTarget, SPELL_UNBOUND_PLAGUE);
+				}
+				DoScriptText(SAY_PHASE_HC, me);
+				m_uiUnboundPlague = 48000;
+			} else m_uiUnboundPlague -= uiDiff;
+
         DoMeleeAttackIfReady();
     }
 };
@@ -164,8 +272,8 @@ struct npc_volatile_oozeAI : public ScriptedAI
     void Reset()
     {
         TargetGUID = 0;
-        OozeAdhesivTimer = 1000;
-        OozeExplosion = 1000;
+        OozeAdhesivTimer = 35000;
+        OozeExplosion = 30000;
         MovechaseTimer = 999999;
     }
 
@@ -203,7 +311,46 @@ struct npc_volatile_oozeAI : public ScriptedAI
         } else OozeAdhesivTimer -= diff;
     }
 };
+struct npc_choke_bombAI : public ScriptedAI
+{
+    npc_choke_bombAI(Creature *pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = pCreature->GetInstanceData();
+    }
+    ScriptedInstance* m_pInstance;
+    uint32 m_uiChokeTimer;
+    uint32 m_uiExplodeDespawn;
+    void Reset()
+    {
+        float x, y, z;
+        me->GetNearPoint(me, x, y, z, 1, 50, M_PI*2*rand_norm());
+        me->GetMotionMaster()->MovePoint(0, x, y, z);
+        me->SetVisibility(VISIBILITY_OFF);
+        DoCast(me, RAID_MODE(SPELL_CHOKING_GAS_10_NORMAL,SPELL_CHOKING_GAS_25_NORMAL,SPELL_CHOKING_GAS_10_HEROIC,SPELL_CHOKING_GAS_25_HEROIC));
+        me->SetReactState(REACT_PASSIVE);
+        me->SetSpeed(MOVE_WALK, 1.5f, true);
+        m_uiChokeTimer = 1000;
+        m_uiExplodeDespawn = 20000;
+    }
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if(m_uiChokeTimer <= uiDiff)
+        {
+            DoCast(me, RAID_MODE(SPELL_CHOKING_GAS_10_NORMAL,SPELL_CHOKING_GAS_25_NORMAL,SPELL_CHOKING_GAS_10_HEROIC,SPELL_CHOKING_GAS_25_HEROIC));
+            m_uiChokeTimer = 15000;
+        } else m_uiChokeTimer -= uiDiff;
 
+        if(m_uiExplodeDespawn <= uiDiff)
+        {
+            DoCast(me, SPELL_CHOKING_GAS_EXPLOSION);
+            me->ForcedDespawn();
+        } m_uiExplodeDespawn -= uiDiff;
+    }
+};
+CreatureAI* GetAI_npc_choke_bomb(Creature* pCreature)
+{
+    return new npc_choke_bombAI(pCreature);
+}
 CreatureAI* GetAI_npc_volatile_ooze(Creature* pCreature)
 {
     return new npc_volatile_oozeAI(pCreature);
@@ -227,4 +374,9 @@ void AddSC_boss_professor_putricide()
     newscript->Name = "npc_volatile_ooze";
     newscript->GetAI = &GetAI_npc_volatile_ooze;
     newscript->RegisterSelf();
+
+    newScript = new Script;
+    newScript->Name = "npc_choke_bomb";
+    newScript->GetAI = &GetAI_npc_choke_bomb;
+    newScript->RegisterSelf(); 
 }
