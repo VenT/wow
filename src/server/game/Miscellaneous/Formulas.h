@@ -29,7 +29,7 @@ namespace Trinity
     {
         inline float hk_honor_at_level_f(uint8 level, uint32 count = 1)
         {
-            return count * level * 1.55f;
+            return count * level * 1.25f;
         }
         inline uint32 hk_honor_at_level(uint8 level, uint32 count = 1)
         {
