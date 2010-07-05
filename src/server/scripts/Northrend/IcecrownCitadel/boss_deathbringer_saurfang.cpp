@@ -239,7 +239,7 @@ struct boss_saurfangAI : public ScriptedAI
         {
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
             DoCast(pTarget, RAID_MODE(SPELL_RUNE_OF_BLOOD_10_NORMAL,SPELL_RUNE_OF_BLOOD_25_NORMAL,SPELL_RUNE_OF_BLOOD_10_HEROIC,SPELL_RUNE_OF_BLOOD_25_HEROIC));
-            me->ModifyHealth(me->GetMaxHealth() * 0.05);
+           // me->ModifyHealth(me->GetMaxHealth() * 0.05);
             m_uiRuneOfBloodTimer = 40000;
         } else m_uiRuneOfBloodTimer -= uiDiff;
 
