@@ -1,6 +1,5 @@
 -- AdictosWoW fix para la base de datos
--- TrinityCore Rev: 7962 Release Hash: b3c0e2b0e531
--- WoW cliente 3.3.3a
+-- WoW cliente 3.3.5a
 -- Realizado completamente de principio a fin por Georgios Burnham H. en base a datos tomados de varias fuentes Bizz.
 -- Prueba del Campeón, estancia de 5 jugadores  http://www.wowwiki.com/Trial_of_the_Champion
 -- Mapa http://es.wowhead.com/zone=4722
@@ -38,7 +37,7 @@ INSERT INTO `vehicle_accessory` (`entry`,`accessory_entry`,`seat_id`,`minion`,`d
 (33298,35332,0,1, 'Darnassian Nightsaber');
 
 
-/*-- Textos originales.
+-- Textos originales.
 DELETE FROM `script_texts` WHERE `entry` <= -1999926 and `entry` >= -1999956;
 INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1999926, 'Coming out of the gate Grand Champions other faction.  ' ,0,0,0,1, 'SAY_START' ),
@@ -68,39 +67,7 @@ INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`sound`,`type`
 (0,-1999951, 'Take this time to consider your past deeds.' ,16248,1,0,5, 'palsum' ),
 (0,-1999952, 'What is the meaning of this?' ,0,1,0,5, 'dk_hightlord' ),
 (0,-1999953, 'No...I\'m still too young' ,0,1,0,5, 'die' ),
-(0,-1999954, 'Excellent work! You are win Argent champion!' ,0,3,0,0, 'win' );*/
-
--- textos traducidos al castellano
-DELETE FROM `script_texts` WHERE `entry` <= -1999926 and `entry` >= -1999956;
-INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
-(0,-1999926, 'Los que estan detrás de la puerta, entren Grandes Championes de la otra fación.  ' ,0,0,0,1, 'SAY_START' ),
-(0,-1999927, 'Buen trabajo AdictoWoW! Puedes recoger tu recompensa del baul del Coliseo del Crusado!.  ' ,0,1,0,1, 'Win' ),
-(0,-1999928, 'Has estropeado mi gran entrada. Rata.' ,16256,1,0,5, 'SAY_AGGRO' ),
-(0,-1999929, 'Realmente pensabas que derrotarías a un agente del Rey Exánime en los campos de tu patético torneo?' ,16257,1,0,5, 'SAY_AGGRO_1' ),
-(0,-1999930, 'He venido a terminar mi cometido ' ,16258,1,0,5, 'SAY_AGGRO_2' ),
-(0,-1999931, 'Esta farsa termina aquí...!' ,16259,1,0,5, 'SAY_AGGRO_3' ),
-(0,-1999932, '[Zombie]Brains.... .... ....' ,0,1,0,5, 'SAY_SLAY' ),
-(0,-1999933, 'Me estorbaba esa carne putrefacta...!' ,16262,1,0,5, 'SAY_DEATH_1' ),
-(0,-1999934, 'No necesito huesos para vencerte...!' ,16263,1,0,5, 'SAY_DEATH_2' ),
-(0,-1999935, 'No! No debo fallar...otra vez...' ,16264,1,0,5, 'SAY_DEATH_3' ),
-(0,-1999936, 'Que es eso... arriba cerca de la bigas?' ,0,1,0,5, 'detected' ),
-(0,-1999937, 'Por favor cambia tu arma! La siguiente batalla va a comenzar ahora!' ,0,3,0,5, 'nx' ),
-(0,-1999939, 'Excelente trabajo!' ,0,1,0,1, 'work' ),
-(0,-1999940, 'Salgan de atrás de la puerta, vengan Campeones del Coliseo del Crusado.' ,0,0,0,1, 'SAY_START3' ),
-(0,-1999941, 'Excelente trabajo! Eres el ganador Camperon Argenta!.. No te olvodes de Votar por AdictosWoW. Gracias.' ,0,3,0,0, 'win' ),
-(0,-1999942, 'Los Sunreavers se enorgullecen de presentar a sus representantes en esta prueba por combates.' ,0,0,0,1, 'an1' ),
-(0,-1999943, 'Bienvenidos, campeones. Hoy, ante los ojos de sus compañeros, demostrarán ser ustedes mismos unos combatientes dignos.' ,0,0,0,1, 'an2' ),
-(0,-1999944, 'Luchen bien, Hordas! Lok\'tar Ogar!' ,0,1,0,5, 'Thrall' ),
-(0,-1999945, 'Finalmente, una pelea que vale la pena ver.' ,0,1,0,5, 'Garrosh' ),
-(0,-1999946, 'No he venido aquí para observar animales desgarrandose el uno al otro sin sentido, Georgios' ,0,1,0,5, 'King' ),
-(0,-1999947, 'En primer lugar, se enfrentarán a tres de los Grandes Campeones del Torneo! Estas feroces contendientes han golpeado a todos los demás para llegar a la cima de la destreza en la lucha.' ,0,1,0,5, 'Hightlord' ),
-(0,-1999948, 'Verás...!, tu siguiente desafio viene de nuestros Rangos de los Cruzados. Serás puesto a prueba contra sus proezas.' ,0,1,0,5, 'Hightlord2' ),
-(0,-1999949, 'Puedes comenzar!' ,0,0,0,5, 'text' ),
-(0,-1999950, 'Bien, entonces. Comencemos Adictos.' ,0,1,0,5, 'pal agro' ),
-(0,-1999951, 'Take this time to consider your past deeds.' ,16248,1,0,5, 'palsum' ),
-(0,-1999952, 'Que signifia esto?' ,0,1,0,5, 'dk_hightlord' ),
-(0,-1999953, 'No...Soy todavía muy joven' ,0,1,0,5, 'die' ),
-(0,-1999954, 'Excelente trabajo! Eres el ganador Campeon Argenta!.. No te olvodes de Votar por AdictosWoW. Gracias.' ,0,3,0,0, 'win' );
+(0,-1999954, 'Excellent work! You are win Argent champion!' ,0,3,0,0, 'win' );
 
 
 -- actualización nueva de todos los npc relacionado a prueba del campeón
@@ -309,25 +276,11 @@ DELETE FROM `creature` WHERE `guid`=130961;
 INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (130961, 35004, 650, 3, 1, 0, 0, 746.626, 618.54, 411.09, 4.63158, 86400, 0, 0, 10635, 0, 0, 0);
 
-/******************************/
-/*
--- Daño normal 10.2p
+-- Daño
 UPDATE `creature_template` SET `dmg_multiplier`= (dmg_multiplier*1.40) WHERE `entry` IN (SELECT `id` FROM creature WHERE `map`=650);
 -- El Caballero Negro 35451 11.8 - 12012 17.6p
 UPDATE `creature_template` SET `dmg_multiplier`= (dmg_multiplier*2) WHERE `entry`= 35451;
 UPDATE `creature_template` SET `dmg_multiplier`= (dmg_multiplier*2) WHERE `entry`= 12012;
--- UPDATE `creature_template` SET `dmg_multiplier`= (dmg_multiplier*1.30) WHERE `entry` IN (SELECT `id` FROM creature WHERE `map`=650); -- AND `rank` =3;
-*/
-UPDATE `creature_template` SET `dmg_multiplier`= (dmg_multiplier*1.50) WHERE `entry` in (12000, 12001, 12002, 12003, 12004, 12005, 12006, 12007, 12008, 12009, 12010, 12011, 12012, 
-12436, 12437, 12438, 12439, 12440, 12441, 12442, 12443, 12444, 12445, 12446, 12447, 12448, 12449,12450, 12451, 12452, 12453, 12454, 12455, 12456, 
-12482, 12483, 12484, 12485, 12486, 12487, 12488, 12725, 
-33297, 33298, 33299, 33300, 33301, 33408, 33409, 33414, 33416, 33418, 34657, 34658, 34701,34702, 34703, 34705,  
-34928,34942, 35028, 35029, 35030, 35031, 35032, 35033, 35034, 35035, 35036, 35037, 35038, 35039, 35040, 
-35041, 35042, 35043, 35044, 35045, 35046, 35047, 35048, 35049, 35050, 35051, 35052, 35119, 
-35305, 35307, 35309, 35314, 35323, 35325, 35326, 35327, 35328, 35329, 35330, 35331, 35332, 35451,   
-35545, 35564, 35569, 35570, 35571, 35572, 35590, 35617, 35633, 35634, 35635, 35636, 35637, 35638, 35640, 35641, 35644, 35768,36558);
-/******************************/
-
 
 -- CREATURES SPAWN TRIAL OF CHAMPION MAP 650
 DELETE FROM `creature` WHERE `map`=650;
@@ -488,18 +441,18 @@ DELETE FROM `gameobject` WHERE `id` IN (195709, 195374, 195323, 195710, 195375, 
 DELETE FROM `creature_loot_template` WHERE (`entry`=35451);
 INSERT INTO `creature_loot_template` VALUES 
 (35451, 43228, 28, 1, 0, 3, 3),
-(35451, 47231, 9.04, 1, 1, 1, 1),
-(35451, 47230, 9.04, 1, 1, 1, 1),
-(35451, 47220, 9.04, 1, 1, 1, 1),
-(35451, 47228, 9.04, 1, 1, 1, 1),
-(35451, 47221, 9.04, 1, 1, 1, 1),
-(35451, 47222, 9.04, 1, 1, 1, 1),
-(35451, 47232, 9.04, 1, 1, 1, 1),
-(35451, 47229, 9.04, 1, 1, 1, 1),
-(35451, 47227, 9.04, 1, 1, 1, 1),
-(35451, 47226, 9.04, 1, 1, 1, 1),
-(35451, 47215, 9.04, 1, 1, 1, 1),
-(35451, 47216, 0.5, 1, 2, 1, 1); -- El Corazón Negro
+(35451, 47231, 16.666, 1, 1, 1, 1),
+(35451, 47230, 16.666, 1, 1, 1, 1),
+(35451, 47220, 16.666, 1, 1, 1, 1),
+(35451, 47228, 16.666, 1, 1, 1, 1),
+(35451, 47221, 16.666, 1, 1, 1, 1),
+(35451, 47222, 16.666, 1, 1, 1, 1),
+(35451, 47232, 16.666, 1, 2, 1, 1),
+(35451, 47229, 16.666, 1, 2, 1, 1),
+(35451, 47227, 16.666, 1, 2, 1, 1),
+(35451, 47226, 16.666, 1, 2, 1, 1),
+(35451, 47215, 16.666, 1, 2, 1, 1),
+(35451, 47216, 16.666, 1, 2, 1, 1);
 
 -- http://www.wowhead.com/npc=35451/el-caballero-negro#drops:mode=heroic:0+1-15
 -- Hero
@@ -512,19 +465,19 @@ INSERT INTO `creature_loot_template` VALUES
 (12012, 48418, -100, 1, 0, 1, 1),
 (12012, 43102, 100, 1, 0, 1, 1),
 (12012, 43228, 2, 1, 0, 4, 4),
-(12012, 47527, 19.9, 1, 1, 1, 1),
-(12012, 47563, 19.9, 1, 1, 1, 1),
-(12012, 47561, 19.9, 1, 1, 1, 1),
-(12012, 47529, 19.9, 1, 1, 1, 1),
-(12012, 47562, 0.5, 1, 1, 1, 1), -- Símbolo de Redención
-(12012, 47566, 19.9, 1, 1, 1, 1),
-(12012, 49682, 0.4, 1, 2, 1, 1), -- Daga de rodela del Caballero Negro
-(12012, 47560, 19.8, 1, 2, 1, 1),
-(12012, 47567, 19.8, 1, 2, 1, 1),
-(12012, 47564, 19.8, 1, 2, 1, 1),
-(12012, 47569, 0.3, 1, 2, 1, 1), -- Kris espectral
-(12012, 47568, 0.2, 1, 2, 1, 1), -- Carabina de puntería certera
-(12012, 47565, 19.8, 1, 2, 1, 1);
+(12012, 47527, 16.666, 1, 1, 1, 1),
+(12012, 47563, 16.666, 1, 1, 1, 1),
+(12012, 47561, 16.666, 1, 1, 1, 1),
+(12012, 47529, 16.666, 1, 1, 1, 1),
+(12012, 47562, 16.666, 1, 1, 1, 1),
+(12012, 47566, 16.666, 1, 1, 1, 1),
+(12012, 49682, 14.285, 1, 2, 1, 1),
+(12012, 47560, 14.285, 1, 2, 1, 1),
+(12012, 47567, 14.285, 1, 2, 1, 1),
+(12012, 47564, 14.285, 1, 2, 1, 1),
+(12012, 47569, 14.285, 1, 2, 1, 1),
+(12012, 47568, 14.285, 1, 2, 1, 1),
+(12012, 47565, 14.285, 1, 2, 1, 1);
 
 -- Confessor's Cache
 -- http://www.wowhead.com/object=195323#contains:mode=normal:0+1-15
@@ -549,7 +502,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 -- http://www.wowhead.com/object=195323#contains:mode=heroic:0+1-15
 -- Heroic (Entry: 195324)
 -- Fix rates and groups
-UPDATE `gameobject_template` SET `data1`='21417' WHERE entry='195324'; -- No sé porque hay que hacerle un upate sino no sale el loot
+UPDATE `gameobject_template` SET `data1`='21417' WHERE entry='195324';
 DELETE FROM `gameobject_loot_template` WHERE (`entry`=21417);
 INSERT INTO `gameobject_loot_template` VALUES 
 (21417, 34057, 1.3, 1, 0, 1, 2),
@@ -561,12 +514,12 @@ INSERT INTO `gameobject_loot_template` VALUES
 (21417, 47496, 8.333, 1, 1, 1, 1),
 (21417, 47497, 8.333, 1, 1, 1, 1),
 (21417, 47498, 8.333, 1, 1, 1, 1),
-(21417, 47522, 0.333, 1, 1, 1, 1), -- Golpemédula
+(21417, 47522, 8.333, 1, 1, 1, 1),
 (21417, 47245, 8.333, 1, 1, 1, 1),
-(21417, 47500, 0.333, 1, 1, 1, 1), -- Hoja de pacificador
+(21417, 47500, 8.333, 1, 1, 1, 1),
 (21417, 47510, 8.333, 1, 1, 1, 1),
 (21417, 47511, 8.333, 1, 1, 1, 1),
-(21417, 47512, 0.333, 1, 1, 1, 1), -- Confesión de pecador
+(21417, 47512, 8.333, 1, 1, 1, 1),
 (21417, 47514, 8.333, 1, 1, 1, 1);
 
 -- Eadric's Cache
@@ -576,7 +529,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 DELETE FROM `gameobject_loot_template` WHERE (`entry`=27325);
 INSERT INTO `gameobject_loot_template` VALUES 
 (27325, 43228, 21, 1, 0, 3, 3),
-(27325, 47213, 0.333, 1, 1, 1, 1), -- Runa abisal
+(27325, 47213, 8.333, 1, 1, 1, 1),
 (27325, 47181, 8.333, 1, 1, 1, 1),
 (27325, 47201, 8.333, 1, 1, 1, 1),
 (27325, 47176, 8.333, 1, 1, 1, 1),
@@ -587,7 +540,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 (27325, 47202, 8.333, 1, 1, 1, 1),
 (27325, 47185, 8.333, 1, 1, 1, 1),
 (27325, 47210, 8.333, 1, 1, 1, 1),
-(27325, 47200, 0.333, 1, 1, 1, 1); -- Sello de pureza
+(27325, 47200, 8.333, 1, 1, 1, 1);
 
 -- http://www.wowhead.com/object=195374#contains:mode=heroic:0+1-15
 -- Hero (Entry: 195375)
@@ -603,13 +556,13 @@ INSERT INTO `gameobject_loot_template` VALUES
 (27416, 47496, 8.333, 1, 1, 1, 1),
 (27416, 47497, 8.333, 1, 1, 1, 1),
 (27416, 47498, 8.333, 1, 1, 1, 1),
-(27416, 47500, 0.333, 1, 1, 1, 1), -- Hoja de pacificador
-(27416, 47501, 0.333, 1, 1, 1, 1), -- Indecisión de Kurisu
+(27416, 47500, 8.333, 1, 1, 1, 1),
+(27416, 47501, 8.333, 1, 1, 1, 1),
 (27416, 47502, 8.333, 1, 1, 1, 1),
 (27416, 47503, 8.333, 1, 1, 1, 1),
 (27416, 47504, 8.333, 1, 1, 1, 1),
 (27416, 47508, 8.333, 1, 1, 1, 1),
-(27416, 47509, 0.333, 1, 1, 1, 1); -- Pena de Mariel
+(27416, 47509, 8.333, 1, 1, 1, 1);
 
 -- Champion's Cache
 -- http://www.wowhead.com/object=195709#contains:mode=normal:0+1-15
@@ -634,27 +587,13 @@ INSERT INTO `gameobject_loot_template` VALUES
 (27414, 44990, 43, 1, 0, 1, 1),
 (27414, 47241, 100, 1, 0, 1, 1),
 (27414, 34057, 1.3, 1, 0, 1, 1),
-(27414, 47243, 0.666, 1, 1, 1, 1), -- Marca del incansable
+(27414, 47243, 16.666, 1, 1, 1, 1),
 (27414, 47244, 16.666, 1, 1, 1, 1),
 (27414, 47248, 16.666, 1, 1, 1, 1),
 (27414, 47249, 16.666, 1, 1, 1, 1),
 (27414, 47250, 16.666, 1, 1, 1, 1),
-(27414, 47493, 0.666, 1, 1, 1, 1); -- Filo de ruina
-
-/*********************** QUERY TO SELECT JUST PURPLE ITEMS REF: TDB *************************/
-/*
-SELECT * FROM  `gameobject_loot_template` WHERE `item` IN 
-(47174, 47170, 47172, 47173, 47175,47171, -- alijo de campeón normal 27321
-47248, 47244, 47250, 47249, 47243, 47493, -- alijo de campeón heroico 27414
-47177, 47178, 47181, 47199, 47202, 47185, 47210, 47213, 47200, 47201, 47176, 47197, -- alijo de eadric normal 27325
-47496, 47504, 47494, 47508, 47498, 47500, 47502, 47495, 47503, 47497, 47501, 47509, -- alijo de eadric heroico 27416
-47213, 47219, 47214, 47177, 47211, 47218, 47185, 47178, 47181, 47212, 47176, 47217, -- alijo de la confesora normal 27327
-47496, 47494, 47245, 47510, 47522, 47511, 47498, 47500, 47514, 47495, 47497, 47512); -- alijo de la confesora heroica 27417
-*/
-/*SELECT * FROM  `gameobject_loot_template` WHERE `item` IN (47174, 74170, 47172, 47173, 47175, 47171);*/
+(27414, 47493, 16.666, 1, 1, 1, 1);
 
 
 -- Acceso a la estancia
-UPDATE `access_requirement` SET `level_min`=80, `heroic_level_min`=80 WHERE `id`= 5503; -- prueba del curzado lvl80 25p map 650
-
--- FIN después de putos dias de trabajo.
+UPDATE `access_requirement` SET `level_min`=80, `heroic_level_min`=80 WHERE `id`= 5503;

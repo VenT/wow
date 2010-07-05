@@ -427,7 +427,7 @@ struct mob_vh_dragonsAI : public ScriptedAI
                                 PortalGuardian_UpdateAI(uiDiff);
                                 break;
             default:
-                debug_log("SD2: The Violet Hold: Unhandled dragon entry %u!", me->GetEntry());
+                sLog.outDebug("SD2: The Violet Hold: Unhandled dragon entry %u!", me->GetEntry());
                 break;
         }
         DoMeleeAttackIfReady();
