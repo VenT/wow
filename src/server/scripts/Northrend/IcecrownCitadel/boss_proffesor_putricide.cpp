@@ -136,13 +136,14 @@ struct boss_professor_putricideAI : public ScriptedAI
         if (m_uiAddSpawnTimer < uiDiff)
         {
 			switch(urand(0, 1))
-        {
+			{
 			case 0:
 				me->SummonCreature(SUMMON_GASCLOUD, me->GetPositionX()-35, me->GetPositionY()+35, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 9999999);
 				break;
 			case 1:
 				me->SummonCreature(SUMMON_VOLATILE_OOZE, me->GetPositionX()+35, me->GetPositionY()+35, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 9999999);
 				break;
+			}
             m_uiAddSpawnTimer = 60000;
         } else m_uiAddSpawnTimer -= uiDiff;
 
@@ -161,11 +162,12 @@ struct boss_professor_putricideAI : public ScriptedAI
         if (m_uiPhase == 2)
         {
 			if (m_uiUnstableExperimentTimer < uiDiff)
-					{
+			{
 						DoCast(me, SPELL_UNSTABLE_EXPERIMENT);
 						me->MonsterTextEmote(EMOTE_UNSTABLE_EXPERIMENT,NULL);
 						m_uiUnstableExperimentTimer = 40000;
 						m_uiAddSpawnTimer = 10000;
+			}
 			} else m_uiUnstableExperimentTimer -= uiDiff;
 			
 			if (m_uiAddSpawnTimer < uiDiff)
