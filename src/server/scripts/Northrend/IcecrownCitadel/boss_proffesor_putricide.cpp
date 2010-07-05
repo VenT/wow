@@ -76,8 +76,10 @@ struct boss_professor_putricideAI : public ScriptedAI
     uint32 m_uiPhase;
     uint32 m_uiUnstableExperimentTimer;
     uint32 m_uiAddSpawnTimer;
-    uint32 m_uiGooTimer;
-    uint32 m_uiBombtimer;
+	uint32 m_uiGooTimer;
+	uint32 m_uiBombtimer;
+	uint32 m_uiPuddleTimer;
+	uint32 m_uiUnboundTimer;
 
     void Reset()
     {
@@ -173,7 +175,6 @@ struct boss_professor_putricideAI : public ScriptedAI
 			} else m_uiUnstableExperimentTimer -= uiDiff;
 			
 			if (m_uiAddSpawnTimer < uiDiff)
-			{
 				switch(urand(0, 1))
 				{
 				case 0:
@@ -184,8 +185,6 @@ struct boss_professor_putricideAI : public ScriptedAI
 					break;
 					m_uiAddSpawnTimer = 60000;
 				} else m_uiAddSpawnTimer -= uiDiff;
-			}
-
 			if (m_uiBombtimer < uiDiff)
 			{
 				Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -204,7 +203,7 @@ struct boss_professor_putricideAI : public ScriptedAI
                     me->SummonCreature(SUMMON_CHOKE, me->GetPositionX()-20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
 					m_uiBombtimer = 26000;
 					break;
-				)
+				}
             } else m_uiBombtimer -= uiDiff;
 
 			if (m_uiGooTimer < uiDiff)
@@ -218,7 +217,6 @@ struct boss_professor_putricideAI : public ScriptedAI
 					m_uiGooTimer = 23000;
 				}
 			} else m_uiGooTimer -= uiDiff;
-		}
 
 		if(m_uiPhase == 2 && me->GetHealth()*100 / me->GetMaxHealth() < 36)
         {
@@ -228,7 +226,7 @@ struct boss_professor_putricideAI : public ScriptedAI
 				DoCast(me, SPELL_MUTATED_STRENGTH);
 				m_uiPhase = 3;
 				m_uiPuddleTimer = 8000;
-                m_uiUnboundPlague = 51000;
+                m_uiUnboundTimer = 51000;
 		}
 
 		if (m_uiPhase == 3)
@@ -239,7 +237,7 @@ struct boss_professor_putricideAI : public ScriptedAI
                 DoCast(pTarget, SPELL_SLIME_PUDDLE);
 			} else m_uiPuddleTimer -= uiDiff;
 
-			if (m_uiUnboundPlague <= uiDiff)
+			if (m_uiUnboundTimer <= uiDiff)
 			{
 				DoCast(me, SPELL_SLIME_PUDDLE);
 				if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
@@ -248,8 +246,9 @@ struct boss_professor_putricideAI : public ScriptedAI
 					DoCast(pTarget, SPELL_UNBOUND_PLAGUE);
 				}
 				DoScriptText(SAY_PHASE_HC, me);
-				m_uiUnboundPlague = 48000;
-			} else m_uiUnboundPlague -= uiDiff;
+				m_uiUnboundTimer = 48000;
+			} else m_uiUnboundTimer -= uiDiff;
+		}
 
         DoMeleeAttackIfReady();
     }
@@ -383,4 +382,4 @@ void AddSC_boss_professor_putricide()
     NewScript->Name = "npc_choke_bomb";
     NewScript->GetAI = &GetAI_npc_choke_bomb;
     NewScript->RegisterSelf(); 
-}
+};
