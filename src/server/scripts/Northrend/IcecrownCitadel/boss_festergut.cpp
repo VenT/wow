@@ -50,6 +50,12 @@ enum Spells
     SPELL_BLIGHTED_SPORES      =    69290, 
 };
 
+enum Achievements
+{
+    ACHIEV_INOCULATE_10 = 4577,
+    ACHIEV_INOCULATE_25 = 4615,
+};
+
 struct boss_festergutAI : public ScriptedAI
 {
     boss_festergutAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -67,14 +73,18 @@ struct boss_festergutAI : public ScriptedAI
     uint32 m_uiGastricBloatTimer;
     uint32 m_uiBerserkTimer;
 
+    bool Achievements;
+
     void Reset()
     {
         m_uiPungentBlightTimer = 120000;
         m_uiInhaleBlightTimer  = 33000;
         m_uiVileGasTimer = 30000;
-        m_uiGasSporesTimer = 20000;
+        m_uiGasSporesTimer = 21000;
         m_uiGastricBloatTimer = 15000;
         m_uiBerserkTimer = 300000;
+
+        Achievement = false;
 
         if (m_pInstance)
             m_pInstance->SetData(DATA_FESTERGURT_EVENT, NOT_STARTED);
@@ -104,8 +114,29 @@ struct boss_festergutAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2), me);
-    }
+        switch(urand(0, 1))
+        {
+        case 0:
+            DoScriptText(SAY_KILL_1, me);
+            break;
+        case 1:
+            DoScriptText(SAY_KILL_2, me);
+            break;
+        }
+
+        switch(0)
+        {
+        case 0:
+            if (pVictim->HasAura(72103))
+            {
+                if(!Achievement)
+                m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEV_INOCULATE_10,ACHIEV_INOCULATE_25));
+                Achievement = true;
+            }
+            break;
+        }
+     }
+
 
     void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
     {
@@ -154,7 +185,7 @@ struct boss_festergutAI : public ScriptedAI
         {
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             DoCast(pTarget, SPELL_VILE_GAS);
-            m_uiVileGasTimer = 30000;
+            m_uiVileGasTimer = 33000;
         } else m_uiVileGasTimer -= uiDiff;
 
         if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
@@ -165,13 +196,14 @@ struct boss_festergutAI : public ScriptedAI
                 uint32 count = RAID_MODE(2,3,2,3);
                 for (uint8 i = 1; i <= count; i++)
                 {
-                    Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 200, true);
+                    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                     if (pTarget && !pTarget->HasAura(SPELL_GAS_SPORES))
                     {
                         DoCast(pTarget, SPELL_GAS_SPORES);
+                        DoCast(pTarget, SPELL_INOCULATED);
                     }
                 }
-                m_uiGasSporesTimer = 31000;
+                m_uiGasSporesTimer = 21000;
             } else m_uiGasSporesTimer -= uiDiff;
         }
 
