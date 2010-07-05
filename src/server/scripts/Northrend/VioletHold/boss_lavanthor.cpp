@@ -1,22 +1,15 @@
-/*
- * Copyright (C) 2009 - 2010 Trinity <http://www.trinitycore.org/>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- */
+/* Script Data Start
+SDName: Boss lavanthor
+SDAuthor: LordVanMartin
+SD%Complete:
+SDComment:
+SDCategory:
+Script Data End */
 
-#include "ScriptPCH.h"
+/*** SQL START ***
+update creature_template set scriptname = '' where entry = '';
+*** SQL END ***/
+#include "ScriptedPch.h"
 #include "violet_hold.h"
 
 enum Spells
@@ -59,7 +52,7 @@ struct boss_lavanthorAI : public ScriptedAI
         }
     }
 
-    void EnterCombat(Unit* /*who*/)
+    void EnterCombat(Unit* who)
     {
         if (pInstance)
         {
@@ -78,19 +71,19 @@ struct boss_lavanthorAI : public ScriptedAI
 
     void AttackStart(Unit* pWho)
     {
-        if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE) || me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE) || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
-        if (me->Attack(pWho, true))
+        if (m_creature->Attack(pWho, true))
         {
-            me->AddThreat(pWho, 0.0f);
-            me->SetInCombatWith(pWho);
-            pWho->SetInCombatWith(me);
+            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->SetInCombatWith(pWho);
+            pWho->SetInCombatWith(m_creature);
             DoStartMovement(pWho);
         }
     }
 
-    void MoveInLineOfSight(Unit* /*who*/) {}
+    void MoveInLineOfSight(Unit* who) {}
 
     void UpdateAI(const uint32 diff)
     {
@@ -100,19 +93,19 @@ struct boss_lavanthorAI : public ScriptedAI
 
         if (uiFireboltTimer <= diff)
         {
-            DoCast(me->getVictim(), SPELL_FIREBOLT);
+            DoCast(m_creature->getVictim(), SPELL_FIREBOLT);
             uiFireboltTimer = urand(5000,13000);
         } else uiFireboltTimer -= diff;
 
         if (uiFlameBreathTimer <= diff)
         {
-            DoCast(me->getVictim(), SPELL_FLAME_BREATH);
+            DoCast(m_creature->getVictim(), SPELL_FLAME_BREATH);
             uiFlameBreathTimer = urand(10000,15000);
         } else uiFlameBreathTimer -= diff;
 
         if (uiLavaBurnTimer <= diff)
         {
-            DoCast(me->getVictim(), SPELL_LAVA_BURN);
+            DoCast(m_creature->getVictim(), SPELL_LAVA_BURN);
             uiLavaBurnTimer = urand(15000,23000);
         }
 
@@ -120,7 +113,7 @@ struct boss_lavanthorAI : public ScriptedAI
         {
             if (uiCauterizingFlamesTimer <= diff)
             {
-                DoCast(me->getVictim(), SPELL_CAUTERIZING_FLAMES);
+                DoCast(m_creature->getVictim(), SPELL_CAUTERIZING_FLAMES);
                 uiCauterizingFlamesTimer = urand(10000,16000);
             } else uiCauterizingFlamesTimer -= diff;
         }
@@ -128,7 +121,7 @@ struct boss_lavanthorAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void JustDied(Unit* /*killer*/)
+    void JustDied(Unit* killer)
     {
         if (pInstance)
         {

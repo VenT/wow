@@ -1,6 +1,4 @@
-/*
- * Copyright (C) 2009 - 2010 Trinity <http://www.trinitycore.org/>
- *
+/* Copyright (C) 2006 - 2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -16,7 +14,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "ScriptPCH.h"
+/* Script Data Start
+SDName: Boss ichoron
+SDAuthor: ckegg
+SD%Complete: 80%
+SDComment: TODO: better spawn location for adds
+SDCategory:
+Script Data End */
+
+#include "ScriptedPch.h"
 #include "violet_hold.h"
 
 enum Spells
@@ -98,7 +104,7 @@ struct boss_ichoronAI : public ScriptedAI
         uiBubbleCheckerTimer = 1000;
         uiWaterBoltVolleyTimer = urand(10000, 15000);
 
-        me->SetVisibility(VISIBILITY_ON);
+        m_creature->SetVisibility(VISIBILITY_ON);
         DespawnWaterElements();
 
         if (pInstance)
@@ -110,11 +116,11 @@ struct boss_ichoronAI : public ScriptedAI
         }
     }
 
-    void EnterCombat(Unit* /*pWho*/)
+    void EnterCombat(Unit* pWho)
     {
-        DoScriptText(SAY_AGGRO, me);
+        DoScriptText(SAY_AGGRO, m_creature);
 
-        DoCast(me, SPELL_PROTECTIVE_BUBBLE);
+        DoCast(m_creature, SPELL_PROTECTIVE_BUBBLE);
 
         if (pInstance)
         {
@@ -133,27 +139,27 @@ struct boss_ichoronAI : public ScriptedAI
 
     void AttackStart(Unit* pWho)
     {
-        if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE) || me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE) || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
-        if (me->Attack(pWho, true))
+        if (m_creature->Attack(pWho, true))
         {
-            me->AddThreat(pWho, 0.0f);
-            me->SetInCombatWith(pWho);
-            pWho->SetInCombatWith(me);
+            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->SetInCombatWith(pWho);
+            pWho->SetInCombatWith(m_creature);
             DoStartMovement(pWho);
         }
     }
 
     void DoAction(const int32 param)
     {
-        if (!me->isAlive())
+        if (!m_creature->isAlive())
             return;
 
         switch(param)
         {
             case ACTION_WATER_ELEMENT_HIT:
-                me->SetHealth(me->GetHealth() + me->GetMaxHealth() * 0.01);
+                m_creature->SetHealth(m_creature->GetHealth() + m_creature->GetMaxHealth() * 0.01);
 
                 if (bIsExploded)
                     DoExplodeCompleted();
@@ -161,9 +167,9 @@ struct boss_ichoronAI : public ScriptedAI
                 bAchievement = false;
                 break;
             case ACTION_WATER_ELEMENT_KILLED:
-                uint32 damage = (me->GetMaxHealth()*3)/100;
-                me->SetHealth(me->GetHealth() - damage);
-                me->LowerPlayerDamageReq(damage);
+                uint32 damage = (m_creature->GetMaxHealth()*3)/100;
+                m_creature->SetHealth(m_creature->GetHealth() - damage);
+                m_creature->LowerPlayerDamageReq(damage);
                 break;
         }
     }
@@ -181,15 +187,17 @@ struct boss_ichoronAI : public ScriptedAI
 
         if (!HealthBelowPct(25))
         {
-            DoScriptText(SAY_BUBBLE, me);
-            DoCast(me, SPELL_PROTECTIVE_BUBBLE, true);
+            DoScriptText(SAY_BUBBLE, m_creature);
+            DoCast(m_creature, SPELL_PROTECTIVE_BUBBLE, true);
         }
 
-        me->SetVisibility(VISIBILITY_ON);
-        me->GetMotionMaster()->MoveChase(me->getVictim());
+        //m_creature->SetVisibility(VISIBILITY_ON);
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
     }
 
-    void MoveInLineOfSight(Unit* /*pWho*/) {}
+    void MoveInLineOfSight(Unit* pWho) {}
 
     void UpdateAI(const uint32 uiDiff)
     {
@@ -199,8 +207,8 @@ struct boss_ichoronAI : public ScriptedAI
 
         if (!bIsFrenzy && HealthBelowPct(25) && !bIsExploded)
         {
-            DoScriptText(SAY_ENRAGE, me);
-            DoCast(me, SPELL_FRENZY, true);
+            DoScriptText(SAY_ENRAGE, m_creature);
+            DoCast(m_creature, DUNGEON_MODE(SPELL_FRENZY, SPELL_FRENZY_H), true);
             bIsFrenzy = true;
         }
 
@@ -210,18 +218,19 @@ struct boss_ichoronAI : public ScriptedAI
             {
                 if (!bIsExploded)
                 {
-                    if (!me->HasAura(SPELL_PROTECTIVE_BUBBLE, 0))
+                    if (!m_creature->HasAura(SPELL_PROTECTIVE_BUBBLE, 0))
                     {
-                        DoScriptText(SAY_SHATTER, me);
-                        DoCast(me, SPELL_WATER_BLAST);
-                        DoCast(me, SPELL_DRAINED);
+                        DoScriptText(SAY_SHATTER, m_creature);
+                        DoCast(m_creature->getVictim(), DUNGEON_MODE(SPELL_WATER_BLAST, SPELL_WATER_BLAST_H));
+                        DoCast(m_creature, SPELL_DRAINED);
                         bIsExploded = true;
-                        me->AttackStop();
-                        me->SetVisibility(VISIBILITY_OFF);
+                        m_creature->AttackStop();
+                        //m_creature->SetVisibility(VISIBILITY_OFF);
+                        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         for (uint8 i = 0; i < 10; i++)
                         {
                             int tmp = urand(0, MAX_SPAWN_LOC-1);
-                            me->SummonCreature(NPC_ICHOR_GLOBULE, SpawnLoc[tmp], TEMPSUMMON_CORPSE_DESPAWN);
+                            m_creature->SummonCreature(NPC_ICHOR_GLOBULE, SpawnLoc[tmp], TEMPSUMMON_CORPSE_DESPAWN);
                         }
                     }
                 }
@@ -231,7 +240,7 @@ struct boss_ichoronAI : public ScriptedAI
                     if (!m_waterElements.empty())
                     {
                         for (std::list<uint64>::const_iterator itr = m_waterElements.begin(); itr != m_waterElements.end(); ++itr)
-                            if (Creature* pTemp = Unit::GetCreature(*me, *itr))
+                            if (Creature* pTemp = Unit::GetCreature(*m_creature, *itr))
                                 if (pTemp->isAlive())
                                 {
                                     bIsWaterElementsAlive = true;
@@ -251,7 +260,7 @@ struct boss_ichoronAI : public ScriptedAI
         {
             if (uiWaterBoltVolleyTimer <= uiDiff)
             {
-                DoCast(me, SPELL_WATER_BOLT_VOLLEY);
+                DoCast(m_creature, DUNGEON_MODE(SPELL_WATER_BOLT_VOLLEY, SPELL_WATER_BOLT_VOLLEY_H));
                 uiWaterBoltVolleyTimer = urand(10000, 15000);
             }
             else uiWaterBoltVolleyTimer -= uiDiff;
@@ -260,14 +269,14 @@ struct boss_ichoronAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* /*killer*/)
+    void JustDied(Unit* killer)
     {
-        DoScriptText(SAY_DEATH, me);
+        DoScriptText(SAY_DEATH, m_creature);
 
         if (bIsExploded)
         {
             bIsExploded = false;
-            me->SetVisibility(VISIBILITY_ON);
+            m_creature->SetVisibility(VISIBILITY_ON);
         }
 
         DespawnWaterElements();
@@ -292,30 +301,22 @@ struct boss_ichoronAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (pSummoned)
-        {
-            pSummoned->SetSpeed(MOVE_RUN, 0.3f);
-            pSummoned->GetMotionMaster()->MoveFollow(me, 0, 0);
-            m_waterElements.push_back(pSummoned->GetGUID());
-            pInstance->SetData64(DATA_ADD_TRASH_MOB,pSummoned->GetGUID());
-        }
+        pSummoned->SetSpeed(MOVE_RUN, 0.3f);
+        pSummoned->GetMotionMaster()->MoveFollow(m_creature, 0, 0);
+        m_waterElements.push_back(pSummoned->GetGUID());
     }
 
 
     void SummonedCreatureDespawn(Creature *pSummoned)
     {
-        if (pSummoned)
-        {
-            m_waterElements.remove(pSummoned->GetGUID());
-            pInstance->SetData64(DATA_DEL_TRASH_MOB,pSummoned->GetGUID());
-        }
+        m_waterElements.remove(pSummoned->GetGUID());
     }
 
-    void KilledUnit(Unit * victim)
+    void KilledUnit(Unit *victim)
     {
-        if (victim == me)
+        if (victim == m_creature)
             return;
-        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
+        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), m_creature);
     }
 };
 
@@ -340,7 +341,7 @@ struct mob_ichor_globuleAI : public ScriptedAI
         uiRangeCheck_Timer = 1000;
     }
 
-    void AttackStart(Unit* /*pWho*/)
+    void AttackStart(Unit* pWho)
     {
         return;
     }
@@ -351,13 +352,13 @@ struct mob_ichor_globuleAI : public ScriptedAI
         {
             if (pInstance)
             {
-                if (Creature* pIchoron = Unit::GetCreature(*me, pInstance->GetData64(DATA_ICHORON)))
+                if (Creature* pIchoron = Unit::GetCreature(*m_creature, pInstance->GetData64(DATA_ICHORON)))
                 {
-                    if (me->IsWithinDist(pIchoron, 2.0f , false))
+                    if (m_creature->IsWithinDist(pIchoron, 2.0f , false))
                     {
                         if (pIchoron->AI())
                             pIchoron->AI()->DoAction(ACTION_WATER_ELEMENT_HIT);
-                        me->ForcedDespawn();
+                        m_creature->ForcedDespawn();
                     }
                 }
             }
@@ -366,10 +367,10 @@ struct mob_ichor_globuleAI : public ScriptedAI
         else uiRangeCheck_Timer -= uiDiff;
     }
 
-    void JustDied(Unit* /*pKiller*/)
+    void JustDied(Unit* pKiller)
     {
-        DoCast(me, SPELL_SPLASH);
-        if (Creature* pIchoron = Unit::GetCreature(*me, pInstance->GetData64(DATA_ICHORON)))
+        DoCast(m_creature, SPELL_SPLASH);
+        if (Creature* pIchoron = Unit::GetCreature(*m_creature, pInstance->GetData64(DATA_ICHORON)))
             if (pIchoron->AI())
                 pIchoron->AI()->DoAction(ACTION_WATER_ELEMENT_KILLED);
     }

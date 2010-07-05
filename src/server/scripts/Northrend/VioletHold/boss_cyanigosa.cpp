@@ -1,22 +1,15 @@
-/*
- * Copyright (C) 2009 - 2010 Trinity <http://www.trinitycore.org/>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- */
+/* Script Data Start
+SDName: Boss cyanigosa
+SDAuthor: LordVanMartin
+SD%Complete:
+SDComment:
+SDCategory:
+Script Data End */
 
-#include "ScriptPCH.h"
+/*** SQL START ***
+update creature_template set scriptname = '' where entry = '';
+*** SQL END ***/
+#include "ScriptedPch.h"
 #include "violet_hold.h"
 
 enum Spells
@@ -72,21 +65,34 @@ struct boss_cyanigosaAI : public ScriptedAI
             pInstance->SetData(DATA_CYANIGOSA_EVENT, NOT_STARTED);
     }
 
-    void EnterCombat(Unit* /*who*/)
+    void DeleteFromThreatList(uint64 TargetGUID)
     {
-        DoScriptText(SAY_AGGRO, me);
+        for (std::list<HostileReference*>::const_iterator itr = m_creature->getThreatManager().getThreatList().begin(); itr != m_creature->getThreatManager().getThreatList().end(); ++itr)
+        {
+            if ((*itr)->getUnitGuid() == TargetGUID)
+            {
+                (*itr)->removeReference();
+                break;
+            }
+        }
+    }
+
+    void EnterCombat(Unit* who)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+        DoCast(m_creature, SPELL_TRANSFORM);
 
         if (pInstance)
             pInstance->SetData(DATA_CYANIGOSA_EVENT, IN_PROGRESS);
     }
 
-    void MoveInLineOfSight(Unit* /*who*/) {}
+    void MoveInLineOfSight(Unit* who) {}
 
     void UpdateAI(const uint32 diff)
     {
         if (pInstance && pInstance->GetData(DATA_REMOVE_NPC) == 1)
         {
-            me->ForcedDespawn();
+            m_creature->ForcedDespawn();
             pInstance->SetData(DATA_REMOVE_NPC, 0);
         }
 
@@ -97,25 +103,36 @@ struct boss_cyanigosaAI : public ScriptedAI
         if (uiArcaneVacuumTimer <= diff)
         {
             DoCast(SPELL_ARCANE_VACUUM);
-            uiArcaneVacuumTimer = 10000;
+            Map* pMap = m_creature->GetMap();
+            if (pMap && pMap->IsDungeon())
+            {
+                Map::PlayerList const &PlayerList = pMap->GetPlayers();
+
+                if (!PlayerList.isEmpty())
+                    for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                        if (i->getSource()->isAlive())
+                            DoTeleportPlayer(i->getSource(), m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), i->getSource()->GetOrientation());
+            }
+            CAST_AI(boss_cyanigosaAI, m_creature->AI())->DeleteFromThreatList(m_creature->GetGUID());
+            uiArcaneVacuumTimer = 30000;
         } else uiArcaneVacuumTimer -= diff;
 
         if (uiBlizzardTimer <= diff)
         {
             if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                DoCast(pTarget, SPELL_BLIZZARD);
+                DoCast(pTarget, DUNGEON_MODE(SPELL_BLIZZARD, H_SPELL_BLIZZARD));
             uiBlizzardTimer = 15000;
         } else uiBlizzardTimer -= diff;
 
         if (uiTailSweepTimer <= diff)
         {
-            DoCast(SPELL_TAIL_SWEEP);
+            DoCast(DUNGEON_MODE(SPELL_TAIL_SWEEP, H_SPELL_TAIL_SWEEP));
             uiTailSweepTimer = 20000;
         } else uiTailSweepTimer -= diff;
 
         if (uiUncontrollableEnergyTimer <= diff)
         {
-            DoCastVictim(SPELL_UNCONTROLLABLE_ENERGY);
+            DoCast(m_creature->getVictim(), DUNGEON_MODE(SPELL_UNCONTROLLABLE_ENERGY,H_SPELL_UNCONTROLLABLE_ENERGY), true);
             uiUncontrollableEnergyTimer = 25000;
         } else uiUncontrollableEnergyTimer -= diff;
 
@@ -130,19 +147,19 @@ struct boss_cyanigosaAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void JustDied(Unit* /*killer*/)
+    void JustDied(Unit* killer)
     {
-        DoScriptText(SAY_DEATH, me);
+        DoScriptText(SAY_DEATH, m_creature);
 
         if (pInstance)
             pInstance->SetData(DATA_CYANIGOSA_EVENT, DONE);
     }
 
-    void KilledUnit(Unit * victim)
+    void KilledUnit(Unit *victim)
     {
-        if (victim == me)
+        if (victim == m_creature)
             return;
-        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
+        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), m_creature);
     }
 };
 

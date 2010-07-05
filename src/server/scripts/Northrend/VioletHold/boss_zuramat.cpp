@@ -1,22 +1,11 @@
-/*
- * Copyright (C) 2009 - 2010 Trinity <http://www.trinitycore.org/>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- */
+/* Script Data Start
+SDName: Boss zuramat
+SD%Complete:
+SDComment: The phasemask for the voids dosen't work.
+SDCategory:
+Script Data End */
 
-#include "ScriptPCH.h"
+#include "ScriptedPch.h"
 #include "violet_hold.h"
 
 enum Spells
@@ -78,21 +67,21 @@ struct boss_zuramatAI : public ScriptedAI
 
     void AttackStart(Unit* pWho)
     {
-        if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE) || me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE) || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
-        if (me->Attack(pWho, true))
+        if (m_creature->Attack(pWho, true))
         {
-            me->AddThreat(pWho, 0.0f);
-            me->SetInCombatWith(pWho);
-            pWho->SetInCombatWith(me);
+            m_creature->AddThreat(pWho, 0.0f);
+            m_creature->SetInCombatWith(pWho);
+            pWho->SetInCombatWith(m_creature);
             DoStartMovement(pWho);
         }
     }
 
-    void EnterCombat(Unit* /*who*/)
+    void EnterCombat(Unit* who)
     {
-        DoScriptText(SAY_AGGRO, me);
+        DoScriptText(SAY_AGGRO, m_creature);
         if (pInstance)
         {
             if (GameObject *pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_ZURAMAT_CELL)))
@@ -108,7 +97,7 @@ struct boss_zuramatAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit* /*who*/) {}
+    void MoveInLineOfSight(Unit* who) {}
 
     void UpdateAI(const uint32 diff)
     {
@@ -118,7 +107,7 @@ struct boss_zuramatAI : public ScriptedAI
 
         if (SpellSummonVoidTimer <= diff)
         {
-            DoCast(me->getVictim(), SPELL_SUMMON_VOID_SENTRY, false);
+            DoCast(m_creature->getVictim(), SPELL_SUMMON_VOID_SENTRY, false);
             SpellSummonVoidTimer = 20000;
         } else SpellSummonVoidTimer -=diff;
 
@@ -131,16 +120,16 @@ struct boss_zuramatAI : public ScriptedAI
 
         if (SpellShroudOfDarknessTimer <= diff)
         {
-            DoCast(me->getVictim(), SPELL_SHROUD_OF_DARKNESS);
+            DoCast(m_creature->getVictim(), SPELL_SHROUD_OF_DARKNESS);
             SpellShroudOfDarknessTimer = 20000;
         } else SpellShroudOfDarknessTimer -=diff;
 
         DoMeleeAttackIfReady();
     }
 
-    void JustDied(Unit* /*killer*/)
+    void JustDied(Unit* killer)
     {
-        DoScriptText(SAY_DEATH, me);
+        DoScriptText(SAY_DEATH, m_creature);
 
         if (pInstance)
         {
@@ -157,17 +146,17 @@ struct boss_zuramatAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit * victim)
+    void KilledUnit(Unit *victim)
     {
-        if (victim == me)
+        if (victim == m_creature)
             return;
 
-        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
+        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), m_creature);
     }
 
     void JustSummoned(Creature* summon)
     {
-        summon->AI()->AttackStart(me->getVictim());
+        summon->AI()->AttackStart(m_creature->getVictim());
         summon->AI()->DoCastAOE(SPELL_ZURAMAT_ADD_2);
         summon->SetPhaseMask(17,true);
     }
