@@ -27,7 +27,6 @@
 #define SPELL_SPELL_DISRUPTION  29310
 #define SPELL_DECREPIT_FEVER    RAID_MODE(29998,55011)
 #define SPELL_PLAGUE_CLOUD      29350
-#define ACHIEV_SAFETY_DANCE     RAID_MODE(1996,2139)
 
 enum Events
 {
@@ -44,11 +43,6 @@ enum Phases
     PHASE_DANCE,
 };
 
-// Anti-cheaters position check
-#define CHECK_X             2821.88
-#define CHECK_Y            -3684.89
-#define CHECK_Z             273.62
-
 struct boss_heiganAI : public BossAI
 {
     boss_heiganAI(Creature *c) : BossAI(c, BOSS_HEIGAN) {}
@@ -57,33 +51,19 @@ struct boss_heiganAI : public BossAI
     bool eruptDirection;
     Phases phase;
 
-    void KilledUnit(Unit* Victim)
+    void KilledUnit(Unit* /*Victim*/)
     {
         if (!(rand()%5))
             DoScriptText(SAY_SLAY, me);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* /*Killer*/)
     {
         _JustDied();
         DoScriptText(SAY_DEATH, me);
-
-        // TODO: in caso di ress i player morti non devono essere contati vivi alla fine
-        if (instance)
-        {
-            const Map::PlayerList &Players = instance->instance->GetPlayers();
-            if (!Players.isEmpty())
-            {
-                Player *pPlayer;
-                for (Map::PlayerList::const_iterator i = Players.begin(); i != Players.end(); ++i)
-                    if ((pPlayer = i->getSource()) && !pPlayer->isAlive())
-                        return;
-                instance->DoCompleteAchievement(ACHIEV_SAFETY_DANCE);
-            }
-        }
     }
 
-    void EnterCombat(Unit *who)
+    void EnterCombat(Unit * /*who*/)
     {
         _EnterCombat();
         DoScriptText(SAY_AGGRO, me);
@@ -97,7 +77,6 @@ struct boss_heiganAI : public BossAI
         eruptSection = 3;
         if (phase == PHASE_FIGHT)
         {
-            me->SetReactState(REACT_AGGRESSIVE);
             events.ScheduleEvent(EVENT_DISRUPT, urand(10000, 25000));
             events.ScheduleEvent(EVENT_FEVER, urand(15000, 20000));
             events.ScheduleEvent(EVENT_PHASE, 90000);
@@ -105,13 +84,12 @@ struct boss_heiganAI : public BossAI
         }
         else
         {
-            float x, y, z, o;            
-            me->SetReactState(REACT_PASSIVE);
+            float x, y, z, o;
             me->GetHomePosition(x, y, z, o);
             me->NearTeleportTo(x, y, z, o);
             DoCastAOE(SPELL_PLAGUE_CLOUD);
             events.ScheduleEvent(EVENT_PHASE, 45000);
-            events.ScheduleEvent(EVENT_ERUPT, 7500);
+            events.ScheduleEvent(EVENT_ERUPT, 8000);
         }
     }
 
@@ -121,15 +99,6 @@ struct boss_heiganAI : public BossAI
             return;
 
         events.Update(diff);
-
-        // Distance check
-        if(me->GetDistance(CHECK_X, CHECK_Y, CHECK_Z) <= 4)
-        {
-            std::list<HostileReference*> &m_threatlist = me->getThreatManager().getThreatList();
-            for (std::list<HostileReference*>::iterator itr = m_threatlist.begin(); itr != m_threatlist.end(); ++itr)
-                if((*itr)->getTarget()->GetTypeId() == TYPEID_PLAYER)
-                    (*itr)->getTarget()->NearTeleportTo(2793.86, -3707.38, 276.627, 0);
-        }
 
         while (uint32 eventId = events.ExecuteEvent())
         {
@@ -158,7 +127,7 @@ struct boss_heiganAI : public BossAI
 
                     eruptDirection ? ++eruptSection : --eruptSection;
 
-                    events.ScheduleEvent(EVENT_ERUPT, phase == PHASE_FIGHT ? 10000 : 3350);
+                    events.ScheduleEvent(EVENT_ERUPT, phase == PHASE_FIGHT ? 10000 : 3000);
                     break;
             }
         }

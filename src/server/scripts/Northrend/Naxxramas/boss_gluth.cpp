@@ -54,14 +54,6 @@ struct boss_gluthAI : public BossAI
         me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_INFECTED_WOUND, true);
     }
 
-    std::vector<Creature*> triggers;
-
-    void Reset()
-    {
-        triggers.clear();
-        _Reset();
-    }
-
     void MoveInLineOfSight(Unit *who)
     {
         if (who->GetEntry() == MOB_ZOMBIE && me->IsWithinDistInMap(who, 7))
@@ -74,18 +66,8 @@ struct boss_gluthAI : public BossAI
             BossAI::MoveInLineOfSight(who);
     }
 
-    void EnterCombat(Unit *who)
+    void EnterCombat(Unit * /*who*/)
     {
-        for (uint32 i = 0; i < 3; ++i)
-            if (Creature *trigger = DoSummon(WORLD_TRIGGER, PosSummon[i]))
-                triggers.push_back(trigger);
-        if (triggers.size() < 3)
-        {
-            sLog.outError("Script Gluth: cannot summon triggers!");
-            EnterEvadeMode();
-            return;
-        }
-
         _EnterCombat();
         events.ScheduleEvent(EVENT_WOUND, 10000);
         events.ScheduleEvent(EVENT_ENRAGE, 15000);
@@ -96,9 +78,7 @@ struct boss_gluthAI : public BossAI
 
     void JustSummoned(Creature *summon)
     {
-        if (summon->GetEntry() == WORLD_TRIGGER)
-            summon->setActive(true);
-        else if (summon->GetEntry() == MOB_ZOMBIE)
+        if (summon->GetEntry() == MOB_ZOMBIE)
             summon->AI()->AttackStart(me);
         summons.Summon(summon);
     }
@@ -134,7 +114,7 @@ struct boss_gluthAI : public BossAI
                     break;
                 case EVENT_SUMMON:
                     for (uint32 i = 0; i < RAID_MODE(1,2); ++i)
-                        DoSummon(MOB_ZOMBIE, triggers[rand()%3]);
+                        DoSummon(MOB_ZOMBIE, PosSummon[rand()%3]);
                     events.ScheduleEvent(EVENT_SUMMON, 10000);
                     break;
             }

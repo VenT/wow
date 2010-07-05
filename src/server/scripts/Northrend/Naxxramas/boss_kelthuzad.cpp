@@ -322,7 +322,7 @@ struct boss_kelthuzadAI : public BossAI
         DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
     }
 
-    void JustDied(Unit* Killer)
+    void JustDied(Unit* /*Killer*/)
     {
         _JustDied();
         DoScriptText(SAY_DEATH, me);
@@ -336,7 +336,7 @@ struct boss_kelthuzadAI : public BossAI
         chained.clear();
     }
 
-    void EnterCombat(Unit* who)
+    void EnterCombat(Unit* /*who*/)
     {
         me->setFaction(uiFaction);
 
@@ -635,7 +635,7 @@ CreatureAI* GetAI_boss_kelthuzadAI(Creature* pCreature)
     return new boss_kelthuzadAI (pCreature);
 }
 
-bool AreaTrigger_at_kelthuzad_center(Player* pPlayer, const AreaTriggerEntry *at)
+bool AreaTrigger_at_kelthuzad_center(Player* pPlayer, const AreaTriggerEntry * /*at*/)
 {
     if (pPlayer->isGameMaster())
         return false;
