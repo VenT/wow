@@ -40,8 +40,8 @@ enum Data
     DATA_WAVE_COUNT,
     DATA_REMOVE_NPC,
     DATA_DOOR,
-	DATA_BOSS_PHASE,
-	DATA_LASTBOSS
+        DATA_BOSS_PHASE,
+        DATA_LASTBOSS
 };
 
 enum Data64
@@ -89,11 +89,11 @@ enum WorldStates
 
 enum DefenceSystem
 {
-	SPELL_DEFENSE_SYSTEM_VISUAL			= 57887,
-    SPELL_DEFENSE_SYSTEM_SPAWN			= 57886,
-	SPELL_CONTROL_CRYSTAL_ACTIVATION	= 57804,
-	NPC_DEFENSE_SYSTEM					= 30837,
-    NPC_DEFENSE_DUMMY_TARGET			= 30857
+        SPELL_DEFENSE_SYSTEM_VISUAL                     = 57887,
+    SPELL_DEFENSE_SYSTEM_SPAWN                  = 57886,
+        SPELL_CONTROL_CRYSTAL_ACTIVATION        = 57804,
+        NPC_DEFENSE_SYSTEM                                      = 30837,
+    NPC_DEFENSE_DUMMY_TARGET                    = 30857
 };
 
 static float fDefenseSystemLoc[4] = {1888.146f, 803.382f, 58.604f, 3.072f};

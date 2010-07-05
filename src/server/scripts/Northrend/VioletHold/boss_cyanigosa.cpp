@@ -9,7 +9,7 @@ Script Data End */
 /*** SQL START ***
 update creature_template set scriptname = '' where entry = '';
 *** SQL END ***/
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "violet_hold.h"
 
 enum Spells
@@ -67,7 +67,7 @@ struct boss_cyanigosaAI : public ScriptedAI
 
     void DeleteFromThreatList(uint64 TargetGUID)
     {
-        for (std::list<HostileReference*>::const_iterator itr = m_creature->getThreatManager().getThreatList().begin(); itr != m_creature->getThreatManager().getThreatList().end(); ++itr)
+        for (std::list<HostileReference*>::const_iterator itr = me->getThreatManager().getThreatList().begin(); itr != me->getThreatManager().getThreatList().end(); ++itr)
         {
             if ((*itr)->getUnitGuid() == TargetGUID)
             {
@@ -79,8 +79,8 @@ struct boss_cyanigosaAI : public ScriptedAI
 
     void EnterCombat(Unit* who)
     {
-        DoScriptText(SAY_AGGRO, m_creature);
-        DoCast(m_creature, SPELL_TRANSFORM);
+        DoScriptText(SAY_AGGRO, me);
+        DoCast(me, SPELL_TRANSFORM);
 
         if (pInstance)
             pInstance->SetData(DATA_CYANIGOSA_EVENT, IN_PROGRESS);
@@ -92,7 +92,7 @@ struct boss_cyanigosaAI : public ScriptedAI
     {
         if (pInstance && pInstance->GetData(DATA_REMOVE_NPC) == 1)
         {
-            m_creature->ForcedDespawn();
+            me->ForcedDespawn();
             pInstance->SetData(DATA_REMOVE_NPC, 0);
         }
 
@@ -103,7 +103,7 @@ struct boss_cyanigosaAI : public ScriptedAI
         if (uiArcaneVacuumTimer <= diff)
         {
             DoCast(SPELL_ARCANE_VACUUM);
-            Map* pMap = m_creature->GetMap();
+            Map* pMap = me->GetMap();
             if (pMap && pMap->IsDungeon())
             {
                 Map::PlayerList const &PlayerList = pMap->GetPlayers();
@@ -111,9 +111,9 @@ struct boss_cyanigosaAI : public ScriptedAI
                 if (!PlayerList.isEmpty())
                     for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                         if (i->getSource()->isAlive())
-                            DoTeleportPlayer(i->getSource(), m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), i->getSource()->GetOrientation());
+                            DoTeleportPlayer(i->getSource(), me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), i->getSource()->GetOrientation());
             }
-            CAST_AI(boss_cyanigosaAI, m_creature->AI())->DeleteFromThreatList(m_creature->GetGUID());
+            CAST_AI(boss_cyanigosaAI, me->AI())->DeleteFromThreatList(me->GetGUID());
             uiArcaneVacuumTimer = 30000;
         } else uiArcaneVacuumTimer -= diff;
 
@@ -132,7 +132,7 @@ struct boss_cyanigosaAI : public ScriptedAI
 
         if (uiUncontrollableEnergyTimer <= diff)
         {
-            DoCast(m_creature->getVictim(), DUNGEON_MODE(SPELL_UNCONTROLLABLE_ENERGY,H_SPELL_UNCONTROLLABLE_ENERGY), true);
+            DoCast(me->getVictim(), DUNGEON_MODE(SPELL_UNCONTROLLABLE_ENERGY,H_SPELL_UNCONTROLLABLE_ENERGY), true);
             uiUncontrollableEnergyTimer = 25000;
         } else uiUncontrollableEnergyTimer -= diff;
 
@@ -149,7 +149,7 @@ struct boss_cyanigosaAI : public ScriptedAI
 
     void JustDied(Unit* killer)
     {
-        DoScriptText(SAY_DEATH, m_creature);
+        DoScriptText(SAY_DEATH, me);
 
         if (pInstance)
             pInstance->SetData(DATA_CYANIGOSA_EVENT, DONE);
@@ -157,9 +157,9 @@ struct boss_cyanigosaAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        if (victim == m_creature)
+        if (victim == me)
             return;
-        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), m_creature);
+        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
     }
 };
 

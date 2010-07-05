@@ -1,4 +1,4 @@
-#include "ScriptedPch.h"
+#include "ScriptPCH.h"
 #include "violet_hold.h"
 
 #define MAX_ENCOUNTER          3
@@ -71,20 +71,20 @@ struct instance_violet_hold : public ScriptedInstance
     bool bWiped;
     bool instance_failed;
  
-	uint8 shield_percent;
-	uint8 boss_encounter_phase;
-	uint8 last_boss;
-	uint64 m_uiIntroCrystalGUID;
+        uint8 shield_percent;
+        uint8 boss_encounter_phase;
+        uint8 last_boss;
+        uint64 m_uiIntroCrystalGUID;
 
     std::string str_data;
 
     void Initialize()
     {
         shield_percent = 100;
-		boss_encounter_phase = 0;
-		last_boss = 0;
-		instance_failed = false;
-		uint64 m_uiIntroCrystalGUID = 0;
+                boss_encounter_phase = 0;
+                last_boss = 0;
+                instance_failed = false;
+                uint64 m_uiIntroCrystalGUID = 0;
 
         uiMoragg = 0;
         uiErekem = 0;
@@ -248,28 +248,28 @@ struct instance_violet_hold : public ScriptedInstance
                 uiRemoveNpc = data;
                 break;
             case DATA_DOOR:
-				if(data == SPECIAL){
-					shield_percent -= 1;
-					DoUpdateWorldState(WORLD_STATE_VH_PRISON_STATE, shield_percent);
-					if(shield_percent <= 0){
-						instance_failed =  true;
-						SaveToDB();
-						if (GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
-							pMainDoor->SetGoState(GO_STATE_ACTIVE);
-						//instance->RemoveAllPlayers();
-					}
-				}
-				break;
-			case DATA_BOSS_PHASE:
-				boss_encounter_phase = data;
-				AddWave();
-				break;
-			case DATA_LASTBOSS:
-				last_boss = data;				
-				break;
-			case DATA_INSTANCE_FAILED:
-				instance_failed = data;
-				break;
+                                if(data == SPECIAL){
+                                        shield_percent -= 1;
+                                        DoUpdateWorldState(WORLD_STATE_VH_PRISON_STATE, shield_percent);
+                                        if(shield_percent <= 0){
+                                                instance_failed =  true;
+                                                SaveToDB();
+                                                if (GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
+                                                        pMainDoor->SetGoState(GO_STATE_ACTIVE);
+                                                //instance->RemoveAllPlayers();
+                                        }
+                                }
+                                break;
+                        case DATA_BOSS_PHASE:
+                                boss_encounter_phase = data;
+                                AddWave();
+                                break;
+                        case DATA_LASTBOSS:
+                                last_boss = data;                               
+                                break;
+                        case DATA_INSTANCE_FAILED:
+                                instance_failed = data;
+                                break;
         }
     }
 
@@ -282,28 +282,28 @@ struct instance_violet_hold : public ScriptedInstance
             case DATA_CYANIGOSA_EVENT:          return m_auiEncounter[2];
             case DATA_WAVE_COUNT:               return uiWaveCount;
             case DATA_REMOVE_NPC:               return uiRemoveNpc;
-            case DATA_LASTBOSS:					return last_boss;
-			case DATA_INSTANCE_FAILED:			return instance_failed;
+            case DATA_LASTBOSS:                                 return last_boss;
+                        case DATA_INSTANCE_FAILED:                      return instance_failed;
         }
 
         return 0;
     }
 
     void ProcessActivationCrystal(Unit* pUser, bool bIsIntro)
-	{
-		if (Creature* pSummon = pUser->SummonCreature(NPC_DEFENSE_SYSTEM, fDefenseSystemLoc[0], fDefenseSystemLoc[1], fDefenseSystemLoc[2], fDefenseSystemLoc[3], TEMPSUMMON_TIMED_DESPAWN, 10000))
-		{
-			pSummon->CastSpell(pSummon, SPELL_DEFENSE_SYSTEM_VISUAL, true);
+        {
+                if (Creature* pSummon = pUser->SummonCreature(NPC_DEFENSE_SYSTEM, fDefenseSystemLoc[0], fDefenseSystemLoc[1], fDefenseSystemLoc[2], fDefenseSystemLoc[3], TEMPSUMMON_TIMED_DESPAWN, 10000))
+                {
+                        pSummon->CastSpell(pSummon, SPELL_DEFENSE_SYSTEM_VISUAL, true);
 
-			// TODO: figure out how the rest work
-			// NPC's NPC_DEFENSE_DUMMY_TARGET are probably channeling some spell to the defense system
-		}
+                        // TODO: figure out how the rest work
+                        // NPC's NPC_DEFENSE_DUMMY_TARGET are probably channeling some spell to the defense system
+                }
 
-		if (bIsIntro)
-			DoUseDoorOrButton(m_uiIntroCrystalGUID);
+                if (bIsIntro)
+                        DoUseDoorOrButton(m_uiIntroCrystalGUID);
 
-		// else, kill (and despawn?) certain trash mobs. Also boss affected, but not killed.
-	}
+                // else, kill (and despawn?) certain trash mobs. Also boss affected, but not killed.
+        }
 
     void SpawnPortal()
     {
@@ -397,9 +397,9 @@ struct instance_violet_hold : public ScriptedInstance
                     uiFirstBoss = urand(1,6);
                 last_boss = uiFirstBoss;
                 if(boss_encounter_phase == 0)
-					break;				
-				StartBossEncounter(uiFirstBoss);
-				boss_encounter_phase = 0;
+                                        break;                          
+                                StartBossEncounter(uiFirstBoss);
+                                boss_encounter_phase = 0;
                 break;
             case 12:
                 if (uiSecondBoss == 0)
@@ -408,8 +408,8 @@ struct instance_violet_hold : public ScriptedInstance
                         uiSecondBoss = urand(1,6);
                     } while (uiSecondBoss == uiFirstBoss);
                 last_boss = uiSecondBoss;
-				if(boss_encounter_phase == 0)
-					break;
+                                if(boss_encounter_phase == 0)
+                                        break;
                 StartBossEncounter(uiSecondBoss);
                 boss_encounter_phase = 0;
                 break;
