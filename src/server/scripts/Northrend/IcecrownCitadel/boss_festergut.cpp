@@ -84,7 +84,7 @@ struct boss_festergutAI : public ScriptedAI
         m_uiGastricBloatTimer = 15000;
         m_uiBerserkTimer = 300000;
 
-        Achievement = false;
+        Achievements = false;
 
         if (m_pInstance)
             m_pInstance->SetData(DATA_FESTERGURT_EVENT, NOT_STARTED);
@@ -127,11 +127,11 @@ struct boss_festergutAI : public ScriptedAI
         switch(0)
         {
         case 0:
-            if (pVictim->HasAura(72103))
+            if (victim->HasAura(72103))
             {
-                if(!Achievement)
+                if(!Achievements)
                 m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEV_INOCULATE_10,ACHIEV_INOCULATE_25));
-                Achievement = true;
+                Achievements = true;
             }
             break;
         }
