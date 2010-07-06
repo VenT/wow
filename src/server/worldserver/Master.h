@@ -34,6 +34,7 @@ class Master
     public:
         Master();
         ~Master();
+        static volatile uint32 m_masterLoopCounter;
         int Run();
 
     private:

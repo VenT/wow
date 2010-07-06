@@ -56,6 +56,11 @@ extern int m_ServiceStatus;
 #endif
 
 
+/// \todo Warning disabling not useful under VC++2005. Can somebody say on which compiler it is useful? 	
+#pragma warning(disable:4305)	 	
+	 	
+volatile uint32 Master::m_masterLoopCounter = 0;
+
 /// Handle cored's termination signals
 class CoredSignalHandler : public Trinity::SignalHandler
 {
@@ -99,6 +104,7 @@ public:
         {
             ACE_Based::Thread::Sleep(1000);
             uint32 curtime = getMSTime();
+
             // normal work
             if (w_loops != World::m_worldLoopCounter)
             {
