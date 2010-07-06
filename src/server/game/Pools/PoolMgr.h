@@ -89,16 +89,10 @@ class PoolGroup
 
 class PoolMgr
 {
-<<<<<<< HEAD:src/server/game/Pools/PoolMgr.h
-    friend class ACE_Singleton<PoolMgr, ACE_Null_Mutex>;
+
+    public:
     PoolMgr();
     ~PoolMgr() {};
-
-=======
->>>>>>> fdd89b5... Get rid of Trinity Singleton and Threading patterns and replace them with:src/server/game/Pools/PoolHandler.h
-    public:
-        PoolHandler();
-        ~PoolHandler() {};
 
         void LoadFromDB();
         void Initialize();
@@ -141,11 +135,8 @@ class PoolMgr
         SpawnedPoolData mSpawnedData;
 };
 
-<<<<<<< HEAD:src/server/game/Pools/PoolMgr.h
-#define poolhandler (*ACE_Singleton<PoolMgr, ACE_Null_Mutex>::instance())
-=======
-#define poolhandler Trinity::Singleton<PoolHandler>::Instance()
->>>>>>> fdd89b5... Get rid of Trinity Singleton and Threading patterns and replace them with:src/server/game/Pools/PoolHandler.h
+
+#define poolhandler Trinity::Singleton<PoolMgr>::Instance()
 
 // Method that tell if the creature is part of a pool and return the pool id if yes
 template<>

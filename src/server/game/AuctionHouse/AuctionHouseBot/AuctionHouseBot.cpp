@@ -22,12 +22,9 @@
 #include "AuctionHouseBot.h"
 #include <vector>
 
-<<<<<<< HEAD:src/server/game/AuctionHouse/AuctionHouseBot/AuctionHouseBot.cpp
-=======
 #include "SingletonImp.h"
 INSTANTIATE_SINGLETON_1(AuctionHouseBot);
 
->>>>>>> fdd89b5... Get rid of Trinity Singleton and Threading patterns and replace them with:src/server/game/AuctionHouse/AuctionHouseBot/AuctionHouseBot.cpp
 using namespace std;
 vector<uint32> npcItems;
 vector<uint32> lootItems;
