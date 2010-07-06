@@ -14,12 +14,6 @@ UPDATE creature_template SET ScriptName = 'npc_arcane_overload' WHERE entry = 30
 
 UPDATE creature_template SET unit_flags = 1 WHERE entry = 28859;
 
-/*
-DELETE FROM spell_script_target WHERE entry = 56505;
-INSERT INTO spell_script_target (entry, type, targetEntry) VALUES
-(56505, 1, 22517);
-*/
-
 UPDATE creature_template SET mindmg = 3684, maxdmg = 4329, dmg_multiplier = 7.5, mechanic_immune_mask = 1072918979 WHERE entry = 30245; -- Nexus Lord
 UPDATE creature_template SET mindmg = 3684, maxdmg = 4329, dmg_multiplier = 13,  mechanic_immune_mask = 1072918979 WHERE entry = 31750; -- Nexus Lord (1)
 UPDATE creature_template SET mechanic_immune_mask = 1072918979 WHERE entry IN (30249, 31751);
