@@ -44,7 +44,7 @@ enum Spells
     SPELL_GAS_VISUAL_SMAL      =    69154,
     SPELL_GAS_VISUAL_MIDDEL    =    69152,
     SPELL_GAS_VISUAL_BIG       =    69126, 
-    SPELL_GAS_SPORES           =    69279,
+    SPELL_GAS_SPORES           =    69278,
     SPELL_BERSERK              =    47008,
     SPELL_INOCULATED           =    72103,
     SPELL_BLIGHTED_SPORES      =    69290, 
@@ -153,7 +153,7 @@ struct boss_festergutAI : public ScriptedAI
         switch(TouchedType)
         {
         case SPELL_GAS_SPORES:
-            if (pTarget && pTarget->HasAura(SPELL_BLIGHTED_SPORES))
+            if (pTarget && pTarget->HasAura(69291))
             {
                 pTarget->CastSpell(pTarget, SPELL_INOCULATED, true);
             }
