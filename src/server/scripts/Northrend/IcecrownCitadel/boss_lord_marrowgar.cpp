@@ -40,9 +40,9 @@ enum Spells
     SPELL_SABER_SLASH_10_HEROIC          =  70814,
     SPELL_SABER_SLASH_25_HEROIC          =  70814,
     SPELL_COLD_FLAME_10_NORMAL           =  69145, //69146 - was the old spell - and it was the wrong one - or maybe not but lets try using this for the given situation
-    SPELL_COLD_FLAME_25_NORMAL           =  70823,
-    SPELL_COLD_FLAME_10_HEROIC           =  70824,
-    SPELL_COLD_FLAME_25_HEROIC           =  70825,
+    SPELL_COLD_FLAME_25_NORMAL           =  69145,
+    SPELL_COLD_FLAME_10_HEROIC           =  69145,
+    SPELL_COLD_FLAME_25_HEROIC           =  69145,
     SPELL_COLD_DESPAWN                   =  66346,
     SPELL_COLD_FLAME_SPAWN               =  69138,
     SPELL_BONE_SPIKE_GRAVEYARD_10_NORMAL =  69057,
