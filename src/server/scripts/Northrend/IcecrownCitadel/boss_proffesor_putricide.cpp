@@ -151,7 +151,7 @@ struct boss_professor_putricideAI : public ScriptedAI
             m_uiAddSpawnTimer = 60000;
         } else m_uiAddSpawnTimer -= uiDiff;
 
-		if(m_uiPhase == 1 && me->GetHealth()*100 / me->GetMaxHealth() < 81)
+		if(!m_uiPhase == 2 && me->GetHealth()*100 / me->GetMaxHealth() < 81)
         {
                 DoScriptText(SAY_TRANSFORM_1, me);
                 DoCast(me, SPELL_TEAR_GAS);
@@ -214,11 +214,11 @@ struct boss_professor_putricideAI : public ScriptedAI
 				{
 					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 					DoCast(pTarget, RAID_MODE(SPELL_MALLEABLE_GOO_10_NORMAL,SPELL_MALLEABLE_GOO_25_NORMAL,SPELL_MALLEABLE_GOO_10_HEROIC,SPELL_MALLEABLE_GOO_25_HEROIC));
-					m_uiGooTimer = 23000;
+					m_uiGooTimer = 33000;
 				}
 			} else m_uiGooTimer -= uiDiff;
 
-		if(m_uiPhase == 2 && me->GetHealth()*100 / me->GetMaxHealth() < 36)
+		if(!m_uiPhase == 3 && me->GetHealth()*100 / me->GetMaxHealth() < 36)
         {
                 DoScriptText(SAY_TRANSFORM_2, me);
                 DoCast(me, SPELL_TEAR_GAS);
