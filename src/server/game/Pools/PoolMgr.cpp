@@ -23,7 +23,7 @@
 #include "MapManager.h"
 #include "SingletonImp.h"
 
-INSTANTIATE_SINGLETON_1(PoolHandler);
+INSTANTIATE_SINGLETON_1(PoolMgr);
 
 ////////////////////////////////////////////////////////////
 // template class SpawnedPoolData
