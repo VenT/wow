@@ -142,7 +142,7 @@ struct boss_valithriaAI : public ScriptedAI
 	void EnterCombat(Unit *who) 
 	{
 		me->SetHealth(me->GetMaxHealth() * 0.50);                 
-		m_uiSummonTimer = 15000;
+		m_uiSummonTimer = 20000;
 		m_uiPortalTimer = 30000;  
 		Phase = 1;
 	}
@@ -187,7 +187,7 @@ struct boss_valithriaAI : public ScriptedAI
 					DoSummon(CREATURE_ABOMINATION, Pos[RAND(0,1,2,3)]);
 				}
 
-				m_uiSummonTimer = 20000;
+				m_uiSummonTimer = 28000;
 			} else m_uiSummonTimer -= diff;
 
 			if (m_uiPortalTimer <= diff) 
@@ -377,7 +377,7 @@ struct npc_skellmage_iccAI : public ScriptedAI
 		{
 			Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
 			DoCast(pTarget, SPELL_COLUMN);
-			m_uiColumnTimer = 20000; 
+			m_uiColumnTimer = 27000; 
 		} else m_uiColumnTimer -= diff; 
 
 		DoMeleeAttackIfReady(); 
@@ -398,7 +398,7 @@ struct npc_fireskell_iccAI : public ScriptedAI
 
 	void EnterCombat(Unit* who)
 	{  
-		m_uiWasteTimer = 20000; 
+		m_uiWasteTimer = 27000; 
 		m_uiFireballTimer = 5000; 
 	}
 
@@ -516,7 +516,7 @@ struct npc_glutabomination_iccAI : public ScriptedAI
 
 	void JustDied(Unit* killer)  
 	{
-		uint32 count = RAID_MODE(8,8,8,8);
+		uint32 count = RAID_MODE(4,6,6,8);
 		for (uint8 i = 1; i <= count; i++)
 		{
 			me->SummonCreature(CREATURE_WORM, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN);       
@@ -550,7 +550,7 @@ struct npc_blistzombie_iccAI : public ScriptedAI
 		if (m_uiBurstTTimer <= diff)
 		{
 			DoCast(SPELL_BURST); 
-			m_uiBurstTTimer = 20000;
+			m_uiBurstTTimer = 24000;
 			m_uiDelayTimer  = 1000;
 		} else m_uiBurstTTimer -= diff;   
 
