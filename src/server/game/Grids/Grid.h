@@ -33,6 +33,7 @@
 */
 
 #include "Define.h"
+#include "ThreadingModel.h"
 #include "TypeContainer.h"
 #include "TypeContainerVisitor.h"
 
@@ -43,7 +44,8 @@ template
 <
 class ACTIVE_OBJECT,
 class WORLD_OBJECT_TYPES,
-class GRID_OBJECT_TYPES
+class GRID_OBJECT_TYPES,
+class ThreadModel = Trinity::SingleThreaded<ACTIVE_OBJECT>
 >
 class Grid
 {
@@ -128,6 +130,9 @@ class Grid
             return i_container.GetElements().isEmpty();
         }*/
     private:
+
+        typedef typename ThreadModel::Lock Guard;
+        typedef typename ThreadModel::VolatileType VolatileType;
 
         TypeMapContainer<GRID_OBJECT_TYPES> i_container;
         TypeMapContainer<WORLD_OBJECT_TYPES> i_objects;

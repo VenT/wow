@@ -46,7 +46,7 @@ void DynamicObject::AddToWorld()
     ///- Register the dynamicObject for guid lookup
     if (!IsInWorld())
     {
-        sObjectAccessor.AddObject(this);
+        ObjectAccessor::Instance().AddObject(this);
         WorldObject::AddToWorld();
     }
 }
@@ -69,7 +69,7 @@ void DynamicObject::RemoveFromWorld()
             }
         }
         WorldObject::RemoveFromWorld();
-        sObjectAccessor.RemoveObject(this);
+        ObjectAccessor::Instance().RemoveObject(this);
     }
 }
 

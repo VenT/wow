@@ -165,8 +165,8 @@ bool ChatHandler::HandleGMListIngameCommand(const char* /*args*/)
 {
     bool first = true;
 
-    ACE_GUARD_RETURN(ACE_Thread_Mutex, guard, *HashMapHolder<Player>::GetLock(), true);
-    HashMapHolder<Player>::MapType &m = sObjectAccessor.GetPlayers();
+    ObjectAccessor::Guard guard(*HashMapHolder<Player>::GetLock());
+    HashMapHolder<Player>::MapType &m = ObjectAccessor::Instance().GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator itr = m.begin(); itr != m.end(); ++itr)
     {
         AccountTypes itr_sec = itr->second->GetSession()->GetSecurity();

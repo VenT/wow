@@ -94,9 +94,8 @@ struct Script
 
 class ScriptMgr
 {
-    friend class ACE_Singleton<ScriptMgr, ACE_Null_Mutex>;
-    ScriptMgr();
     public:
+        ScriptMgr();
         ~ScriptMgr();
 
         void ScriptsInit();
@@ -159,6 +158,6 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit *pTarget = NULL);
 #define FUNC_PTR(name, callconvention, returntype, parameters)    typedef returntype(callconvention *name)parameters;
 #endif
 
-#define sScriptMgr (*ACE_Singleton<ScriptMgr, ACE_Null_Mutex>::instance())
+#define sScriptMgr Trinity::Singleton<ScriptMgr>::Instance()
 #endif
 

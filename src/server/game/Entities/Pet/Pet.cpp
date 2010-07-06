@@ -74,7 +74,7 @@ void Pet::AddToWorld()
     if (!IsInWorld())
     {
         ///- Register the pet for guid lookup
-        sObjectAccessor.AddObject(this);
+        ObjectAccessor::Instance().AddObject(this);
         Unit::AddToWorld();
         AIM_Initialize();
     }
@@ -98,7 +98,7 @@ void Pet::RemoveFromWorld()
     {
         ///- Don't call the function for Creature, normal mobs + totems go in a different storage
         Unit::RemoveFromWorld();
-        sObjectAccessor.RemoveObject(this);
+        ObjectAccessor::Instance().RemoveObject(this);
     }
 }
 

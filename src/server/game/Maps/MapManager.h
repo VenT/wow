@@ -22,7 +22,7 @@
 #define TRINITY_MAPMANAGER_H
 
 #include "Define.h"
-#include "ace/Singleton.h"
+#include "Singleton.h"
 #include "ace/Thread_Mutex.h"
 #include "Common.h"
 #include "Map.h"
@@ -31,9 +31,10 @@
 
 class Transport;
 
-class MapManager
+class MapManager : public Trinity::Singleton<MapManager, Trinity::ClassLevelLockable<MapManager, ACE_Thread_Mutex> >
 {
-    friend class ACE_Singleton<MapManager, ACE_Thread_Mutex>;
+
+    friend class Trinity::OperatorNew<MapManager>;
     typedef UNORDERED_MAP<uint32, Map*> MapMapType;
     typedef std::pair<UNORDERED_MAP<uint32, Map*>::iterator, bool>  MapMapPair;
 
@@ -161,7 +162,7 @@ class MapManager
             return (iter == i_maps.end() ? NULL : iter->second);
         }
 
-        ACE_Thread_Mutex Lock;
+        typedef Trinity::ClassLevelLockable<MapManager, ACE_Thread_Mutex>::Lock Guard;
         uint32 i_gridCleanUpDelay;
         MapMapType i_maps;
         IntervalTimer i_timer;
@@ -169,5 +170,4 @@ class MapManager
         uint32 i_MaxInstanceId;
         MapUpdater m_updater;
 };
-#define sMapMgr (*ACE_Singleton<MapManager, ACE_Thread_Mutex>::instance())
 #endif

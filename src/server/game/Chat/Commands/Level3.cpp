@@ -689,7 +689,7 @@ bool ChatHandler::HandleReloadConfigCommand(const char* /*args*/)
 {
     sLog.outString("Re-Loading config settings...");
     sWorld.LoadConfigSettings(true);
-    sMapMgr.InitializeVisibilityDistanceInfo();
+    MapManager::Instance().InitializeVisibilityDistanceInfo();
     SendGlobalGMSysMessage("World config settings reloaded.");
     return true;
 }
@@ -4513,7 +4513,7 @@ bool ChatHandler::HandleReviveCommand(const char *args)
     }
     else
         // will resurrected at login without corpse
-        sObjectAccessor.ConvertCorpseForPlayer(target_guid);
+        ObjectAccessor::Instance().ConvertCorpseForPlayer(target_guid);
 
     return true;
 }
@@ -5533,8 +5533,8 @@ bool ChatHandler::HandleResetAllCommand(const char * args)
 
     CharacterDatabase.PExecute("UPDATE characters SET at_login = at_login | '%u' WHERE (at_login & '%u') = '0'",atLogin,atLogin);
 
-    ACE_GUARD_RETURN(ACE_Thread_Mutex, guard, *HashMapHolder<Player>::GetLock(), true);
-    HashMapHolder<Player>::MapType const& plist = sObjectAccessor.GetPlayers();
+    ObjectAccessor::Guard guard(*HashMapHolder<Player>::GetLock());
+    HashMapHolder<Player>::MapType const& plist = ObjectAccessor::Instance().GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator itr = plist.begin(); itr != plist.end(); ++itr)
         itr->second->SetAtLoginFlag(atLogin);
 
@@ -7020,8 +7020,8 @@ bool ChatHandler::HandleInstanceUnbindCommand(const char *args)
 
 bool ChatHandler::HandleInstanceStatsCommand(const char* /*args*/)
 {
-    PSendSysMessage("instances loaded: %d", sMapMgr.GetNumInstances());
-    PSendSysMessage("players in instances: %d", sMapMgr.GetNumPlayersInInstances());
+    PSendSysMessage("instances loaded: %d", MapManager::Instance().GetNumInstances());
+    PSendSysMessage("players in instances: %d", MapManager::Instance().GetNumPlayersInInstances());
     PSendSysMessage("instance saves: %d", sInstanceSaveManager.GetNumInstanceSaves());
     PSendSysMessage("players bound: %d", sInstanceSaveManager.GetNumBoundPlayersTotal());
     PSendSysMessage("groups bound: %d", sInstanceSaveManager.GetNumBoundGroupsTotal());

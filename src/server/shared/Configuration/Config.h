@@ -21,16 +21,15 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <ace/Singleton.h>
+#include <Policies/Singleton.h>
 #include "Define.h"
 
 class DOTCONFDocument;
 
 class Config
 {
-    friend class ACE_Singleton<Config, ACE_Null_Mutex>;
-    Config();
     public:
+        Config();
         ~Config();
 
         bool SetSource(const char *file, bool ignorecase = true);
@@ -48,7 +47,7 @@ class Config
         DOTCONFDocument *mConf;
 };
 
-#define sConfig (*ACE_Singleton<Config, ACE_Null_Mutex>::instance())
+#define sConfig Trinity::Singleton<Config>::Instance()
 
 #endif
 

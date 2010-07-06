@@ -22,7 +22,7 @@
 #define TRINITYCORE_LOG_H
 
 #include "Common.h"
-#include <ace/Singleton.h>
+#include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
 
 class Config;
@@ -82,9 +82,9 @@ enum ColorTypes
 
 const int Colors = int(WHITE)+1;
 
-class Log
+class Log : public Trinity::Singleton<Log, Trinity::ClassLevelLockable<Log, ACE_Thread_Mutex> >
 {
-    friend class ACE_Singleton<Log, ACE_Thread_Mutex>;
+    friend class Trinity::OperatorNew<Log>;
     Log();
     ~Log();
 
@@ -172,10 +172,10 @@ class Log
         std::string m_dumpsDir;
 };
 
-#define sLog (*ACE_Singleton<Log, ACE_Thread_Mutex>::instance())
+#define sLog Trinity::Singleton<Log>::Instance()
 
 #ifdef TRINITY_DEBUG
-#define DEBUG_LOG sLog.outDebug
+#define DEBUG_LOG Trinity::Singleton<Log>::Instance().outDebug
 #else
 #define DEBUG_LOG
 #endif

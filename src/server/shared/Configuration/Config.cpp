@@ -19,6 +19,9 @@
  */
 
 #include "ConfigEnv.h"
+#include "Policies/SingletonImp.h"
+
+INSTANTIATE_SINGLETON_1(Config);
 
 Config::Config() : mIgnoreCase(true), mConf(NULL)
 {

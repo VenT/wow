@@ -75,7 +75,7 @@ void WorldSession::HandleGuildInviteOpcode(WorldPacket& recvPacket)
     recvPacket >> Invitedname;
 
     if (normalizePlayerName(Invitedname))
-        player = sObjectAccessor.FindPlayerByName(Invitedname.c_str());
+        player = ObjectAccessor::Instance().FindPlayerByName(Invitedname.c_str());
 
     if (!player)
     {

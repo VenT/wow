@@ -21,7 +21,7 @@
 #define _ADDONMGR_H
 
 #include "Common.h"
-#include "ace/Singleton.h"
+#include "Singleton.h"
 
 #include <string>
 
@@ -67,10 +67,9 @@ typedef std::list<SavedAddon> SavedAddonsList;
 
 class AddonMgr
 {
-    friend class ACE_Singleton<AddonMgr, ACE_Null_Mutex>;
-    AddonMgr();
     public:
 
+        AddonMgr();
         ~AddonMgr();
 
         void LoadFromDB();
@@ -83,7 +82,7 @@ class AddonMgr
         SavedAddonsList m_knownAddons;                           // Known addons.
 };
 
-#define sAddonMgr (*ACE_Singleton<AddonMgr, ACE_Null_Mutex>::instance())
+#define sAddonMgr Trinity::Singleton<AddonMgr>::Instance()
 
 #endif
 

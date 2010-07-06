@@ -20,7 +20,7 @@
 #define _LFGMGR_H
 
 #include "Common.h"
-#include "ace/Singleton.h"
+#include "Singleton.h"
 #include "Group.h"
 #include "LFG.h"
 
@@ -237,44 +237,43 @@ typedef std::map<uint8, LFGQueue *> LFGQueueMap;
 
 class LFGMgr
 {
-    friend class ACE_Singleton<LFGMgr, ACE_Null_Mutex>;
+public:
     LFGMgr();
-    public:
-       ~LFGMgr();
+    ~LFGMgr();
 
-        void InitLFG();
-        void SendLfgPlayerInfo(Player *plr);
-        void SendLfgPartyInfo(Player *plr);
-        void Join(Player *plr);
-        void Leave(Player *plr, Group *grp = NULL);
-        void UpdateRoleCheck(Group *grp, Player *plr = NULL);
-        void Update(uint32 diff);
+    void InitLFG();
+    void SendLfgPlayerInfo(Player *plr);
+    void SendLfgPartyInfo(Player *plr);
+    void Join(Player *plr);
+    void Leave(Player *plr, Group *grp = NULL);
+    void UpdateRoleCheck(Group *grp, Player *plr = NULL);
+    void Update(uint32 diff);
 
-    private:
-        void BuildLfgRoleCheck(WorldPacket &data, LfgRoleCheck *pRoleCheck);
-        void BuildAvailableRandomDungeonList(WorldPacket &data, Player *plr);
-        void BuildRewardBlock(WorldPacket &data, uint32 dungeon, Player *plr);
-        void BuildPlayerLockDungeonBlock(WorldPacket &data, LfgLockStatusSet *lockSet);
-        void BuildPartyLockDungeonBlock(WorldPacket &data, LfgLockStatusMap *lockMap);
-        bool CheckGroupRoles(LfgRolesMap &groles, bool removeLeaderFlag = true);
+private:
+    void BuildLfgRoleCheck(WorldPacket &data, LfgRoleCheck *pRoleCheck);
+    void BuildAvailableRandomDungeonList(WorldPacket &data, Player *plr);
+    void BuildRewardBlock(WorldPacket &data, uint32 dungeon, Player *plr);
+    void BuildPlayerLockDungeonBlock(WorldPacket &data, LfgLockStatusSet *lockSet);
+    void BuildPartyLockDungeonBlock(WorldPacket &data, LfgLockStatusMap *lockMap);
+    bool CheckGroupRoles(LfgRolesMap &groles, bool removeLeaderFlag = true);
 
-        LfgLockStatusMap* GetPartyLockStatusDungeons(Player *plr, LfgDungeonSet *dungeons);
-        LfgLockStatusSet* GetPlayerLockStatusDungeons(Player *plr, LfgDungeonSet *dungeons);
-        LfgDungeonSet* GetRandomDungeons(uint8 level, uint8 expansion);
-        LfgDungeonSet* GetDungeonsByRandom(uint32 randomdungeon);
-        LfgDungeonSet* GetAllDungeons();
-        LfgReward* GetRandomDungeonReward(uint32 dungeon, bool done, uint8 level);
-        uint8 GetDungeonGroupType(uint32 dungeon);
+    LfgLockStatusMap* GetPartyLockStatusDungeons(Player *plr, LfgDungeonSet *dungeons);
+    LfgLockStatusSet* GetPlayerLockStatusDungeons(Player *plr, LfgDungeonSet *dungeons);
+    LfgDungeonSet* GetRandomDungeons(uint8 level, uint8 expansion);
+    LfgDungeonSet* GetDungeonsByRandom(uint32 randomdungeon);
+    LfgDungeonSet* GetAllDungeons();
+    LfgReward* GetRandomDungeonReward(uint32 dungeon, bool done, uint8 level);
+    uint8 GetDungeonGroupType(uint32 dungeon);
 
-        LfgRewardList m_RewardList;
-        LfgRewardList m_RewardDoneList;
-        LfgDungeonMap m_DungeonsMap;
+    LfgRewardList m_RewardList;
+    LfgRewardList m_RewardDoneList;
+    LfgDungeonMap m_DungeonsMap;
 
-        LFGQueueMap m_Queues;
-        LfgRoleCheckMap m_RoleChecks;
-        uint32 m_QueueTimer;
-        bool m_update;
+    LFGQueueMap m_Queues;
+    LfgRoleCheckMap m_RoleChecks;
+    uint32 m_QueueTimer;
+    bool m_update;
 };
 
-#define sLFGMgr (*ACE_Singleton<LFGMgr, ACE_Null_Mutex>::instance())
+#define sLFGMgr Trinity::Singleton<LFGMgr>::Instance()
 #endif

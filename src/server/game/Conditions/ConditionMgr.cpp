@@ -19,7 +19,7 @@
  */
 
 
-
+#include "SingletonImp.h"
 #include "Player.h"
 #include "SpellAuras.h"
 #include "SpellMgr.h"
@@ -28,6 +28,8 @@
 #include "ProgressBar.h"
 #include "InstanceData.h"
 #include "ConditionMgr.h"
+
+INSTANTIATE_SINGLETON_1(ConditionMgr);
 
 // Checks if player meets the condition
 // Can have CONDITION_SOURCE_TYPE_NONE && !mReferenceId if called from a special event (ie: eventAI)

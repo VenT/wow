@@ -19,7 +19,7 @@
 #ifndef _AUCTION_HOUSE_MGR_H
 #define _AUCTION_HOUSE_MGR_H
 
-#include "ace/Singleton.h"
+#include "Singleton.h"
 
 #include "SharedDefines.h"
 
@@ -119,53 +119,51 @@ class AuctionHouseObject
 
 class AuctionHouseMgr
 {
-    friend class ACE_Singleton<AuctionHouseMgr, ACE_Null_Mutex>;
+  public:
     AuctionHouseMgr();
-    
-    public:
-        ~AuctionHouseMgr();
+    ~AuctionHouseMgr();
 
-        typedef UNORDERED_MAP<uint32, Item*> ItemMap;
+    typedef UNORDERED_MAP<uint32, Item*> ItemMap;
 
-        AuctionHouseObject* GetAuctionsMap(uint32 factionTemplateId);
-        AuctionHouseObject* GetBidsMap(uint32 factionTemplateId);
+    AuctionHouseObject* GetAuctionsMap(uint32 factionTemplateId);
+    AuctionHouseObject* GetBidsMap(uint32 factionTemplateId);
 
-        Item* GetAItem(uint32 id)
+    Item* GetAItem(uint32 id)
+    {
+        ItemMap::const_iterator itr = mAitems.find(id);
+        if (itr != mAitems.end())
         {
-            ItemMap::const_iterator itr = mAitems.find(id);
-            if (itr != mAitems.end())
-            {
-                return itr->second;
-            }
-            return NULL;
+            return itr->second;
         }
+        return NULL;
+    }
 
-        //auction messages
-        void SendAuctionWonMail(AuctionEntry * auction);
-        void SendAuctionSalePendingMail(AuctionEntry * auction);
-        void SendAuctionSuccessfulMail(AuctionEntry * auction);
-        void SendAuctionExpiredMail(AuctionEntry * auction);
-        static uint32 GetAuctionDeposit(AuctionHouseEntry const* entry, uint32 time, Item *pItem);
-        static AuctionHouseEntry const* GetAuctionHouseEntry(uint32 factionTemplateId);
+    //auction messages
+    void SendAuctionWonMail(AuctionEntry * auction);
+    void SendAuctionSalePendingMail(AuctionEntry * auction);
+    void SendAuctionSuccessfulMail(AuctionEntry * auction);
+    void SendAuctionExpiredMail(AuctionEntry * auction);
+    static uint32 GetAuctionDeposit(AuctionHouseEntry const* entry, uint32 time, Item *pItem);
+    static AuctionHouseEntry const* GetAuctionHouseEntry(uint32 factionTemplateId);
 
-    public:
+  public:
     //load first auction items, because of check if item exists, when loading
-        void LoadAuctionItems();
-        void LoadAuctions();
+    void LoadAuctionItems();
+    void LoadAuctions();
 
-        void AddAItem(Item* it);
-        bool RemoveAItem(uint32 id);
+    void AddAItem(Item* it);
+    bool RemoveAItem(uint32 id);
 
-        void Update();
+    void Update();
 
-    private:
-        AuctionHouseObject mHordeAuctions;
-        AuctionHouseObject mAllianceAuctions;
-        AuctionHouseObject mNeutralAuctions;
+  private:
+    AuctionHouseObject mHordeAuctions;
+    AuctionHouseObject mAllianceAuctions;
+    AuctionHouseObject mNeutralAuctions;
 
-        ItemMap mAitems;
+    ItemMap mAitems;
 };
 
-#define auctionmgr (*ACE_Singleton<AuctionHouseMgr, ACE_Null_Mutex>::instance())
+#define auctionmgr Trinity::Singleton<AuctionHouseMgr>::Instance()
 
 #endif

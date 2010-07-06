@@ -24,9 +24,8 @@
 
 class CreatureEventAIMgr
 {
-    friend class ACE_Singleton<CreatureEventAIMgr, ACE_Null_Mutex>;
-    CreatureEventAIMgr(){};
     public:
+        CreatureEventAIMgr(){};
         ~CreatureEventAIMgr(){};
 
         void LoadCreatureEventAI_Texts();
@@ -43,5 +42,5 @@ class CreatureEventAIMgr
         CreatureEventAI_TextMap    m_CreatureEventAI_TextMap;
 };
 
-#define CreatureEAI_Mgr (*ACE_Singleton<CreatureEventAIMgr, ACE_Null_Mutex>::instance())
+#define CreatureEAI_Mgr Trinity::Singleton<CreatureEventAIMgr>::Instance()
 #endif

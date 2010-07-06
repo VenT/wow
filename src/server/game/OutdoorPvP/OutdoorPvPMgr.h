@@ -22,7 +22,7 @@
 #define OUTDOORPVP_OBJECTIVE_UPDATE_INTERVAL 1000
 
 #include "OutdoorPvP.h"
-#include "ace/Singleton.h"
+#include "Singleton.h"
 
 class Player;
 class GameObject;
@@ -79,7 +79,7 @@ private:
     uint32 m_UpdateTimer;
 };
 
-#define sOutdoorPvPMgr (*ACE_Singleton<OutdoorPvPMgr, ACE_Null_Mutex>::instance())
+#define sOutdoorPvPMgr Trinity::Singleton<OutdoorPvPMgr>::Instance()
 
 #endif /*OUTDOOR_PVP_MGR_H_*/
 

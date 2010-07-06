@@ -18,7 +18,7 @@
  */
 
 #include "DatabaseEnv.h"
-
+#include "SingletonImp.h"
 
 #include "AddonMgr.h"
 #include "ObjectAccessor.h"
@@ -28,6 +28,8 @@
 #include "ProgressBar.h"
 
 extern DatabaseType LoginDatabase;
+
+INSTANTIATE_SINGLETON_1(AddonMgr);
 
 AddonMgr::AddonMgr()
 {

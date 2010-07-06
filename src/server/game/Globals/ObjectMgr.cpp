@@ -22,6 +22,8 @@
 #include "DatabaseEnv.h"
 #include "SQLStorage.h"
 #include "SQLStorageImpl.h"
+#include "SingletonImp.h"
+
 #include "Log.h"
 #include "MapManager.h"
 #include "ObjectMgr.h"
@@ -45,6 +47,8 @@
 #include "GossipDef.h"
 #include "Vehicle.h"
 #include "AchievementMgr.h"
+
+INSTANTIATE_SINGLETON_1(ObjectMgr);
 
 ScriptMapMap sQuestEndScripts;
 ScriptMapMap sQuestStartScripts;
@@ -1408,7 +1412,7 @@ uint32 ObjectMgr::AddGOData(uint32 entry, uint32 mapId, float x, float y, float 
     if (!goinfo)
         return 0;
 
-    Map* map = const_cast<Map*>(sMapMgr.CreateBaseMap(mapId));
+    Map* map = const_cast<Map*>(MapManager::Instance().CreateBaseMap(mapId));
     if (!map)
         return 0;
 
@@ -1469,7 +1473,7 @@ bool ObjectMgr::MoveCreData(uint32 guid, uint32 mapId, Position pos)
     AddCreatureToGrid(guid, &data);
 
     // Spawn if necessary (loaded grids only)
-    if (Map* map = const_cast<Map*>(sMapMgr.CreateBaseMap(mapId)))
+    if (Map* map = const_cast<Map*>(MapManager::Instance().CreateBaseMap(mapId)))
     {
         // We use spawn coords to spawn
         if (!map->Instanceable() && map->IsLoaded(data.posX, data.posY))
@@ -1520,7 +1524,7 @@ uint32 ObjectMgr::AddCreData(uint32 entry, uint32 /*team*/, uint32 mapId, float 
     AddCreatureToGrid(guid, &data);
 
     // Spawn if necessary (loaded grids only)
-    if (Map* map = const_cast<Map*>(sMapMgr.CreateBaseMap(mapId)))
+    if (Map* map = const_cast<Map*>(MapManager::Instance().CreateBaseMap(mapId)))
     {
         // We use spawn coords to spawn
         if (!map->Instanceable() && !map->IsRemovalGrid(x, y))
@@ -5549,7 +5553,7 @@ void ObjectMgr::LoadGraveyardZones()
 WorldSafeLocsEntry const *ObjectMgr::GetClosestGraveYard(float x, float y, float z, uint32 MapId, uint32 team)
 {
     // search for zone associated closest graveyard
-    uint32 zoneId = sMapMgr.GetZoneId(MapId,x,y,z);
+    uint32 zoneId = MapManager::Instance().GetZoneId(MapId,x,y,z);
 
     // Simulate std. algorithm:
     //   found some graveyard associated to (ghost_zone,ghost_map)
@@ -6610,7 +6614,7 @@ void ObjectMgr::LoadCorpses()
             continue;
         }
 
-        sObjectAccessor.AddCorpse(corpse);
+        ObjectAccessor::Instance().AddCorpse(corpse);
 
         ++count;
     }

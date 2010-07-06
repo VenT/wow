@@ -23,7 +23,7 @@
 
 #include "Define.h"
 #include "Dynamic/UnorderedMap.h"
-#include "ace/Singleton.h"
+#include "Policies/Singleton.h"
 
 #include <string>
 #include <vector>
@@ -94,6 +94,11 @@ class ObjectRegistry
             return i_registeredObjects;
         }
 
+    private:
+        RegistryMapType i_registeredObjects;
+        friend class Trinity::OperatorNew<ObjectRegistry<T, Key> >;
+
+        // protected for friend use since it should be a singleton
         ObjectRegistry() {}
         ~ObjectRegistry()
         {
@@ -101,9 +106,6 @@ class ObjectRegistry
                 delete iter->second;
             i_registeredObjects.clear();
         }
-    private:
-        RegistryMapType i_registeredObjects;
-        
 };
 #endif
 

@@ -25,6 +25,7 @@
 #include "Updates/UpdateFields.h"
 
 #include "Utilities/Util.h"
+#include "Policies/SingletonImp.h"
 #include "Define.h"
 #include "Threading/Threading.h"
 #include "Database/SqlDelayThread.h"

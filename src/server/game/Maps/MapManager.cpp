@@ -20,6 +20,7 @@
 
 #include "MapManager.h"
 #include "InstanceSaveMgr.h"
+#include "SingletonImp.h"
 #include "DatabaseEnv.h"
 #include "Log.h"
 #include "ObjectAccessor.h"
@@ -35,6 +36,10 @@
 #include "ObjectMgr.h"
 #include "Language.h"
 #include "WorldPacket.h"
+
+#define CLASS_LOCK Trinity::ClassLevelLockable<MapManager, ACE_Thread_Mutex>
+INSTANTIATE_SINGLETON_2(MapManager, CLASS_LOCK);
+INSTANTIATE_CLASS_MUTEX(MapManager, ACE_Thread_Mutex);
 
 extern GridState* si_GridStates[];                          // debugging code, should be deleted some day
 
@@ -111,7 +116,7 @@ Map* MapManager::_createBaseMap(uint32 id)
 
     if (m == NULL)
     {
-        ACE_GUARD_RETURN(ACE_Thread_Mutex, Guard, Lock, NULL);
+        Guard guard(*this);
 
         const MapEntry* entry = sMapStore.LookupEntry(id);
         if (entry && entry->Instanceable())
@@ -231,7 +236,7 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player, bool loginCheck)
         InstanceGroupBind* boundedInstance = pGroup->GetBoundInstance(player);
         if (boundedInstance && boundedInstance->save)
         {
-            if (Map *boundedMap = sMapMgr.FindMap(mapid,boundedInstance->save->GetInstanceId()))
+            if (Map *boundedMap = MapManager::Instance().FindMap(mapid,boundedInstance->save->GetInstanceId()))
             {
                 // Player permanently bounded to different instance than groups one
                 InstancePlayerBind* playerBoundedInstance = player->GetBoundInstance(mapid, player->GetDungeonDifficulty());
@@ -302,7 +307,7 @@ void MapManager::Update(uint32 diff)
     for (iter = i_maps.begin(); iter != i_maps.end(); ++iter)
         iter->second->DelayedUpdate(i_timer.GetCurrent());
 
-    sObjectAccessor.Update(i_timer.GetCurrent());
+    ObjectAccessor::Instance().Update(i_timer.GetCurrent());
     for (TransportSet::iterator iter = m_Transports.begin(); iter != m_Transports.end(); ++iter)
         (*iter)->Update(i_timer.GetCurrent());
 
@@ -356,7 +361,7 @@ void MapManager::InitMaxInstanceId()
 
 uint32 MapManager::GetNumInstances()
 {
-    ACE_GUARD_RETURN(ACE_Thread_Mutex, Guard, Lock, NULL);
+    Guard guard(*this);
 
     uint32 ret = 0;
     for (MapMapType::iterator itr = i_maps.begin(); itr != i_maps.end(); ++itr)
@@ -373,7 +378,7 @@ uint32 MapManager::GetNumInstances()
 
 uint32 MapManager::GetNumPlayersInInstances()
 {
-    ACE_GUARD_RETURN(ACE_Thread_Mutex, Guard, Lock, NULL);
+    Guard guard(*this);
 
     uint32 ret = 0;
     for (MapMapType::iterator itr = i_maps.begin(); itr != i_maps.end(); ++itr)

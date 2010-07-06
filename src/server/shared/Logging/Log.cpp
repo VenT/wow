@@ -20,11 +20,14 @@
 
 #include "Common.h"
 #include "Log.h"
+#include "Policies/SingletonImp.h"
 #include "Configuration/ConfigEnv.h"
 #include "Util.h"
 
 #include <stdarg.h>
 #include <stdio.h>
+
+INSTANTIATE_SINGLETON_1( Log );
 
 Log::Log() :
     raLogfile(NULL), logfile(NULL), gmLogfile(NULL), charLogfile(NULL),

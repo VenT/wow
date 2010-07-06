@@ -121,10 +121,8 @@ typedef std::map<uint32, ConditionList > ConditionReferenceMap;//only used for r
 
 class ConditionMgr
 {
-    friend class ACE_Singleton<ConditionMgr, ACE_Null_Mutex>;
-    ConditionMgr();
-    
     public:
+        ConditionMgr();
         ~ConditionMgr();
 
         void LoadConditions(bool isReload = false);
@@ -167,6 +165,6 @@ class ConditionMgr
         std::list<Condition*> m_AllocatedMemory; // some garbage collection :)
 };
 
-#define sConditionMgr (*ACE_Singleton<ConditionMgr, ACE_Null_Mutex>::instance())
+#define sConditionMgr Trinity::Singleton<ConditionMgr>::Instance()
 
 #endif

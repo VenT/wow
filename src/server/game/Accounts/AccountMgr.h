@@ -24,6 +24,7 @@
 #include <string>
 
 #include "Common.h"
+#include "Singleton.h"
 
 enum AccountOpResult
 {
@@ -58,6 +59,6 @@ class AccountMgr
         static bool normalizeString(std::string& utf8str);
 };
 
-#define accmgr (*ACE_Singleton<AccountMgr, ACE_Null_Mutex>::instance())
+#define accmgr Trinity::Singleton<AccountMgr>::Instance()
 #endif
 

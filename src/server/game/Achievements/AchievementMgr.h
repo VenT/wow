@@ -22,7 +22,7 @@
 #include <string>
 
 #include "Common.h"
-#include "ace/Singleton.h"
+#include "Singleton.h"
 #include "DatabaseEnv.h"
 #include "DBCEnums.h"
 #include "DBCStores.h"
@@ -342,6 +342,6 @@ class AchievementGlobalMgr
         AchievementRewardLocales m_achievementRewardLocales;
 };
 
-#define achievementmgr (*ACE_Singleton<AchievementGlobalMgr, ACE_Null_Mutex>::instance())
+#define achievementmgr Trinity::Singleton<AchievementGlobalMgr>::Instance()
 
 #endif
