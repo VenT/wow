@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 #ifndef DEF_VIOLET_HOLD_H
 #define DEF_VIOLET_HOLD_H
 
@@ -32,8 +15,9 @@ enum Creatures
     CREATURE_MORAGG                                 = 29316,
     CREATURE_CYANIGOSA                              = 31134,
     CREATURE_SINCLARI                               = 30658,
+    NPC_VIOLET_HOLD_GUARD                           = 30659,
     CREATURE_SABOTEOUR                              = 31079,
-    NPC_VIOLET_HOLD_GUARD                           = 30659
+    CREATURE_AZURE_PRISONER                         = 310100
 };
 
 enum Data
@@ -44,15 +28,14 @@ enum Data
     DATA_WAVE_COUNT,
     DATA_REMOVE_NPC,
     DATA_PORTAL_LOCATION,
+    DATA_FIRST_BOSS,
+    DATA_SECOND_BOSS,
     DATA_DOOR_INTEGRITY,
     DATA_NPC_PRESENCE_AT_DOOR,
     DATA_NPC_PRESENCE_AT_DOOR_ADD,
     DATA_NPC_PRESENCE_AT_DOOR_REMOVE,
-    DATA_START_BOSS_ENCOUNTER,
-    DATA_FIRST_BOSS,
-    DATA_SECOND_BOSS,
-    DATA_ACTIVATE_CRYSTAL,
-    DATA_MAIN_EVENT_PHASE
+    DATA_PHASEUI = 0,
+    DATA_START_BOSS_ENCOUNTER = -1
 };
 
 enum Data64
@@ -76,10 +59,10 @@ enum Data64
     DATA_ZURAMAT_CELL,
     DATA_MAIN_DOOR,
     DATA_SINCLARI,
-    DATA_TELEPORTATION_PORTAL,
     DATA_SABOTEUR_PORTAL,
-    DATA_ADD_TRASH_MOB,
-    DATA_DEL_TRASH_MOB
+    DATA_PRE_EVENT_PORTAL_1,
+    DATA_PRE_EVENT_PORTAL_2,
+    DATA_TELEPORTATION_PORTAL
 };
 
 enum Bosses

@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include "ScriptPCH.h"
 #include "violet_hold.h"
 
@@ -48,31 +31,30 @@ enum GameObjects
     GO_INTRO_ACTIVATION_CRYSTAL                     = 193615,
     GO_ACTIVATION_CRYSTAL                           = 193611
 };
+enum Yells
+{
+     CYANIGOSA_SAY_SPAWN        = -1608005
+};
 
-enum AzureSaboteurSpells
+enum Spells
+{
+    CYANIGOSA_SPELL_TRANSFORM                       = 58668,
+    CYANIGOSA_BLUE_AURA                             = 47759,
+};
+enum Azure_Saboteur_Spells
 {
     SABOTEUR_SHIELD_DISRUPTION                      = 58291,
     SABOTEUR_SHIELD_EFFECT                          = 45775
 };
 
-enum CrystalSpells
-{
-    SPELL_ARCANE_LIGHTNING                          = 57912
-};
-
-enum Events
-{
-    EVENT_ACTIVATE_CRYSTAL                          = 20001
-};
-
 const Position PortalLocation[] =
 {
-    {1877.51, 850.104, 44.6599, 4.7822 },     // WP 1
-    {1918.37, 853.437, 47.1624, 4.12294},     // WP 2
-    {1936.07, 803.198, 53.3749, 3.12414},     // WP 3
-    {1927.61, 758.436, 51.4533, 2.20891},     // WP 4
-    {1890.64, 753.471, 48.7224, 1.71042},     // WP 5
-    {1908.31, 809.657, 38.7037, 3.08701}      // WP 6
+  {1877.51, 850.104, 44.6599, 4.7822},     // WP 1
+  {1918.37, 853.437, 47.1624, 4.12294},    // WP 2
+  {1936.07, 803.198, 53.3749, 3.12414},    // WP 3
+  {1927.61, 758.436, 51.4533, 2.20891},    // WP 4
+  {1890.64, 753.471, 48.7224, 1.71042},    // WP 5
+  {1908.31, 809.657, 38.7037, 3.08701}     // WP 6
 };
 
 const Position BossStartMove1  = {1894.684448, 739.390503, 47.668003};
@@ -84,24 +66,12 @@ const Position BossStartMove4  = {1853.618286, 758.557617, 38.657505};
 const Position BossStartMove5  = {1906.683960, 842.348022, 38.637459};
 const Position BossStartMove6  = {1928.207031, 852.864441, 47.200813};
 
-const Position CyanigosasSpawnLocation = {1930.281250, 804.407715, 52.410946, 3.139621};
+const Position POS_CREATURE_CYANIGOSA_SPAWN = {1930.281250, 804.407715, 52.410946, 3.139621};
 const Position MiddleRoomLocation = {1892.291260, 805.696838, 38.438862, 3.139621};
 const Position MiddleRoomPortalSaboLocation = {1896.622925, 804.854126, 38.504772, 3.139621};
+const Position PreEventPortal1Location = {1878.302368, 851.276489, 43.333546, 4.688873};
+const Position PreEventPortal2Location = {1889.795044, 757.195435, 47.666958, 1.735774};
 
-//Cyanigosa's prefight event data
-enum Yells
-{
-    CYANIGOSA_SAY_SPAWN                           = -1608005
-};
-enum Spells
-{
-    CYANIGOSA_SPELL_TRANSFORM                     = 58668,
-    CYANIGOSA_BLUE_AURA                           = 47759,
-};
-enum Achievements
-{
-    ACHIEV_DEFENSELESS                            = 1816
-};
 
 struct instance_violet_hold : public ScriptedInstance
 {
@@ -116,6 +86,11 @@ struct instance_violet_hold : public ScriptedInstance
     uint64 uiZuramat;
     uint64 uiCyanigosa;
     uint64 uiSinclari;
+    uint64 uiTeleportationPortal;
+    uint64 uiSaboteurPortal;
+    uint64 uiSaboteur;
+    uint64 uiPreEventPortal1;
+    uint64 uiPreEventPortal2;
 
     uint64 uiMoraggCell;
     uint64 uiErekemCell;
@@ -126,35 +101,30 @@ struct instance_violet_hold : public ScriptedInstance
     uint64 uiXevozzCell;
     uint64 uiZuramatCell;
     uint64 uiMainDoor;
-    uint64 uiTeleportationPortal;
-    uint64 uiSaboteurPortal;
 
     uint64 uiActivationCrystal[3];
 
     uint32 uiActivationTimer;
-    uint32 uiCyanigosaEventTimer;
     uint32 uiDoorSpellTimer;
+    uint32 uiTimer;
 
-    std::set<uint64> trashMobs; // to kill with crystal
-
+    uint8 uiMainDoorState;
+    uint8 uiDoorIntegrity;
     uint8 uiWaveCount;
     uint8 uiLocation;
     uint8 uiFirstBoss;
     uint8 uiSecondBoss;
     uint8 uiRemoveNpc;
-
-    uint8 uiDoorIntegrity;
+    uint8 uiPhase;
+    uint8 uiStartBossEncounter;
+    uint8 uiOnlyonce;
 
     uint8 m_auiEncounter[MAX_ENCOUNTER];
     uint8 uiCountErekemGuards;
     uint8 uiCountActivationCrystals;
-    uint8 uiCyanigosaEventPhase;
-    uint8 uiMainEventPhase; // SPECIAL: pre event animations, IN_PROGRESS: event itself
 
     bool bActive;
-    bool bWiped;
     bool bIsDoorSpellCasted;
-    bool bCrystalActivated;
 
     std::list<uint8> NpcAtDoorCastingList;
 
@@ -170,6 +140,10 @@ struct instance_violet_hold : public ScriptedInstance
         uiZuramat = 0;
         uiCyanigosa = 0;
         uiSinclari = 0;
+        uiTeleportationPortal = 0;
+        uiSaboteurPortal = 0;
+        uiPreEventPortal1 = 0;
+        uiPreEventPortal2 = 0;
 
         uiMoraggCell = 0;
         uiErekemCell = 0;
@@ -180,30 +154,26 @@ struct instance_violet_hold : public ScriptedInstance
         uiXevozzCell = 0;
         uiZuramatCell = 0;
         uiMainDoor = 0;
-        uiTeleportationPortal = 0;
-        uiSaboteurPortal = 0;
-
-        trashMobs.clear();
-        
         uiRemoveNpc = 0;
 
+        uiMainDoorState = GO_STATE_ACTIVE;
         uiDoorIntegrity = 100;
-
         uiWaveCount = 0;
         uiLocation = urand(0,5);
         uiFirstBoss = 0;
         uiSecondBoss = 0;
         uiCountErekemGuards = 0;
         uiCountActivationCrystals = 0;
-        uiCyanigosaEventPhase = 1;
+        uiPhase = 0;
+        uiTimer = 3000;
+        uiStartBossEncounter = -1;
+        uiOnlyonce = 0;
 
         uiActivationTimer = 5000;
         uiDoorSpellTimer = 2000;
-        uiCyanigosaEventTimer = 3*IN_MILISECONDS;
 
         bActive = false;
         bIsDoorSpellCasted = false;
-        bCrystalActivated = false;
 
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
     }
@@ -248,9 +218,21 @@ struct instance_violet_hold : public ScriptedInstance
             case CREATURE_CYANIGOSA:
                 uiCyanigosa = pCreature->GetGUID();
                 pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
+                pCreature->SetReactState(REACT_PASSIVE);
                 break;
             case CREATURE_SINCLARI:
                 uiSinclari = pCreature->GetGUID();
+                break;
+           case CREATURE_SABOTEOUR:
+                uiSaboteur = pCreature->GetGUID();
+                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
+                pCreature->SetReactState(REACT_PASSIVE);
+                break;
+           case NPC_VIOLET_HOLD_GUARD:
+                pCreature->SetReactState(REACT_AGGRESSIVE);
+                break;
+           case CREATURE_AZURE_PRISONER:
+                pCreature->SetReactState(REACT_AGGRESSIVE);
                 break;
         }
 
@@ -318,11 +300,8 @@ struct instance_violet_hold : public ScriptedInstance
                 if (data == DONE)
                 {
                     SaveToDB();
-                    uiMainEventPhase = DONE;
                     if (GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
                         pMainDoor->SetGoState(GO_STATE_ACTIVE);
-                    if (!bCrystalActivated && uiDoorIntegrity == 100)
-                        DoCompleteAchievement(ACHIEV_DEFENSELESS);
                 }
                 break;
             case DATA_WAVE_COUNT:
@@ -340,14 +319,14 @@ struct instance_violet_hold : public ScriptedInstance
                 DoUpdateWorldState(WORLD_STATE_VH_PRISON_STATE, uiDoorIntegrity);
                 break;
             case DATA_NPC_PRESENCE_AT_DOOR_ADD:
-                NpcAtDoorCastingList.push_back(data);
+                    NpcAtDoorCastingList.push_back(data);
                 break;
             case DATA_NPC_PRESENCE_AT_DOOR_REMOVE:
-                if(!NpcAtDoorCastingList.empty())
-                    NpcAtDoorCastingList.pop_back();
+                    if(!NpcAtDoorCastingList.empty())
+                        NpcAtDoorCastingList.pop_back();
                 break;
             case DATA_MAIN_DOOR:
-                if (GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
+                if(GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
                 {
                     switch(data)
                     {
@@ -362,45 +341,12 @@ struct instance_violet_hold : public ScriptedInstance
                             break;
                     }
                 }
+                uiMainDoorState = data;
                 break;
             case DATA_START_BOSS_ENCOUNTER:
-                switch(uiWaveCount)
-                {
-                    case 6:
-                        StartBossEncounter(uiFirstBoss);
-                        break;
-                    case 12:
-                        StartBossEncounter(uiSecondBoss);
-                        break;
-                }
+                uiStartBossEncounter = data;
                 break;
-            case DATA_ACTIVATE_CRYSTAL:
-                ActivateCrystal();
-                break;
-            case DATA_MAIN_EVENT_PHASE:
-                uiMainEventPhase = data;
-                if (data == IN_PROGRESS) // Start event
-                {
-                    if (GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
-                        pMainDoor->SetGoState(GO_STATE_READY);
-                    uiWaveCount = 1;
-                    bActive = true;
-                    uiRemoveNpc = 0; // might not have been reset after a wipe on a boss.
-                }
-                break;
-        }
-    }
 
-    void SetData64(uint32 type, uint64 data)
-    {
-        switch(type)
-        {
-            case DATA_ADD_TRASH_MOB:
-                trashMobs.insert(data);
-                break;
-            case DATA_DEL_TRASH_MOB:
-                trashMobs.erase(data);
-                break;
         }
     }
 
@@ -414,13 +360,13 @@ struct instance_violet_hold : public ScriptedInstance
             case DATA_WAVE_COUNT:               return uiWaveCount;
             case DATA_REMOVE_NPC:               return uiRemoveNpc;
             case DATA_PORTAL_LOCATION:          return uiLocation;
-            case DATA_DOOR_INTEGRITY:           return uiDoorIntegrity;
-            case DATA_NPC_PRESENCE_AT_DOOR:     return NpcAtDoorCastingList.size();
             case DATA_FIRST_BOSS:               return uiFirstBoss;
             case DATA_SECOND_BOSS:              return uiSecondBoss;
-            case DATA_MAIN_EVENT_PHASE:         return uiMainEventPhase;
+            case DATA_DOOR_INTEGRITY:           return uiDoorIntegrity;
+            case DATA_NPC_PRESENCE_AT_DOOR:     return NpcAtDoorCastingList.size();
+            case DATA_MAIN_DOOR:                return uiMainDoorState;
+            case DATA_START_BOSS_ENCOUNTER:      return uiStartBossEncounter;
         }
-
         return 0;
     }
 
@@ -449,8 +395,9 @@ struct instance_violet_hold : public ScriptedInstance
             case DATA_SINCLARI:                 return uiSinclari;
             case DATA_TELEPORTATION_PORTAL:     return uiTeleportationPortal;
             case DATA_SABOTEUR_PORTAL:          return uiSaboteurPortal;
+            case DATA_PRE_EVENT_PORTAL_1:       return uiPreEventPortal1;
+            case DATA_PRE_EVENT_PORTAL_2:       return uiPreEventPortal2;
         }
-
         return 0;
     }
 
@@ -458,21 +405,26 @@ struct instance_violet_hold : public ScriptedInstance
     {
         SetData(DATA_PORTAL_LOCATION, (GetData(DATA_PORTAL_LOCATION) + urand(1,5))%6);
         if (Creature *pSinclari = instance->GetCreature(uiSinclari))
+        {
             if(Creature *portal = pSinclari->SummonCreature(CREATURE_TELEPORTATION_PORTAL,PortalLocation[GetData(DATA_PORTAL_LOCATION)],TEMPSUMMON_CORPSE_DESPAWN))
                 uiTeleportationPortal = portal->GetGUID();
+        }
     }
 
     void StartBossEncounter(uint8 uiBoss, bool bForceRespawn = true)
     {
         Creature* pBoss = NULL;
-
         switch(uiBoss)
         {
             case BOSS_MORAGG:
                 HandleGameObject(uiMoraggCell,bForceRespawn);
                 pBoss = instance->GetCreature(uiMoragg);
                 if (pBoss)
+                {
+                    pBoss->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
                     pBoss->GetMotionMaster()->MovePoint(0, BossStartMove1);
+                    pBoss->SetReactState(REACT_AGGRESSIVE);
+                }
                 break;
             case BOSS_EREKEM:
                 HandleGameObject(uiErekemCell, bForceRespawn);
@@ -480,9 +432,12 @@ struct instance_violet_hold : public ScriptedInstance
                 HandleGameObject(uiErekemLeftGuardCell, bForceRespawn);
 
                 pBoss = instance->GetCreature(uiErekem);
-
                 if (pBoss)
+                {
+                    pBoss->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
                     pBoss->GetMotionMaster()->MovePoint(0, BossStartMove2);
+                    pBoss->SetReactState(REACT_AGGRESSIVE);
+                }
 
                 if (Creature* pGuard1 = instance->GetCreature(uiErekemGuard[0]))
                 {
@@ -490,7 +445,7 @@ struct instance_violet_hold : public ScriptedInstance
                         pGuard1->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
                     else
                         pGuard1->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
-                    pGuard1->GetMotionMaster()->MovePoint(0, BossStartMove21);
+                        pGuard1->GetMotionMaster()->MovePoint(0, BossStartMove21);
                 }
 
                 if (Creature* pGuard2 = instance->GetCreature(uiErekemGuard[1]))
@@ -499,52 +454,60 @@ struct instance_violet_hold : public ScriptedInstance
                         pGuard2->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
                     else
                         pGuard2->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
-                    pGuard2->GetMotionMaster()->MovePoint(0, BossStartMove22);
+                        pGuard2->GetMotionMaster()->MovePoint(0, BossStartMove22);
                 }
                 break;
             case BOSS_ICHORON:
                 HandleGameObject(uiIchoronCell,bForceRespawn);
                 pBoss = instance->GetCreature(uiIchoron);
                 if (pBoss)
+                {
+                    pBoss->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
+                    pBoss->SetReactState(REACT_AGGRESSIVE);
                     pBoss->GetMotionMaster()->MovePoint(0, BossStartMove3);
+                }
                 break;
             case BOSS_LAVANTHOR:
                 HandleGameObject(uiLavanthorCell,bForceRespawn);
                 pBoss = instance->GetCreature(uiLavanthor);
                 if (pBoss)
+                {
+                    pBoss->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
                     pBoss->GetMotionMaster()->MovePoint(0, BossStartMove4);
+                    pBoss->SetReactState(REACT_AGGRESSIVE);
+                }
                 break;
             case BOSS_XEVOZZ:
                 HandleGameObject(uiXevozzCell,bForceRespawn);
                 pBoss = instance->GetCreature(uiXevozz);
                 if (pBoss)
+                {
+                    pBoss->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
                     pBoss->GetMotionMaster()->MovePoint(0, BossStartMove5);
+                    pBoss->SetReactState(REACT_AGGRESSIVE);
+                }
                 break;
             case BOSS_ZURAMAT:
                 HandleGameObject(uiZuramatCell,bForceRespawn);
                 pBoss = instance->GetCreature(uiZuramat);
                 if (pBoss)
+                {
+                    pBoss->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
                     pBoss->GetMotionMaster()->MovePoint(0, BossStartMove6);
+                    pBoss->SetReactState(REACT_AGGRESSIVE);
+                }
                 break;
         }
-
-        // generic boss state changes
-        if (pBoss)
+        if (!bForceRespawn && pBoss)
         {
-            pBoss->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
-            pBoss->SetReactState(REACT_AGGRESSIVE);
-
-            if (!bForceRespawn)
+            if (pBoss->isDead())
             {
-                if (pBoss->isDead())
-                {
-                    // respawn but avoid to be looted again
-                    pBoss->Respawn();
-                    pBoss->RemoveLootMode(1);
-                }
-                pBoss->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
-                uiWaveCount = 0;
+                // respawn but avoid to be looted again
+                pBoss->Respawn();
+                pBoss->RemoveLootMode(1);
             }
+            pBoss->SetReactState(REACT_PASSIVE);
+            SetData(DATA_WAVE_COUNT,0);
         }
     }
 
@@ -558,11 +521,11 @@ struct instance_violet_hold : public ScriptedInstance
             case 6:
                 if (uiFirstBoss == 0)
                     uiFirstBoss = urand(1,6);
-                if (Creature *pSinclari = instance->GetCreature(uiSinclari))
-                {
-                    if(Creature *pPortal = pSinclari->SummonCreature(CREATURE_TELEPORTATION_PORTAL, MiddleRoomPortalSaboLocation, TEMPSUMMON_CORPSE_DESPAWN))
-                        uiSaboteurPortal = pPortal->GetGUID();
-                    if (Creature *pAzureSaboteur = pSinclari->SummonCreature(CREATURE_SABOTEOUR, MiddleRoomLocation, TEMPSUMMON_DEAD_DESPAWN))
+                if (Creature *pSinclari = instance->GetCreature(uiSinclari)) {
+                    if(Creature *portal = pSinclari->SummonCreature(CREATURE_TELEPORTATION_PORTAL, MiddleRoomPortalSaboLocation, TEMPSUMMON_CORPSE_DESPAWN))
+                        uiSaboteurPortal = portal->GetGUID();
+                    pSinclari->SummonCreature(CREATURE_SABOTEOUR, MiddleRoomLocation, TEMPSUMMON_DEAD_DESPAWN);
+                    if (Creature *pAzureSaboteur = instance->GetCreature(uiSaboteur))
                         pAzureSaboteur->CastSpell(pAzureSaboteur, SABOTEUR_SHIELD_EFFECT, false);
                 }
                 break;
@@ -572,11 +535,11 @@ struct instance_violet_hold : public ScriptedInstance
                     {
                         uiSecondBoss = urand(1,6);
                     } while (uiSecondBoss == uiFirstBoss);
-                if (Creature *pSinclari = instance->GetCreature(uiSinclari))
-                {
-                    if(Creature *pPortal = pSinclari->SummonCreature(CREATURE_TELEPORTATION_PORTAL, MiddleRoomPortalSaboLocation, TEMPSUMMON_CORPSE_DESPAWN))
-                        uiSaboteurPortal = pPortal->GetGUID();
-                    if (Creature *pAzureSaboteur = pSinclari->SummonCreature(CREATURE_SABOTEOUR, MiddleRoomLocation, TEMPSUMMON_DEAD_DESPAWN))
+                if (Creature *pSinclari = instance->GetCreature(uiSinclari)) {
+                    if(Creature *portal = pSinclari->SummonCreature(CREATURE_TELEPORTATION_PORTAL, MiddleRoomPortalSaboLocation, TEMPSUMMON_CORPSE_DESPAWN))
+                        uiSaboteurPortal = portal->GetGUID();
+                    pSinclari->SummonCreature(CREATURE_SABOTEOUR, MiddleRoomLocation, TEMPSUMMON_DEAD_DESPAWN);
+                    if (Creature *pAzureSaboteur = instance->GetCreature(uiSaboteur))
                         pAzureSaboteur->CastSpell(pAzureSaboteur, SABOTEUR_SHIELD_EFFECT, false);
                 }
                 break;
@@ -584,17 +547,16 @@ struct instance_violet_hold : public ScriptedInstance
             {
                 Creature *pSinclari = instance->GetCreature(uiSinclari);
                 if (pSinclari)
-                    pSinclari->SummonCreature(CREATURE_CYANIGOSA,CyanigosasSpawnLocation,TEMPSUMMON_DEAD_DESPAWN);
+                    pSinclari->SummonCreature(CREATURE_CYANIGOSA,POS_CREATURE_CYANIGOSA_SPAWN,TEMPSUMMON_DEAD_DESPAWN);
+                uiPhase = 1;
                 break;
             }
             case 1:
             {
-                if (GameObject* pMainDoor = instance->GetGameObject(uiMainDoor))
-                    pMainDoor->SetGoState(GO_STATE_READY);
-                DoUpdateWorldState(WORLD_STATE_VH_PRISON_STATE, 100);
+		DoUpdateWorldState(WORLD_STATE_VH_PRISON_STATE, 100);
             }
             default:
-                SpawnPortal();
+		SpawnPortal();
                 break;
         }
     }
@@ -670,8 +632,19 @@ struct instance_violet_hold : public ScriptedInstance
         if (!instance->HavePlayers())
             return;
 
+        if ((uiWaveCount == 0) && (GetData(DATA_MAIN_DOOR) != GO_STATE_READY) && uiOnlyonce == 0) {
+            uiOnlyonce=1;
+            if (Creature *pSinclari = instance->GetCreature(uiSinclari)) {
+                if(Creature *portal1 = pSinclari->SummonCreature(CREATURE_TELEPORTATION_PORTAL, PreEventPortal1Location, TEMPSUMMON_CORPSE_DESPAWN))
+                    uiPreEventPortal1 = portal1->GetGUID();
+                if(Creature *portal2 = pSinclari->SummonCreature(CREATURE_TELEPORTATION_PORTAL, PreEventPortal2Location, TEMPSUMMON_CORPSE_DESPAWN))
+                    uiPreEventPortal2 = portal2->GetGUID();
+            }
+            return;
+        }
+
         // portals should spawn if other portal is dead and doors are closed
-        if (bActive && uiMainEventPhase == IN_PROGRESS)
+        if (bActive && GetData(DATA_MAIN_DOOR) == GO_STATE_READY)
         {
             if (uiActivationTimer < diff)
             {
@@ -681,8 +654,62 @@ struct instance_violet_hold : public ScriptedInstance
             } else uiActivationTimer -= diff;
         }
 
-        // if main event is in progress and players have wiped then reset instance
-        if ( uiMainEventPhase == IN_PROGRESS && CheckWipe())
+        if (uiStartBossEncounter == 1) {
+            switch(uiWaveCount)
+            {
+                case 6:
+                    StartBossEncounter(uiFirstBoss);
+                    uiStartBossEncounter = -1;
+                    break;
+                case 12:
+                    StartBossEncounter(uiSecondBoss);
+                    uiStartBossEncounter = -1;
+                    break;
+            }
+        }
+
+
+
+        if (uiTimer <= diff)
+        {
+            switch(uiWaveCount)
+            {
+                case 18:
+                    if (Creature *pCyanigosa = instance->GetCreature(uiCyanigosa))
+                        if (!pCyanigosa->HasAura(CYANIGOSA_SPELL_TRANSFORM))
+                            switch(uiPhase)
+                            {
+                                case 1:
+                                    pCyanigosa->CastSpell(pCyanigosa, CYANIGOSA_BLUE_AURA, false);
+                                    DoScriptText(CYANIGOSA_SAY_SPAWN, pCyanigosa);
+                                    uiTimer = 7000;
+                                    ++uiPhase;
+                                    break;
+                                case 2:
+                                    pCyanigosa->GetMotionMaster()->MoveJump(MiddleRoomLocation.GetPositionX(), MiddleRoomLocation.GetPositionY(), MiddleRoomLocation.GetPositionZ(), 10.0f, 20.0f);
+                                    pCyanigosa->CastSpell(pCyanigosa, CYANIGOSA_BLUE_AURA, false);
+                                    uiTimer = 7000;
+                                    ++uiPhase;
+                                    break;
+                                case 3:
+                                    pCyanigosa->RemoveAurasDueToSpell(CYANIGOSA_BLUE_AURA);
+                                    pCyanigosa->CastSpell(pCyanigosa, CYANIGOSA_SPELL_TRANSFORM, 0);
+                                    pCyanigosa->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
+                                    pCyanigosa->SetReactState(REACT_AGGRESSIVE);
+                                    uiTimer = 2000;
+                                    ++uiPhase;
+                                    break;
+                                case 4:
+                                    uiPhase = 0;
+                                    break;
+                            }
+                    break;
+            }
+        } else uiTimer -= diff;
+
+
+        // if doors are closed (means event is in progres) and players have wiped then reset instance
+        if (GetData(DATA_MAIN_DOOR) != GO_STATE_ACTIVE && CheckWipe())
         {
             SetData(DATA_REMOVE_NPC, 1);
             StartBossEncounter(uiFirstBoss, false);
@@ -690,7 +717,6 @@ struct instance_violet_hold : public ScriptedInstance
 
             SetData(DATA_MAIN_DOOR,GO_STATE_ACTIVE);
             SetData(DATA_WAVE_COUNT, 0);
-            uiMainEventPhase = NOT_STARTED;
 
             if (Creature* pSinclari = instance->GetCreature(uiSinclari))
             {
@@ -715,43 +741,10 @@ struct instance_violet_hold : public ScriptedInstance
             }
         }
 
-        // Cyanigosa is spawned but not tranformed, prefight event
-        Creature *pCyanigosa = instance->GetCreature(uiCyanigosa);
-        if (pCyanigosa && !pCyanigosa->HasAura(CYANIGOSA_SPELL_TRANSFORM))
-        {
-            if (uiCyanigosaEventTimer <= diff)
-            {
-                switch(uiCyanigosaEventPhase)
-                {
-                    case 1:
-                        pCyanigosa->CastSpell(pCyanigosa, CYANIGOSA_BLUE_AURA, false);
-                        DoScriptText(CYANIGOSA_SAY_SPAWN, pCyanigosa);
-                        uiCyanigosaEventTimer = 7*IN_MILISECONDS;
-                        ++uiCyanigosaEventPhase;
-                        break;
-                    case 2:
-                        pCyanigosa->GetMotionMaster()->MoveJump(MiddleRoomLocation.GetPositionX(), MiddleRoomLocation.GetPositionY(), MiddleRoomLocation.GetPositionZ(), 10.0f, 20.0f);
-                        pCyanigosa->CastSpell(pCyanigosa, CYANIGOSA_BLUE_AURA, false);
-                        uiCyanigosaEventTimer = 7*IN_MILISECONDS;
-                        ++uiCyanigosaEventPhase;
-                        break;
-                    case 3:
-                        pCyanigosa->RemoveAurasDueToSpell(CYANIGOSA_BLUE_AURA);
-                        pCyanigosa->CastSpell(pCyanigosa, CYANIGOSA_SPELL_TRANSFORM, 0);
-                        pCyanigosa->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE|UNIT_FLAG_NON_ATTACKABLE);
-                        pCyanigosa->SetReactState(REACT_AGGRESSIVE);
-                        uiCyanigosaEventTimer = 2*IN_MILISECONDS;
-                        ++uiCyanigosaEventPhase;
-                        break;
-                    case 4:
-                        uiCyanigosaEventPhase = 0;
-                        break;
-                }
-            } else uiCyanigosaEventTimer -= diff;
-        }
+
 
         // if there are NPCs in front of the prison door, which are casting the door seal spell and doors are active
-        if (GetData(DATA_NPC_PRESENCE_AT_DOOR) && uiMainEventPhase == IN_PROGRESS)
+        if(GetData(DATA_NPC_PRESENCE_AT_DOOR) && (GetData(DATA_MAIN_DOOR) == GO_STATE_READY))
         {
             // if door integrity is > 0 then decrase it's integrity state
             if(GetData(DATA_DOOR_INTEGRITY))
@@ -760,39 +753,14 @@ struct instance_violet_hold : public ScriptedInstance
                 {
                     SetData(DATA_DOOR_INTEGRITY,GetData(DATA_DOOR_INTEGRITY)-1);
                     uiDoorSpellTimer =2000;
-                } else uiDoorSpellTimer -= diff;
+                }
+                else uiDoorSpellTimer -= diff;
             }
             // else set door state to active (means door will open and group have failed to sustain mob invasion on the door)
             else
-            {
                 SetData(DATA_MAIN_DOOR,GO_STATE_ACTIVE);
-                uiMainEventPhase = FAIL;
-            }
         }
     }
-
-    void ActivateCrystal()
-    {
-        // Kill all mobs registered with SetData64(ADD_TRASH_MOB)
-        // TODO: All visual, spells etc
-        for (std::set<uint64>::const_iterator itr = trashMobs.begin(); itr != trashMobs.end(); ++itr)
-        {
-            Creature* pCreature = instance->GetCreature(*itr);
-            if (pCreature && pCreature->isAlive())
-                pCreature->CastSpell(pCreature,SPELL_ARCANE_LIGHTNING,true);  // Who should cast the spell?
-        }
-    }
-
-    void ProcessEvent(GameObject* pGO, uint32 uiEventId)
-    {
-        switch(uiEventId)
-        {
-            case EVENT_ACTIVATE_CRYSTAL:
-                bCrystalActivated = true; // Activation by player's will throw event signal
-                ActivateCrystal();
-                break;
-        }
-}
 };
 
 InstanceData* GetInstanceData_instance_violet_hold(Map* pMap)
@@ -808,3 +776,4 @@ void AddSC_instance_violet_hold()
     newscript->GetInstanceData = &GetInstanceData_instance_violet_hold;
     newscript->RegisterSelf();
 }
+
