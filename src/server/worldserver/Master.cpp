@@ -33,7 +33,6 @@
 #include "WorldSocketMgr.h"
 #include "Configuration/ConfigEnv.h"
 #include "Database/DatabaseEnv.h"
-#include "SingletonImp.h"
 
 #include "CliRunnable.h"
 #include "Log.h"
@@ -55,16 +54,6 @@
 extern int m_ServiceStatus;
 #endif
 
-<<<<<<< HEAD:src/server/worldserver/Master.cpp
-=======
-/// \todo Warning disabling not useful under VC++2005. Can somebody say on which compiler it is useful?
-#pragma warning(disable:4305)
-
-INSTANTIATE_SINGLETON_1( Master );
-
-volatile uint32 Master::m_masterLoopCounter = 0;
-
->>>>>>> fdd89b5... Get rid of Trinity Singleton and Threading patterns and replace them with:src/server/worldserver/Master.cpp
 /// Handle cored's termination signals
 class CoredSignalHandler : public Trinity::SignalHandler
 {

@@ -22,12 +22,6 @@
 #include "AuctionHouseBot.h"
 #include <vector>
 
-<<<<<<< HEAD:src/server/game/AuctionHouse/AuctionHouseBot/AuctionHouseBot.cpp
-=======
-#include "SingletonImp.h"
-INSTANTIATE_SINGLETON_1(AuctionHouseBot);
-
->>>>>>> fdd89b5... Get rid of Trinity Singleton and Threading patterns and replace them with:src/server/game/AuctionHouse/AuctionHouseBot/AuctionHouseBot.cpp
 using namespace std;
 vector<uint32> npcItems;
 vector<uint32> lootItems;
@@ -716,7 +710,7 @@ void AuctionHouseBot::Update()
     WorldSession _session(AHBplayerAccount, NULL, SEC_PLAYER, true, 0, LOCALE_enUS);
     Player _AHBplayer(&_session);
     _AHBplayer.Initialize(AHBplayerGUID);
-    ObjectAccessor::Instance().AddObject(&_AHBplayer);
+    sObjectAccessor.AddObject(&_AHBplayer);
 
     // Add New Bids
     if (!sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
@@ -748,7 +742,7 @@ void AuctionHouseBot::Update()
         addNewAuctionBuyerBotBid(&_AHBplayer, &NeutralConfig, &_session);
         _lastrun_n = _newrun;
     }
-    ObjectAccessor::Instance().RemoveObject(&_AHBplayer);
+    sObjectAccessor.RemoveObject(&_AHBplayer);
 }
 
 void AuctionHouseBot::Initialize()
