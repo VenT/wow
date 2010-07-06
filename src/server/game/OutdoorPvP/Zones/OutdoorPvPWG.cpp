@@ -1380,7 +1380,7 @@ bool OutdoorPvPWG::Update(uint32 diff)
                     plr->ResurrectPlayer(1.0f);
                     plr->CastSpell(plr, 6962, true);
                     plr->CastSpell(plr, SPELL_SPIRIT_HEAL_MANA, true);
-                    sObjectAccessor.ConvertCorpseForPlayer(*itr);
+                    ObjectAccessor::Instance().ConvertCorpseForPlayer(*itr);
                 }
                 m_ResurrectQueue.clear();
             }
@@ -1572,7 +1572,7 @@ void OutdoorPvPWG::EndBattle()
             if ((*itr)->isDead())
             {
                 (*itr)->ResurrectPlayer(1.0f);
-                sObjectAccessor.ConvertCorpseForPlayer((*itr)->GetGUID());
+                ObjectAccessor::Instance().ConvertCorpseForPlayer((*itr)->GetGUID());
             }
             (*itr)->RemoveAurasDueToSpell(SPELL_TENACITY);
             (*itr)->CombatStop(true);
