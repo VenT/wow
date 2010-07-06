@@ -1,26 +1,19 @@
-/* Copyright (C) 2006 - 2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-/* Script Data Start
-SDName: Boss ichoron
-SDAuthor: ckegg
-SD%Complete: 80%
-SDComment: TODO: better spawn location for adds
-SDCategory:
-Script Data End */
 
 #include "ScriptPCH.h"
 #include "violet_hold.h"
@@ -116,7 +109,7 @@ struct boss_ichoronAI : public ScriptedAI
         }
     }
 
-    void EnterCombat(Unit* pWho)
+    void EnterCombat(Unit* /*pWho*/)
     {
         DoScriptText(SAY_AGGRO, me);
 
@@ -191,13 +184,11 @@ struct boss_ichoronAI : public ScriptedAI
             DoCast(me, SPELL_PROTECTIVE_BUBBLE, true);
         }
 
-        //me->SetVisibility(VISIBILITY_ON);
-        if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        me->SetVisibility(VISIBILITY_ON);
         me->GetMotionMaster()->MoveChase(me->getVictim());
     }
 
-    void MoveInLineOfSight(Unit* pWho) {}
+    void MoveInLineOfSight(Unit* /*pWho*/) {}
 
     void UpdateAI(const uint32 uiDiff)
     {
@@ -208,7 +199,7 @@ struct boss_ichoronAI : public ScriptedAI
         if (!bIsFrenzy && HealthBelowPct(25) && !bIsExploded)
         {
             DoScriptText(SAY_ENRAGE, me);
-            DoCast(me, DUNGEON_MODE(SPELL_FRENZY, SPELL_FRENZY_H), true);
+            DoCast(me, SPELL_FRENZY, true);
             bIsFrenzy = true;
         }
 
@@ -221,12 +212,11 @@ struct boss_ichoronAI : public ScriptedAI
                     if (!me->HasAura(SPELL_PROTECTIVE_BUBBLE, 0))
                     {
                         DoScriptText(SAY_SHATTER, me);
-                        DoCast(me->getVictim(), DUNGEON_MODE(SPELL_WATER_BLAST, SPELL_WATER_BLAST_H));
+                        DoCast(me, SPELL_WATER_BLAST);
                         DoCast(me, SPELL_DRAINED);
                         bIsExploded = true;
                         me->AttackStop();
-                        //me->SetVisibility(VISIBILITY_OFF);
-                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        me->SetVisibility(VISIBILITY_OFF);
                         for (uint8 i = 0; i < 10; i++)
                         {
                             int tmp = urand(0, MAX_SPAWN_LOC-1);
@@ -260,7 +250,7 @@ struct boss_ichoronAI : public ScriptedAI
         {
             if (uiWaterBoltVolleyTimer <= uiDiff)
             {
-                DoCast(me, DUNGEON_MODE(SPELL_WATER_BOLT_VOLLEY, SPELL_WATER_BOLT_VOLLEY_H));
+                DoCast(me, SPELL_WATER_BOLT_VOLLEY);
                 uiWaterBoltVolleyTimer = urand(10000, 15000);
             }
             else uiWaterBoltVolleyTimer -= uiDiff;
@@ -269,7 +259,7 @@ struct boss_ichoronAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* killer)
+    void JustDied(Unit* /*killer*/)
     {
         DoScriptText(SAY_DEATH, me);
 
@@ -301,18 +291,26 @@ struct boss_ichoronAI : public ScriptedAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        pSummoned->SetSpeed(MOVE_RUN, 0.3f);
-        pSummoned->GetMotionMaster()->MoveFollow(me, 0, 0);
-        m_waterElements.push_back(pSummoned->GetGUID());
+        if (pSummoned)
+        {
+            pSummoned->SetSpeed(MOVE_RUN, 0.3f);
+            pSummoned->GetMotionMaster()->MoveFollow(me, 0, 0);
+            m_waterElements.push_back(pSummoned->GetGUID());
+            pInstance->SetData64(DATA_ADD_TRASH_MOB,pSummoned->GetGUID());
+        }
     }
 
 
     void SummonedCreatureDespawn(Creature *pSummoned)
     {
-        m_waterElements.remove(pSummoned->GetGUID());
+        if (pSummoned)
+        {
+            m_waterElements.remove(pSummoned->GetGUID());
+            pInstance->SetData64(DATA_DEL_TRASH_MOB,pSummoned->GetGUID());
+        }
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit * victim)
     {
         if (victim == me)
             return;
@@ -341,7 +339,7 @@ struct mob_ichor_globuleAI : public ScriptedAI
         uiRangeCheck_Timer = 1000;
     }
 
-    void AttackStart(Unit* pWho)
+    void AttackStart(Unit* /*pWho*/)
     {
         return;
     }
@@ -367,7 +365,7 @@ struct mob_ichor_globuleAI : public ScriptedAI
         else uiRangeCheck_Timer -= uiDiff;
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* /*pKiller*/)
     {
         DoCast(me, SPELL_SPLASH);
         if (Creature* pIchoron = Unit::GetCreature(*me, pInstance->GetData64(DATA_ICHORON)))

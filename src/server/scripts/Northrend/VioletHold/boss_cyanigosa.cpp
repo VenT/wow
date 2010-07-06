@@ -1,14 +1,20 @@
-/* Script Data Start
-SDName: Boss cyanigosa
-SDAuthor: LordVanMartin
-SD%Complete:
-SDComment:
-SDCategory:
-Script Data End */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-/*** SQL START ***
-update creature_template set scriptname = '' where entry = '';
-*** SQL END ***/
 #include "ScriptPCH.h"
 #include "violet_hold.h"
 
@@ -65,28 +71,15 @@ struct boss_cyanigosaAI : public ScriptedAI
             pInstance->SetData(DATA_CYANIGOSA_EVENT, NOT_STARTED);
     }
 
-    void DeleteFromThreatList(uint64 TargetGUID)
-    {
-        for (std::list<HostileReference*>::const_iterator itr = me->getThreatManager().getThreatList().begin(); itr != me->getThreatManager().getThreatList().end(); ++itr)
-        {
-            if ((*itr)->getUnitGuid() == TargetGUID)
-            {
-                (*itr)->removeReference();
-                break;
-            }
-        }
-    }
-
-    void EnterCombat(Unit* who)
+    void EnterCombat(Unit* /*who*/)
     {
         DoScriptText(SAY_AGGRO, me);
-        DoCast(me, SPELL_TRANSFORM);
 
         if (pInstance)
             pInstance->SetData(DATA_CYANIGOSA_EVENT, IN_PROGRESS);
     }
 
-    void MoveInLineOfSight(Unit* who) {}
+    void MoveInLineOfSight(Unit* /*who*/) {}
 
     void UpdateAI(const uint32 diff)
     {
@@ -103,36 +96,25 @@ struct boss_cyanigosaAI : public ScriptedAI
         if (uiArcaneVacuumTimer <= diff)
         {
             DoCast(SPELL_ARCANE_VACUUM);
-            Map* pMap = me->GetMap();
-            if (pMap && pMap->IsDungeon())
-            {
-                Map::PlayerList const &PlayerList = pMap->GetPlayers();
-
-                if (!PlayerList.isEmpty())
-                    for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        if (i->getSource()->isAlive())
-                            DoTeleportPlayer(i->getSource(), me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), i->getSource()->GetOrientation());
-            }
-            CAST_AI(boss_cyanigosaAI, me->AI())->DeleteFromThreatList(me->GetGUID());
-            uiArcaneVacuumTimer = 30000;
+            uiArcaneVacuumTimer = 10000;
         } else uiArcaneVacuumTimer -= diff;
 
         if (uiBlizzardTimer <= diff)
         {
             if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                DoCast(pTarget, DUNGEON_MODE(SPELL_BLIZZARD, H_SPELL_BLIZZARD));
+                DoCast(pTarget, SPELL_BLIZZARD);
             uiBlizzardTimer = 15000;
         } else uiBlizzardTimer -= diff;
 
         if (uiTailSweepTimer <= diff)
         {
-            DoCast(DUNGEON_MODE(SPELL_TAIL_SWEEP, H_SPELL_TAIL_SWEEP));
+            DoCast(SPELL_TAIL_SWEEP);
             uiTailSweepTimer = 20000;
         } else uiTailSweepTimer -= diff;
 
         if (uiUncontrollableEnergyTimer <= diff)
         {
-            DoCast(me->getVictim(), DUNGEON_MODE(SPELL_UNCONTROLLABLE_ENERGY,H_SPELL_UNCONTROLLABLE_ENERGY), true);
+            DoCastVictim(SPELL_UNCONTROLLABLE_ENERGY);
             uiUncontrollableEnergyTimer = 25000;
         } else uiUncontrollableEnergyTimer -= diff;
 
@@ -147,7 +129,7 @@ struct boss_cyanigosaAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void JustDied(Unit* killer)
+    void JustDied(Unit* /*killer*/)
     {
         DoScriptText(SAY_DEATH, me);
 
@@ -155,7 +137,7 @@ struct boss_cyanigosaAI : public ScriptedAI
             pInstance->SetData(DATA_CYANIGOSA_EVENT, DONE);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit * victim)
     {
         if (victim == me)
             return;

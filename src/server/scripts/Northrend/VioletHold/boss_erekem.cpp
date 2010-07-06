@@ -1,14 +1,20 @@
-/* Script Data Start
-SDName: Boss erekem
-SDAuthor: LordVanMartin
-SD%Complete:
-SDComment:
-SDCategory:
-Script Data End */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-/*** SQL START ***
-update creature_template set scriptname = '' where entry = '';
-*** SQL END ***/
 #include "ScriptPCH.h"
 #include "violet_hold.h"
 
@@ -49,7 +55,6 @@ struct boss_erekemAI : public ScriptedAI
     uint32 uiEarthShockTimer;
     uint32 uiLightningBoltTimer;
     uint32 uiEarthShieldTimer;
-    uint32 uiCheckTimer;
 
     ScriptedInstance* pInstance;
 
@@ -60,7 +65,6 @@ struct boss_erekemAI : public ScriptedAI
         uiEarthShockTimer = urand(2000,8000);
         uiLightningBoltTimer = urand(5000,10000);
         uiEarthShieldTimer = 20000;
-        uiCheckTimer = 1000;
         if (pInstance)
         {
             if (pInstance->GetData(DATA_WAVE_COUNT) == 6)
@@ -108,7 +112,7 @@ struct boss_erekemAI : public ScriptedAI
         }
     }
 
-    void EnterCombat(Unit* pWho)
+    void EnterCombat(Unit* /*pWho*/)
     {
         DoScriptText(SAY_AGGRO, me);
         DoCast(me, SPELL_EARTH_SHIELD);
@@ -129,7 +133,7 @@ struct boss_erekemAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit* who) {}
+    void MoveInLineOfSight(Unit* /*who*/) {}
 
     void UpdateAI(const uint32 diff)
     {
@@ -144,12 +148,8 @@ struct boss_erekemAI : public ScriptedAI
             {
                 if (Creature *pGuard2 = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_EREKEM_GUARD_2) : 0))
                 {
-                    if (uiCheckTimer <= diff)
-                    {
-                        if (!pGuard1->isAlive() && !pGuard2->isAlive())
-                            DoCast(me->getVictim(), SPELL_STORMSTRIKE);
-                        uiCheckTimer = 2000;
-                    } else uiCheckTimer -= diff;
+                    if (!pGuard1->isAlive() && !pGuard2->isAlive())
+                        DoCast(me->getVictim(), SPELL_STORMSTRIKE);
                 }
             }
         }
@@ -196,7 +196,7 @@ struct boss_erekemAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void JustDied(Unit* killer)
+    void JustDied(Unit* /*killer*/)
     {
         DoScriptText(SAY_DEATH, me);
 
@@ -215,7 +215,7 @@ struct boss_erekemAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit * victim)
     {
         if (victim == me)
             return;
@@ -285,7 +285,7 @@ struct mob_erekem_guardAI : public ScriptedAI
         }
     }
 
-    void MoveInLineOfSight(Unit* who) {}
+    void MoveInLineOfSight(Unit* /*who*/) {}
 
     void UpdateAI(const uint32 diff)
     {

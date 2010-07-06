@@ -1,20 +1,22 @@
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef DEF_VIOLET_HOLD_H
 #define DEF_VIOLET_HOLD_H
-
-enum GameObjects
-{
-    GO_MAIN_DOOR                                    = 191723,
-    GO_XEVOZZ_DOOR                                  = 191556,
-    GO_LAVANTHOR_DOOR                               = 191566,
-    GO_ICHORON_DOOR                                 = 191722,
-    GO_ZURAMAT_DOOR                                 = 191565,
-    GO_EREKEM_DOOR                                  = 191564,
-    GO_EREKEM_GUARD_1_DOOR                          = 191563,
-    GO_EREKEM_GUARD_2_DOOR                          = 191562,
-    GO_MORAGG_DOOR                                  = 191606,
-    GO_INTRO_ACTIVATION_CRYSTAL                     = 193615,
-    GO_ACTIVATION_CRYSTAL                           = 193611
-};
 
 enum Creatures
 {
@@ -29,7 +31,9 @@ enum Creatures
     CREATURE_EREKEM_GUARD                           = 29395,
     CREATURE_MORAGG                                 = 29316,
     CREATURE_CYANIGOSA                              = 31134,
-    CREATURE_SINCLARI                               = 30658
+    CREATURE_SINCLARI                               = 30658,
+    CREATURE_SABOTEOUR                              = 31079,
+    NPC_VIOLET_HOLD_GUARD                           = 30659
 };
 
 enum Data
@@ -39,9 +43,16 @@ enum Data
     DATA_CYANIGOSA_EVENT,
     DATA_WAVE_COUNT,
     DATA_REMOVE_NPC,
-    DATA_DOOR,
-        DATA_BOSS_PHASE,
-        DATA_LASTBOSS
+    DATA_PORTAL_LOCATION,
+    DATA_DOOR_INTEGRITY,
+    DATA_NPC_PRESENCE_AT_DOOR,
+    DATA_NPC_PRESENCE_AT_DOOR_ADD,
+    DATA_NPC_PRESENCE_AT_DOOR_REMOVE,
+    DATA_START_BOSS_ENCOUNTER,
+    DATA_FIRST_BOSS,
+    DATA_SECOND_BOSS,
+    DATA_ACTIVATE_CRYSTAL,
+    DATA_MAIN_EVENT_PHASE
 };
 
 enum Data64
@@ -65,7 +76,10 @@ enum Data64
     DATA_ZURAMAT_CELL,
     DATA_MAIN_DOOR,
     DATA_SINCLARI,
-    DATA_INSTANCE_FAILED
+    DATA_TELEPORTATION_PORTAL,
+    DATA_SABOTEUR_PORTAL,
+    DATA_ADD_TRASH_MOB,
+    DATA_DEL_TRASH_MOB
 };
 
 enum Bosses
@@ -80,23 +94,11 @@ enum Bosses
     BOSS_CYANIGOSA
 };
 
-enum WorldState
+enum VHWorldStates
 {
     WORLD_STATE_VH              = 3816,
     WORLD_STATE_VH_PRISON_STATE = 3815,
     WORLD_STATE_VH_WAVE_COUNT   = 3810,
 };
-
-enum DefenceSystem
-{
-        SPELL_DEFENSE_SYSTEM_VISUAL                     = 57887,
-    SPELL_DEFENSE_SYSTEM_SPAWN                  = 57886,
-        SPELL_CONTROL_CRYSTAL_ACTIVATION        = 57804,
-        NPC_DEFENSE_SYSTEM                                      = 30837,
-    NPC_DEFENSE_DUMMY_TARGET                    = 30857
-};
-
-static float fDefenseSystemLoc[4] = {1888.146f, 803.382f, 58.604f, 3.072f};
-
 
 #endif
