@@ -2,7 +2,7 @@
 UPDATE gameobject SET state = 0 WHERE id = 194618;
 DELETE FROM `gameobject_loot_template` WHERE entry = 194618;
 INSERT INTO `gameobject_loot_template` VALUES(
-194618, 46070, 100, 1, 0, 1, 1, 0, 0, 0);
+194618, 46070, 100, 1, 0, 1, 1);
 UPDATE quest_template SET QuestFlags = 0 WHERE entry = 13678;
 UPDATE quest_template SET NextQuestId = 0 WHERE NextQuestId = 13678;
 UPDATE quest_template SET ReqCreatureOrGOId1 = 24108 WHERE entry = 13679;
