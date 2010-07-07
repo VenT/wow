@@ -1,17 +1,19 @@
-/* Copyright (C) 2006 - 2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* ScriptData
@@ -68,7 +70,7 @@ bool GossipHello_npc_arete(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_arete(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_arete(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch(uiAction)
     {
@@ -126,7 +128,7 @@ bool GossipHello_npc_dame_evniki_kapsalis(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_dame_evniki_kapsalis(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_dame_evniki_kapsalis(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_TRADE)
         pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
@@ -163,7 +165,7 @@ bool GossipHello_npc_squire_david(Player* pPlayer, Creature* pCreature)
     return true;
 }
 
-bool GossipSelect_npc_squire_david(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_squire_david(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -259,7 +261,7 @@ struct npc_argent_valiantAI : public ScriptedAI
         uiShieldBreakerTimer = 10000;
     }
 
-    void MovementInform(uint32 uiType, uint32 uiId)
+    void MovementInform(uint32 uiType, uint32 /*uiId*/)
     {
         if (uiType != POINT_MOTION_TYPE)
             return;
@@ -340,18 +342,18 @@ struct npc_argent_championAI : public ScriptedAI
         if (uiType != POINT_MOTION_TYPE)
             return;
 
-        me->setFaction(14);
+        m_creature->setFaction(14);
     }
 
     void DamageTaken(Unit* pDoneBy, uint32& uiDamage)
     {
-        if (uiDamage > me->GetHealth() && pDoneBy->GetTypeId() == TYPEID_PLAYER)
+        if (uiDamage > m_creature->GetHealth() && pDoneBy->GetTypeId() == TYPEID_PLAYER)
         {
             uiDamage = 0;
             CAST_PLR(pDoneBy)->KilledMonsterCredit(NPC_ARGENT_CHAMPION_CREDIT,0);
-            me->setFaction(35);
-            me->ForcedDespawn(5000);
-            me->SetHomePosition(me->GetPositionX(),me->GetPositionY(),me->GetPositionZ(),me->GetOrientation());
+            m_creature->setFaction(35);
+            m_creature->ForcedDespawn(5000);
+            m_creature->SetHomePosition(m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),m_creature->GetOrientation());
             EnterEvadeMode();
         }
     }
@@ -397,7 +399,7 @@ struct npc_argent_tournament_postAI : public ScriptedAI
 {
     npc_argent_tournament_postAI(Creature* pCreature) : ScriptedAI(pCreature) {}
 
-    void UpdateAI(const uint32 uiDiff)
+    void UpdateAI(const uint32 /*uiDiff*/)
     {
         if (me->IsNonMeleeSpellCasted(false))
             return;
@@ -416,6 +418,100 @@ struct npc_argent_tournament_postAI : public ScriptedAI
 CreatureAI* GetAI_npc_argent_tournament_post(Creature* pCreature)
 {
     return new npc_argent_tournament_postAI (pCreature);
+}
+
+/*######
+## npc_alorah_and_grimmin
+######*/
+
+enum ealorah_and_grimmin
+{
+    SPELL_CHAIN                     = 68341,
+    NPC_FJOLA_LIGHTBANE             = 36065,
+    NPC_EYDIS_DARKBANE              = 36066,
+    NPC_PRIESTESS_ALORAH            = 36101,
+    NPC_PRIEST_GRIMMIN              = 36102
+};
+
+struct npc_alorah_and_grimminAI : public ScriptedAI
+{
+    npc_alorah_and_grimminAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+    bool uiCast;
+
+    void Reset()
+    {
+        uiCast = false;
+    }
+
+    void UpdateAI(const uint32 /*uiDiff*/)
+    {
+        if (uiCast)
+            return;
+        uiCast = true;
+        Creature* pTarget = NULL;
+
+        switch(me->GetEntry())
+        {
+            case NPC_PRIESTESS_ALORAH:
+                pTarget = me->FindNearestCreature(NPC_EYDIS_DARKBANE, 10.0f);
+                break;
+            case NPC_PRIEST_GRIMMIN:
+                pTarget = me->FindNearestCreature(NPC_FJOLA_LIGHTBANE, 10.0f);
+                break;
+        }
+        if (pTarget)
+            DoCast(pTarget, SPELL_CHAIN);
+
+        if (!UpdateVictim())
+            return;
+    }
+};
+
+CreatureAI* GetAI_npc_alorah_and_grimmin(Creature* pCreature)
+{
+    return new npc_alorah_and_grimminAI (pCreature);
+}
+
+/*######
+## npc_guardian_pavilion
+######*/
+
+enum eGuardianPavilion
+{
+    SPELL_TRESPASSER_H                            = 63987,
+    AREA_SUNREAVER_PAVILION                       = 4676,
+
+    AREA_SILVER_COVENANT_PAVILION                 = 4677,
+    SPELL_TRESPASSER_A                            = 63986,
+};
+
+struct npc_guardian_pavilionAI : public Scripted_NoMovementAI
+{
+    npc_guardian_pavilionAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature) {}
+
+    void MoveInLineOfSight(Unit* pWho)
+    {
+        if (me->GetAreaId() != AREA_SUNREAVER_PAVILION && me->GetAreaId() != AREA_SILVER_COVENANT_PAVILION)
+            return;
+
+        if (!pWho || pWho->GetTypeId() != TYPEID_PLAYER || !me->IsHostileTo(pWho) || !me->isInBackInMap(pWho, 5.0f))
+            return;
+
+        if (pWho->HasAura(SPELL_TRESPASSER_H) || pWho->HasAura(SPELL_TRESPASSER_A))
+            return;
+
+        if (pWho->ToPlayer()->GetTeamId() == TEAM_ALLIANCE)
+            pWho->CastSpell(pWho, SPELL_TRESPASSER_H, true);
+        else
+            pWho->CastSpell(pWho, SPELL_TRESPASSER_A, true);
+
+    }
+};
+
+CreatureAI* GetAI_npc_guardian_pavilion(Creature* pCreature)
+{
+    return new npc_guardian_pavilionAI (pCreature);
 }
 
 void AddSC_icecrown()
@@ -459,5 +555,15 @@ void AddSC_icecrown()
     newscript = new Script;
     newscript->Name = "npc_argent_tournament_post";
     newscript->GetAI = &GetAI_npc_argent_tournament_post;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_alorah_and_grimmin";
+    newscript->GetAI = &GetAI_npc_alorah_and_grimmin;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_guardian_pavilion";
+    newscript->GetAI = &GetAI_npc_guardian_pavilion;
     newscript->RegisterSelf();
 }
