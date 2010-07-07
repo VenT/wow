@@ -1,7 +1,13 @@
 --
 -- Obsidian Sanctum
 --
-
+UPDATE `instance_template` SET `script`='instance_obsidian_sanctum' WHERE `map`=615;
+UPDATE `creature_template` SET `ScriptName`='boss_sartharion' WHERE `entry`=28860;
+UPDATE `creature_template` SET `ScriptName`='mob_vesperon' WHERE `entry`=30449;
+UPDATE `creature_template` SET `ScriptName`='mob_shadron' WHERE `entry`=30451;
+UPDATE `creature_template` SET `ScriptName`='mob_tenebron' WHERE `entry`=30452;
+UPDATE `creature_template` SET `ScriptName`='mob_acolyte_of_shadron' WHERE `entry`=31218;
+UPDATE `creature_template` SET `ScriptName`='mob_acolyte_of_vesperon' WHERE `entry`=31219;
 -- flametsunami
 UPDATE creature_template SET minlevel=83, maxlevel=83, faction_A=14, faction_H=14, unit_flags=0x02000000, flags_extra=0x00000002, ScriptName="npc_flame_tsunami" WHERE entry=30616;
 

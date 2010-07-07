@@ -1,3 +1,17 @@
+UPDATE `instance_template` SET `script`='instance_violet_hold' WHERE `map`=608;
+UPDATE `creature_template` SET `ScriptName`='npc_sinclari_vh' WHERE `entry`=30658;
+UPDATE `creature_template` SET `ScriptName`='npc_teleportation_portal_vh' WHERE `entry`=31011;
+UPDATE `creature_template` SET `ScriptName`='boss_cyanigosa' WHERE `entry`=31134;
+UPDATE `creature_template` SET `ScriptName`='boss_erekem' WHERE `entry`=29315;
+UPDATE `creature_template` SET `ScriptName`='mob_erekem_guard' WHERE `entry`=29395;
+UPDATE `creature_template` SET `ScriptName`='boss_ichoron' WHERE `entry`=29313;
+UPDATE `creature_template` SET `ScriptName`='mob_ichor_globule' WHERE `entry`=29321;
+UPDATE `creature_template` SET `ScriptName`='boss_lavanthor' WHERE `entry`=29312;
+UPDATE `creature_template` SET `ScriptName`='boss_moragg' WHERE `entry`=29316;
+UPDATE `creature_template` SET `ScriptName`='boss_xevozz' WHERE `entry`=29266;
+UPDATE `creature_template` SET `ScriptName`='mob_ethereal_sphere' WHERE `entry`=29271;
+UPDATE `creature_template` SET `ScriptName`='boss_zuramat' WHERE `entry`=29314;
+
 -- Inserting the new mobtype which will be spawned due the PreEvent fight with the Guards (4 different models = 4 "different" mobs)
 INSERT INTO `creature_template` (`entry`,`difficulty_entry_1`,`difficulty_entry_2`,`difficulty_entry_3`,`KillCredit1`,`KillCredit2`,`modelid1`,`modelid2`,`modelid3`,`modelid4`,`name`,`subname`,`IconName`,`gossip_menu_id`,`minlevel`,`maxlevel`,`exp`,`faction_A`,`faction_H`,`npcflag`,`speed_walk`,`speed_run`,`scale`,`rank`,`mindmg`,`maxdmg`,`dmgschool`,`attackpower`,`dmg_multiplier`,`baseattacktime`,`rangeattacktime`,`unit_class`,`unit_flags`,`dynamicflags`,`family`,`trainer_type`,`trainer_spell`,`trainer_class`, `trainer_race`,`minrangedmg`,`maxrangedmg`,`rangedattackpower`,`type`,`type_flags`,`lootid`,`pickpocketloot`,`skinloot`,`resistance1`,`resistance2`,`resistance3`,`resistance4`,`resistance5`,`resistance6`,`spell1`,`spell2`,`spell3`,`spell4`,`spell5`,`spell6`,`spell7`,`spell8`,`PetSpellDataId`,`VehicleId`,`mingold`,`maxgold`,`AIName`,`MovementType`,`InhabitType`,`Health_mod`,`Mana_mod`,`Armor_mod`,`RacialLeader`,`questItem1`,`questItem2`,`questItem3`,`questItem4`,`questItem5`,`questItem6`,`movementId`,`RegenHealth`,`equipment_id`,`mechanic_immune_mask`,`flags_extra`,`ScriptName`,`WDBVerified`) VALUES
 (310100,0,0,0,0,0,24910,27219,25247,27220,'Azure Prisoner','','',0,80,80,2,1720,1720,0,1,1.14286,1,0,142,255,0,192,4,1500,0,1,0,8,0,0,0,0,0,295,438,68,1,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'EventAI',0,3,0.5,0.5,0.5,0,0,0,0,0,0,0,0,1,0,0,0,'mob_azure_prisoner',11723);

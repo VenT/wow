@@ -11,6 +11,27 @@ INSERT INTO areatrigger_scripts VALUES (4156,'at_naxxramas_frostwyrm_wing');
 -- thanks bloodycore
 -- 7560_leviathan_crashfix
 -- Ulduar crash fixes
+UPDATE `instance_template` SET `script`='instance_ulduar' WHERE `map`=603;
+UPDATE `creature_template` SET `ScriptName`='boss_auriaya' WHERE `entry`=33515;
+UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan' WHERE `entry`=33113;
+UPDATE `creature_template` SET `AIName`='TurretAI',`ScriptName`='' WHERE `entry`=33139;
+UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_seat' WHERE `entry`=33114;
+UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_defense_turret' WHERE `entry`=33142;
+UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_overload_device' WHERE `entry`=33143;
+UPDATE `creature_template` SET `ScriptName`='spell_pool_of_tar' WHERE `entry`=33090;
+UPDATE `creature_template` SET `ScriptName`='boss_ignis' WHERE `entry`=33118;
+UPDATE `creature_template` SET `ScriptName`='boss_razorscale' WHERE `entry`=33186;
+UPDATE `creature_template` SET `ScriptName`='boss_xt002' WHERE `entry`=33293;
+UPDATE `creature_template` SET `ScriptName`='mob_xt002_heart' WHERE `entry`=33329;
+UPDATE `creature_template` SET `ScriptName`='mob_scrapbot' WHERE `entry`=33343;
+UPDATE `creature_template` SET `ScriptName`='mob_pummeller' WHERE `entry`=33344;
+UPDATE `creature_template` SET `ScriptName`='mob_boombot' WHERE `entry`=33346;
+UPDATE `creature_template` SET `ScriptName`='mob_void_zone' WHERE `entry`=34001;
+UPDATE `creature_template` SET `ScriptName`='mob_life_spark' WHERE `entry`=34004;
+UPDATE `creature_template` SET `ScriptName`='mob_rune_of_summoning' WHERE `entry`=33051;
+UPDATE `creature_template` SET `ScriptName`='boss_algalon' WHERE `entry`=32871;
+UPDATE `creature_template` SET `ScriptName`='mob_collapsing_star' WHERE `entry`=32955;
+UPDATE `gameobject_template` SET `ScriptName`='ulduar_teleporter' WHERE `entry`=194569;
 UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=33142;
 UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=33139;
 UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=34111;
