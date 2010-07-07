@@ -1,19 +1,18 @@
-/*
- * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2008 - 2010 Trinity <http://www.trinitycore.org/>
+ * Copyright (C) 2006 - 2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 /* ScriptData
@@ -24,6 +23,9 @@ SDCategory: Borean Tundra
 EndScriptData */
 
 /* ContentData
+npc_fizzcrank_fullthrottle
+npc_surristrasz
+npc_tiare
 npc_iruk
 npc_corastrasza
 npc_jenny
@@ -40,6 +42,155 @@ EndContentData */
 #include "ScriptPCH.h"
 #include "ScriptedEscortAI.h"
 #include "ScriptedFollowerAI.h"
+
+/*######
+## npc_fizzcrank_fullthrottle
+######*/
+
+#define GOSSIP_ITEM_GO_ON   "Go on."
+#define GOSSIP_ITEM_TELL_ME "Tell me what's going on out here, Fizzcrank."
+
+enum eFizzcrank
+{
+    GOSSIP_TEXTID_FIZZCRANK1    = 12456,
+    GOSSIP_TEXTID_FIZZCRANK2    = 12457,
+    GOSSIP_TEXTID_FIZZCRANK3    = 12458,
+    GOSSIP_TEXTID_FIZZCRANK4    = 12459,
+    GOSSIP_TEXTID_FIZZCRANK5    = 12460,
+    GOSSIP_TEXTID_FIZZCRANK6    = 12461,
+    GOSSIP_TEXTID_FIZZCRANK7    = 12462,
+    GOSSIP_TEXTID_FIZZCRANK8    = 12463,
+    GOSSIP_TEXTID_FIZZCRANK9    = 12464,
+
+    QUEST_THE_MECHAGNOMES       = 11708
+};
+
+bool GossipHello_npc_fizzcrank_fullthrottle(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    if (pPlayer->GetQuestStatus(QUEST_THE_MECHAGNOMES) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELL_ME, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_fizzcrank_fullthrottle(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    switch(uiAction)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK1, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK2, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK3, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK4, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+5:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK5, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+6:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK6, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+7:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK7, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+8:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK8, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+9:
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK9, pCreature->GetGUID());
+            pPlayer->AreaExploredOrEventHappens(QUEST_THE_MECHAGNOMES);
+            break;
+    }
+    return true;
+}
+
+/*######
+## npc_surristrasz
+######*/
+
+#define GOSSIP_ITEM_FREE_FLIGHT "I'd like passage to the Transitus Shield."
+#define GOSSIP_ITEM_FLIGHT      "May I use a drake to fly elsewhere?"
+
+enum eSurristrasz
+{
+    SPELL_ABMER_TO_COLDARRA     = 46064
+};
+
+bool GossipHello_npc_surristrasz(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    if (pCreature->isTaxi())
+    {
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_FREE_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_GOSSIP);
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_ITEM_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_TAXIVENDOR);
+    }
+
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_surristrasz(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_OPTION_GOSSIP)
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+
+        //TaxiPath 795 (amber to coldarra)
+        pPlayer->CastSpell(pPlayer, SPELL_ABMER_TO_COLDARRA, true);
+    }
+
+    if (uiAction == GOSSIP_OPTION_TAXIVENDOR)
+        pPlayer->GetSession()->SendTaxiMenu(pCreature);
+
+    return true;
+}
+
+/*######
+## npc_tiare
+######*/
+
+#define GOSSIP_ITEM_TELEPORT    "Teleport me to Amber Ledge, please."
+
+enum eTiare
+{
+    SPELL_TELEPORT_COLDARRA     = 50135
+};
+
+bool GossipHello_npc_tiare(Player* pPlayer, Creature* pCreature)
+{
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_GOSSIP);
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_tiare(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_OPTION_GOSSIP)
+    {
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_COLDARRA, true);
+    }
+    return true;
+}
 
 /*######
 ## npc_sinkhole_kill_credit
@@ -582,15 +733,24 @@ struct npc_nesingwary_trapperAI : public ScriptedAI
                 case 7:
                 {
                     GameObject *go_caribou = NULL;
-                    for (uint8 i = 0; i < CaribouTrapsNum; ++i)
-                    {
-                        go_caribou = me->FindNearestGameObject(CaribouTraps[i], 5.0f);
-                        if (go_caribou)
+                    if ((go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_1, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_2, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_3, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_4, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_5, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_6, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_7, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_8, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_9, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_10, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_11, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_12, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_13, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_14, 5.0f)) ||
+                        (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_15, 5.0f)))
                         {
                             go_caribou->SetGoState(GO_STATE_ACTIVE);
                             go_caribouGUID = go_caribou->GetGUID();
-                            break;
-                        }
                     }
                     Phase = 8;
                     uiPhaseTimer = 1000;
@@ -1582,6 +1742,7 @@ struct npc_imprisoned_beryl_sorcererAI : public ScriptedAI
 
     void EnterCombat(Unit* /*pWho*/)
     {
+        return;
     }
 
     void SpellHit(Unit* pUnit, const SpellEntry* pSpell)
@@ -1896,19 +2057,34 @@ struct npc_trapped_mammoth_calfAI : public ScriptedAI
 
     void Reset()
     {
+        GameObject *pTrap;
+
         uiTimer = 1500;
         bStarted = false;
 
-        GameObject* pTrap;
-        for (uint8 i = 0; i < MammothTrapsNum; ++i)
-        {
-            pTrap = me->FindNearestGameObject(MammothTraps[i],11.0f);
-            if (pTrap)
-            {
+        if ((pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_1,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_2,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_3,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_4,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_5,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_6,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_7,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_8,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_9,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_10,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_11,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_12,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_13,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_14,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_15,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_16,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_17,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_18,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_19,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_20,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_21,1.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_22,1.0f)))
                 pTrap->SetGoState(GO_STATE_ACTIVE);
-                return;
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -1934,20 +2110,34 @@ struct npc_trapped_mammoth_calfAI : public ScriptedAI
 
     void MovementInform(uint32 uiType, uint32 /*uiId*/)
     {
-
+        GameObject* pTrap;
         if (uiType != POINT_MOTION_TYPE)
             return;
         me->DisappearAndDie();
-        GameObject* pTrap;
-        for (uint8 i = 0; i < MammothTrapsNum; ++i)
-        {
-            pTrap = me->FindNearestGameObject(MammothTraps[i],11.0f);
-            if (pTrap)
-            {
+
+        if ((pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_1,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_2,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_3,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_4,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_5,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_6,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_7,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_8,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_9,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_10,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_11,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_12,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_13,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_14,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_15,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_16,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_17,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_18,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_19,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_20,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_21,11.0f)) ||
+            (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_22,11.0f)))
                 pTrap->SetLootState(GO_JUST_DEACTIVATED);
-                return;
-            }
-        }
     }
 };
 
@@ -2186,6 +2376,24 @@ void AddSC_borean_tundra()
     Script *newscript;
 
     newscript = new Script;
+    newscript->Name = "npc_fizzcrank_fullthrottle";
+    newscript->pGossipHello = &GossipHello_npc_fizzcrank_fullthrottle;
+    newscript->pGossipSelect = &GossipSelect_npc_fizzcrank_fullthrottle;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_surristrasz";
+    newscript->pGossipHello = &GossipHello_npc_surristrasz;
+    newscript->pGossipSelect = &GossipSelect_npc_surristrasz;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_tiare";
+    newscript->pGossipHello = &GossipHello_npc_tiare;
+    newscript->pGossipSelect = &GossipSelect_npc_tiare;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
     newscript->Name = "npc_sinkhole_kill_credit";
     newscript->GetAI = &GetAI_npc_sinkhole_kill_credit;
     newscript->RegisterSelf();
@@ -2237,6 +2445,7 @@ void AddSC_borean_tundra()
     newscript->Name = "npc_nesingwary_trapper";
     newscript->GetAI = &GetAI_npc_nesingwary_trapper;
     newscript->RegisterSelf();
+    newscript = new Script;
 
     newscript = new Script;
     newscript->Name = "npc_lurgglbr";
